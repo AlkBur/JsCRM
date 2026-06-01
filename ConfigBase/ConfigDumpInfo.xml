@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ConfigDumpInfo xmlns="http://v8.1c.ru/8.3/xcf/dumpinfo" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" format="Hierarchical" version="2.20">
+	<ConfigVersions>
+		<Metadata name="Catalog.Пользователи" id="ca54bf7b-d811-4877-a67d-05fded063d56" configVersion="eb15143caaefc0409e61ce1d1ccb2c2100000000">
+			<Metadata name="Catalog.Пользователи.Attribute.Идентификатор" id="2628a672-d548-47cf-a250-6cb3838492fb"/>
+		</Metadata>
+		<Metadata name="CommonModule.ОбщийМодульТестов" id="acb6729c-7f33-4389-a351-760eea202a85" configVersion="527fb35be012fa4cac2a31831737066600000000"/>
+		<Metadata name="CommonModule.ОбщийМодульТестов.Module" id="acb6729c-7f33-4389-a351-760eea202a85.0" configVersion="dda938f82224a1479ffbd3ca294bbf3600000000"/>
+		<Metadata name="Configuration.ТестоваяКонфигурация" id="f4c587f1-b61c-463b-98e7-91b6a729c0f8" configVersion="594756f85b7d1e4b9ab70f348be996d800000000"/>
+		<Metadata name="Configuration.ТестоваяКонфигурация.MainSectionCommandInterface" id="303d59b4-f550-49f0-8d87-9dbdb37de1f0.9" configVersion="0c45872e1d005b41a7b7e71a295c3da300000000"/>
+		<Metadata name="Configuration.ТестоваяКонфигурация.ManagedApplicationModule" id="303d59b4-f550-49f0-8d87-9dbdb37de1f0.6" configVersion="b3329c480e7ca3409d9811ad3bf9d2f900000000"/>
+		<Metadata name="Constant.БухгалтерскийУчет" id="08a991b5-dd0f-41ff-8b83-f108a73dcc75" configVersion="5efec40e064b374caa78411b1500a11400000000"/>
+		<Metadata name="Constant.ДатаОснования" id="acb47ab8-d2d9-47b6-86f0-a966e6c34f5d" configVersion="165cdefbcb81784eab83422fcd4c4b6700000000"/>
+		<Metadata name="Constant.НазваниеОрганизации" id="6d3b5296-1c0b-4e36-9f2f-3fb95726116e" configVersion="2f2d28e685df3840a298e02bc84e43f900000000"/>
+		<Metadata name="Constant.РейтингНадежности" id="5b418a0d-cdc6-4160-ad76-0281d7c8ef7b" configVersion="a6e67f508f545b48be6b9ad0c83fd0ff00000000"/>
+		<Metadata name="DataProcessor.Strings" id="f8d85db0-9ddb-444e-b111-6acb6f7484f4" configVersion="fbc8d42fd09263478fbe9bace165be2300000000"/>
+		<Metadata name="DataProcessor.Strings.Form.Форма" id="baa23195-3817-4c1c-b72b-c21a31bc2b8d" configVersion="e50ac2dd511579489d27f06a7d03ce8d00000000"/>
+		<Metadata name="DataProcessor.Strings.Form.Форма.Form" id="baa23195-3817-4c1c-b72b-c21a31bc2b8d.0" configVersion="c722a620a91e354e932a97366668316800000000"/>
+		<Metadata name="DataProcessor.Table" id="2e9649ff-86cb-47bc-8ca4-a00bda493a55" configVersion="d0284f78d9eacd4daa8f3f7d9ebd7c7000000000"/>
+		<Metadata name="DataProcessor.Table.Form.Форма" id="fc21f466-3a3d-4a35-839b-a65e29862709" configVersion="3be452ff3a780748a3d13126f1e2a97c00000000"/>
+		<Metadata name="DataProcessor.Table.Form.Форма.Form" id="fc21f466-3a3d-4a35-839b-a65e29862709.0" configVersion="02b625121ab6f84096fb0eb2e9b5e2a900000000"/>
+		<Metadata name="DataProcessor.array" id="aa9016b2-9c20-4af6-a66d-be8e923fb846" configVersion="e7d4e38ea2a5074aaa33854b2555c7cf00000000"/>
+		<Metadata name="DataProcessor.array.Form.Форма" id="3a384b3c-fed3-45a2-9935-cdf4bdfdc9fc" configVersion="1ae3753017cef1498d3f2f0bd2b5270500000000"/>
+		<Metadata name="DataProcessor.array.Form.Форма.Form" id="3a384b3c-fed3-45a2-9935-cdf4bdfdc9fc.0" configVersion="2f0eea2112aac54e9dd543ed0454785f00000000"/>
+		<Metadata name="DataProcessor.collections" id="f8e1f414-18fa-46d0-9821-c1730a73a42b" configVersion="a9241d80d5bc824db857181d7d5a766700000000"/>
+		<Metadata name="DataProcessor.collections.Form.Форма" id="23afad47-70e2-4034-8ca3-a9bd82563534" configVersion="6500bd225df1a443aa928130274bf40400000000"/>
+		<Metadata name="DataProcessor.collections.Form.Форма.Form" id="23afad47-70e2-4034-8ca3-a9bd82563534.0" configVersion="0c1fcd6292beae46bb5baba46daa8c2800000000"/>
+		<Metadata name="DataProcessor.СписокЗначений" id="95143a78-df46-4a5b-977c-4c7bebb08c49" configVersion="e1ff5ec03cc9994d903436d0cd58411600000000"/>
+		<Metadata name="DataProcessor.СписокЗначений.Form.Форма" id="5574ebfc-405c-4a89-9ecc-7d2195d71a9d" configVersion="33dd49b76a0c74488f433f087f6151d500000000"/>
+		<Metadata name="DataProcessor.СписокЗначений.Form.Форма.Form" id="5574ebfc-405c-4a89-9ecc-7d2195d71a9d.0" configVersion="b5c900158370d04fb86f0774610917a700000000"/>
+		<Metadata name="Document.Документ1" id="b1e95c06-16a4-4a6b-91f6-949e3420cd04" configVersion="9decedafb07bf548be8f3878909ea0b400000000"/>
+		<Metadata name="Language.English" id="351db37f-6843-41e5-9352-67d894a11875" configVersion="3860aba29015914e86cb93502df4264300000000"/>
+		<Metadata name="Language.Русский" id="7996d111-03d5-4ff6-b9bf-1a116e6fb9c7" configVersion="9f5ba4a75abb2c40b7116afd43de253900000000"/>
+		<Metadata name="Role.Admin" id="f7467b0d-db9e-417f-a1c9-d6798220e6ed" configVersion="4f37eff47b1387448641916be9ac204d00000000"/>
+		<Metadata name="Role.Admin.Rights" id="f7467b0d-db9e-417f-a1c9-d6798220e6ed.0" configVersion="63a5ff57af33dd4cba8bd639d3d9ffac00000000"/>
+	</ConfigVersions>
+</ConfigDumpInfo>

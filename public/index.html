@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>JsCRM — Документ "Заказ"</title>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+    body { max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
+    .card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h1 { font-size: 20px; margin: 0 0 20px; color: #333; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; }
+    input[type="number"] {
+      width: 100%; padding: 8px 12px; font-size: 16px; border: 1px solid #ccc;
+      border-radius: 4px; outline: none; transition: border-color 0.2s;
+    }
+    input[type="number"]:focus { border-color: #4A90D9; box-shadow: 0 0 0 2px rgba(74,144,217,0.2); }
+    input[readonly] { background: #f0f0f0; color: #555; }
+    .status { font-size: 12px; color: #999; margin-top: 16px; }
+    .status.connected { color: #4CAF50; }
+    .status.disconnected { color: #f44336; }
+    button {
+      width: 100%; padding: 10px; font-size: 16px; background: #4A90D9; color: #fff;
+      border: none; border-radius: 4px; cursor: pointer; margin-top: 8px;
+    }
+    button:hover { background: #357ABD; }
+    button:active { background: #2A5F9E; }
+    .toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: 4px; color: #fff; font-size: 14px; opacity: 0; transition: opacity 0.3s; }
+    .toast.show { opacity: 1; }
+    .toast.success { background: #4CAF50; }
+    .toast.error { background: #f44336; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Документ "Заказ"</h1>
+    <div class="field">
+      <label for="Сумма">Сумма</label>
+      <input type="number" id="Сумма" value="0" step="0.01" />
+    </div>
+    <div class="field">
+      <label for="НДС">НДС (20%)</label>
+      <input type="number" id="НДС" value="0" readonly />
+    </div>
+    <button id="saveBtn">Сохранить</button>
+    <div id="status" class="status disconnected">Нет подключения</div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let ws = null;
+    let object = null;
+
+    const суммаInput = document.getElementById("Сумма");
+    const ндсInput = document.getElementById("НДС");
+    const statusEl = document.getElementById("status");
+    const saveBtn = document.getElementById("saveBtn");
+
+    function connect() {
+      ws = new WebSocket("ws://" + location.host);
+
+      ws.onopen = () => {
+        statusEl.textContent = "Подключено к серверу";
+        statusEl.className = "status connected";
+        loadData();
+      };
+
+      ws.onclose = () => {
+        statusEl.textContent = "Нет подключения";
+        statusEl.className = "status disconnected";
+        setTimeout(connect, 2000);
+      };
+
+      ws.onmessage = (event) => {
+        const patch = JSON.parse(event.data);
+        if (patch.type === "patch") {
+          if (patch.field === "НДС") {
+            ндсInput.value = patch.value;
+          }
+          if (patch.field === "Сумма") {
+            суммаInput.value = patch.value;
+          }
+        }
+      };
+    }
+
+    async function loadData() {
+      const res = await fetch("/api/data");
+      object = await res.json();
+      суммаInput.value = object.Сумма;
+      ндсInput.value = object.НДС;
+    }
+
+    суммаInput.addEventListener("input", () => {
+      const value = parseFloat(суммаInput.value) || 0;
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: "change",
+          field: "Сумма",
+          value: value,
+          handler: "ПриИзмененииСуммы"
+        }));
+      }
+    });
+
+    saveBtn.addEventListener("click", async () => {
+      const id = "order-1";
+      const data = { Сумма: parseFloat(суммаInput.value) || 0, НДС: parseFloat(ндсInput.value) || 0 };
+      await fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, data })
+      });
+      showToast("Сохранено", "success");
+    });
+
+    function showToast(text, type) {
+      const toast = document.getElementById("toast");
+      toast.textContent = text;
+      toast.className = "toast " + type + " show";
+      setTimeout(() => toast.className = "toast", 2000);
+    }
+
+    connect();
+  </script>
+</body>
+</html>

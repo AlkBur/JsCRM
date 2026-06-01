@@ -1,0 +1,12 @@
+{
+  "name": "crm",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "bun server.js"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "webix": "^11.4.0"
+  }
+}

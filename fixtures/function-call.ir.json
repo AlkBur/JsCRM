@@ -1,0 +1,73 @@
+{
+  "irVersion": 1,
+  "generator": { "tool": "handwritten", "version": "0.1" },
+  "features": [],
+  "module": {
+    "name": "Тесты.Вызовы",
+    "globals": [],
+    "procedures": [
+      {
+        "kind": "procedure",
+        "name": "ВызватьПроцедуруТест",
+        "export": false,
+        "params": [
+          { "name": "Объект" }
+        ],
+        "body": [
+          {
+            "kind": "assign",
+            "target": {
+              "kind": "member",
+              "object": { "kind": "variable", "name": "Объект" },
+              "property": "НДС"
+            },
+            "expr": {
+              "kind": "binary",
+              "op": "*",
+              "left": {
+                "kind": "member",
+                "object": { "kind": "variable", "name": "Объект" },
+                "property": "Сумма"
+              },
+              "right": { "kind": "number", "value": 0.2 }
+            }
+          }
+        ]
+      }
+    ],
+    "functions": [
+      {
+        "kind": "function",
+        "name": "Тест_Функция",
+        "export": false,
+        "params": [],
+        "body": [
+          {
+            "kind": "assign",
+            "target": { "kind": "variable", "name": "a" },
+            "expr": { "kind": "number", "value": 10 }
+          },
+          {
+            "kind": "assign",
+            "target": { "kind": "variable", "name": "b" },
+            "expr": { "kind": "number", "value": 20 }
+          },
+          {
+            "kind": "assign",
+            "target": { "kind": "variable", "name": "c" },
+            "expr": {
+              "kind": "binary",
+              "op": "+",
+              "left": { "kind": "variable", "name": "a" },
+              "right": { "kind": "variable", "name": "b" }
+            }
+          },
+          {
+            "kind": "return",
+            "value": { "kind": "variable", "name": "c" }
+          }
+        ]
+      }
+    ]
+  }
+}

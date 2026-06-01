@@ -1,0 +1,74 @@
+{
+  "irVersion": 1,
+  "generator": { "tool": "handwritten", "version": "0.1" },
+  "features": [],
+  "module": {
+    "name": "Тесты.Объекты",
+    "globals": [],
+    "procedures": [
+      {
+        "kind": "procedure",
+        "name": "ПриИзмененииСуммы",
+        "export": true,
+        "params": [
+          { "name": "Объект" }
+        ],
+        "body": [
+          {
+            "kind": "assign",
+            "target": {
+              "kind": "member",
+              "object": { "kind": "variable", "name": "Объект" },
+              "property": "НДС"
+            },
+            "expr": {
+              "kind": "binary",
+              "op": "*",
+              "left": {
+                "kind": "member",
+                "object": { "kind": "variable", "name": "Объект" },
+                "property": "Сумма"
+              },
+              "right": { "kind": "number", "value": 0.2 }
+            }
+          }
+        ]
+      }
+    ],
+    "functions": [
+      {
+        "kind": "function",
+        "name": "Тест_ЧтениеПоля",
+        "export": false,
+        "params": [],
+        "body": [
+          {
+            "kind": "assign",
+            "target": { "kind": "variable", "name": "x" },
+            "expr": { "kind": "number", "value": 100 }
+          },
+          {
+            "kind": "assign",
+            "target": { "kind": "variable", "name": "obj" },
+            "expr": {
+              "kind": "new",
+              "type": "Структура",
+              "args": [
+                { "kind": "string", "value": "Ключ" },
+                { "kind": "variable", "name": "x" }
+              ]
+            }
+          },
+          {
+            "kind": "return",
+            "value": {
+              "kind": "member",
+              "object": { "kind": "variable", "name": "obj" },
+              "property": "Ключ"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
