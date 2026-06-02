@@ -261,11 +261,7 @@
 			<Constant>РейтингНадежности</Constant>
 			<Catalog>Пользователи</Catalog>
 			<Document>Документ1</Document>
-			<DataProcessor>array</DataProcessor>
-			<DataProcessor>Table</DataProcessor>
-			<DataProcessor>Strings</DataProcessor>
 			<DataProcessor>collections</DataProcessor>
-			<DataProcessor>СписокЗначений</DataProcessor>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>

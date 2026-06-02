@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://jscrm.dev/ir-schema-v1.json",
   "title": "1C IR v1",
-  "description": "Intermediate Representation for 1C:Enterprise bytecode — contract between 1C exporter and Bun runtime",
+  "description": "Intermediate Representation for 1C:Enterprise code — contract between 1C exporter and Bun runtime",
 
   "type": "object",
   "properties": {
@@ -15,11 +15,6 @@
       },
       "required": ["tool", "version"],
       "additionalProperties": false
-    },
-    "features": {
-      "type": "array",
-      "items": { "type": "string" },
-      "uniqueItems": true
     },
     "module": { "$ref": "#/$defs/module" }
   },
@@ -51,20 +46,25 @@
       "type": "object",
       "properties": {
         "name": { "type": "string" },
+        "body": { "$ref": "#/$defs/moduleBody" }
+      },
+      "required": ["name", "body"],
+      "additionalProperties": false
+    },
+
+    "moduleBody": {
+      "type": "object",
+      "properties": {
+        "routines": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/routine" }
+        },
         "globals": {
           "type": "array",
           "items": { "$ref": "#/$defs/globalVar" }
-        },
-        "procedures": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/routine" }
-        },
-        "functions": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/routine" }
         }
       },
-      "required": ["name", "procedures", "functions"],
+      "required": ["routines", "globals"],
       "additionalProperties": false
     },
 
@@ -99,9 +99,16 @@
     "param": {
       "type": "object",
       "properties": {
-        "name": { "type": "string" }
+        "name": { "type": "string" },
+        "byValue": { "type": "boolean" },
+        "defaultValue": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/expr" }
+          ]
+        }
       },
-      "required": ["name"],
+      "required": ["name", "byValue", "defaultValue"],
       "additionalProperties": false
     },
 
@@ -112,11 +119,14 @@
         { "$ref": "#/$defs/stmtFor" },
         { "$ref": "#/$defs/stmtWhile" },
         { "$ref": "#/$defs/stmtForEach" },
-        { "$ref": "#/$defs/stmtCall" },
+        { "$ref": "#/$defs/stmtCallFunc" },
+        { "$ref": "#/$defs/stmtCallMethod" },
         { "$ref": "#/$defs/stmtReturn" },
         { "$ref": "#/$defs/stmtBreak" },
         { "$ref": "#/$defs/stmtContinue" },
-        { "$ref": "#/$defs/stmtExpr" }
+        { "$ref": "#/$defs/stmtExpr" },
+        { "$ref": "#/$defs/stmtTry" },
+        { "$ref": "#/$defs/stmtThrow" }
       ]
     },
 
@@ -183,28 +193,43 @@
       "type": "object",
       "properties": {
         "kind": { "const": "foreach" },
-        "item": { "type": "string" },
+        "variable": { "type": "string" },
         "collection": { "$ref": "#/$defs/expr" },
         "body": {
           "type": "array",
           "items": { "$ref": "#/$defs/stmt" }
         }
       },
-      "required": ["kind", "item", "collection", "body"],
+      "required": ["kind", "variable", "collection", "body"],
       "additionalProperties": false
     },
 
-    "stmtCall": {
+    "stmtCallFunc": {
       "type": "object",
       "properties": {
         "kind": { "const": "call" },
-        "callee": { "$ref": "#/$defs/expr" },
+        "name": { "type": "string" },
         "args": {
           "type": "array",
           "items": { "$ref": "#/$defs/expr" }
         }
       },
-      "required": ["kind", "callee", "args"],
+      "required": ["kind", "name", "args"],
+      "additionalProperties": false
+    },
+
+    "stmtCallMethod": {
+      "type": "object",
+      "properties": {
+        "kind": { "const": "call" },
+        "object": { "$ref": "#/$defs/expr" },
+        "method": { "type": "string" },
+        "args": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/expr" }
+        }
+      },
+      "required": ["kind", "object", "method", "args"],
       "additionalProperties": false
     },
 
@@ -246,6 +271,33 @@
       "additionalProperties": false
     },
 
+    "stmtTry": {
+      "type": "object",
+      "properties": {
+        "kind": { "const": "try" },
+        "try": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/stmt" }
+        },
+        "catch": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/stmt" }
+        }
+      },
+      "required": ["kind", "try", "catch"],
+      "additionalProperties": false
+    },
+
+    "stmtThrow": {
+      "type": "object",
+      "properties": {
+        "kind": { "const": "throw" },
+        "value": { "$ref": "#/$defs/expr" }
+      },
+      "required": ["kind", "value"],
+      "additionalProperties": false
+    },
+
     "expr": {
       "oneOf": [
         { "$ref": "#/$defs/exprNumber" },
@@ -256,7 +308,8 @@
         { "$ref": "#/$defs/exprVariable" },
         { "$ref": "#/$defs/exprMember" },
         { "$ref": "#/$defs/exprIndex" },
-        { "$ref": "#/$defs/exprCall" },
+        { "$ref": "#/$defs/exprCallFunc" },
+        { "$ref": "#/$defs/exprCallMethod" },
         { "$ref": "#/$defs/exprNew" },
         { "$ref": "#/$defs/exprBinary" },
         { "$ref": "#/$defs/exprUnary" }
@@ -343,17 +396,32 @@
       "additionalProperties": false
     },
 
-    "exprCall": {
+    "exprCallFunc": {
       "type": "object",
       "properties": {
         "kind": { "const": "call" },
-        "callee": { "$ref": "#/$defs/expr" },
+        "name": { "type": "string" },
         "args": {
           "type": "array",
           "items": { "$ref": "#/$defs/expr" }
         }
       },
-      "required": ["kind", "callee", "args"],
+      "required": ["kind", "name", "args"],
+      "additionalProperties": false
+    },
+
+    "exprCallMethod": {
+      "type": "object",
+      "properties": {
+        "kind": { "const": "call" },
+        "object": { "$ref": "#/$defs/expr" },
+        "method": { "type": "string" },
+        "args": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/expr" }
+        }
+      },
+      "required": ["kind", "object", "method", "args"],
       "additionalProperties": false
     },
 
@@ -364,10 +432,20 @@
         "type": { "type": "string" },
         "args": {
           "type": "array",
-          "items": { "$ref": "#/$defs/expr" }
+          "items": { "$ref": "#/$defs/newArg" }
         }
       },
       "required": ["kind", "type", "args"],
+      "additionalProperties": false
+    },
+
+    "newArg": {
+      "type": "object",
+      "properties": {
+        "key": { "type": "string" },
+        "value": { "$ref": "#/$defs/expr" }
+      },
+      "required": ["key", "value"],
       "additionalProperties": false
     },
 
@@ -377,7 +455,12 @@
         "kind": { "const": "binary" },
         "op": {
           "type": "string",
-          "enum": ["+", "-", "*", "/", ">", "<", ">=", "<=", "=", "<>", "и", "или"]
+          "enum": [
+            "Плюс", "Минус", "Умножить", "Разделить",
+            "Больше", "Меньше", "БольшеИлиРавно", "МеньшеИлиРавно",
+            "Равно", "НеРавно",
+            "И", "Или"
+          ]
         },
         "left": { "$ref": "#/$defs/expr" },
         "right": { "$ref": "#/$defs/expr" }
@@ -392,7 +475,7 @@
         "kind": { "const": "unary" },
         "op": {
           "type": "string",
-          "enum": ["-", "not"]
+          "enum": ["-", "Не"]
         },
         "right": { "$ref": "#/$defs/expr" }
       },

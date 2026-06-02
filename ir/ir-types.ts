@@ -1,16 +1,17 @@
 export interface IRRoot {
   irVersion: 1;
   generator?: { tool: string; version: string };
-  features?: string[];
   module: IRModule;
-  meta?: Meta;
 }
 
 export interface IRModule {
   name: string;
+  body: ModuleBody;
+}
+
+export interface ModuleBody {
+  routines: Routine[];
   globals: GlobalVar[];
-  procedures: Routine[];
-  functions: Routine[];
 }
 
 export interface GlobalVar {
@@ -27,6 +28,8 @@ export interface Routine {
 
 export interface Param {
   name: string;
+  byValue: boolean;
+  defaultValue: null | Expr;
 }
 
 export type Stmt =
@@ -35,11 +38,14 @@ export type Stmt =
   | StmtFor
   | StmtWhile
   | StmtForEach
-  | StmtCall
+  | StmtCallFunc
+  | StmtCallMethod
   | StmtReturn
   | StmtBreak
   | StmtContinue
-  | StmtExpr;
+  | StmtExpr
+  | StmtTry
+  | StmtThrow;
 
 export interface StmtAssign {
   kind: "assign";
@@ -74,15 +80,23 @@ export interface StmtWhile {
 
 export interface StmtForEach {
   kind: "foreach";
-  item: string;
+  variable: string;
   collection: Expr;
   body: Stmt[];
   meta?: Meta;
 }
 
-export interface StmtCall {
+export interface StmtCallFunc {
   kind: "call";
-  callee: Expr;
+  name: string;
+  args: Expr[];
+  meta?: Meta;
+}
+
+export interface StmtCallMethod {
+  kind: "call";
+  object: Expr;
+  method: string;
   args: Expr[];
   meta?: Meta;
 }
@@ -109,6 +123,19 @@ export interface StmtExpr {
   meta?: Meta;
 }
 
+export interface StmtTry {
+  kind: "try";
+  try: Stmt[];
+  catch: Stmt[];
+  meta?: Meta;
+}
+
+export interface StmtThrow {
+  kind: "throw";
+  value: Expr;
+  meta?: Meta;
+}
+
 export type Expr =
   | ExprNumber
   | ExprString
@@ -118,7 +145,8 @@ export type Expr =
   | ExprVariable
   | ExprMember
   | ExprIndex
-  | ExprCall
+  | ExprCallFunc
+  | ExprCallMethod
   | ExprNew
   | ExprBinary
   | ExprUnary;
@@ -171,9 +199,17 @@ export interface ExprIndex {
   meta?: Meta;
 }
 
-export interface ExprCall {
+export interface ExprCallFunc {
   kind: "call";
-  callee: Expr;
+  name: string;
+  args: Expr[];
+  meta?: Meta;
+}
+
+export interface ExprCallMethod {
+  kind: "call";
+  object: Expr;
+  method: string;
   args: Expr[];
   meta?: Meta;
 }
@@ -181,8 +217,13 @@ export interface ExprCall {
 export interface ExprNew {
   kind: "new";
   type: string;
-  args: Expr[];
+  args: NewArg[];
   meta?: Meta;
+}
+
+export interface NewArg {
+  key: string;
+  value: Expr;
 }
 
 export interface ExprBinary {
@@ -195,12 +236,16 @@ export interface ExprBinary {
 
 export interface ExprUnary {
   kind: "unary";
-  op: "-" | "not";
+  op: "-" | "Не";
   right: Expr;
   meta?: Meta;
 }
 
-export type BinOp = "+" | "-" | "*" | "/" | ">" | "<" | ">=" | "<=" | "=" | "<>" | "и" | "или";
+export type BinOp =
+  | "Плюс" | "Минус" | "Умножить" | "Разделить"
+  | "Больше" | "Меньше" | "БольшеИлиРавно" | "МеньшеИлиРавно"
+  | "Равно" | "НеРавно"
+  | "И" | "Или";
 
 export type LValue =
   | LValueVariable

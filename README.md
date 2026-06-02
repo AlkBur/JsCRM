@@ -16,10 +16,10 @@ IR v1 JSON  ←→  ir-validator (ajv)
 
 Two execution paths:
 
-| Path | Source | Use |
-|------|--------|-----|
-| Production | `export/ir/*.ir.json` (from 1C exporter) | Real modules |
-| Testing | `fixtures/*.ir.json` (handwritten) | Dev & compat |
+| Path       | Source                                | Use          |
+| ---------- | ------------------------------------- | ------------ |
+| Production | `export/ir/*.json` (from 1C exporter) | Real modules |
+| Testing    | `fixtures/*.json` (handwritten)       | Dev & compat |
 
 ## Quick Start
 
@@ -31,14 +31,14 @@ bun run src/server.ts # http://localhost:3000
 
 ## Project Status
 
-| Component | Status |
-|-----------|--------|
-| IR v1 schema | ✅ Frozen |
-| IR validator (ajv) | ✅ 11 tests |
-| Golden fixtures | ✅ 3 files |
-| Compatibility Runner | ⏳ Next |
-| AST/VM migration | ⏳ Planned |
-| Metadata Loader | ⏳ Planned |
+| Component            | Status      |
+| -------------------- | ----------- |
+| IR v1 schema         | ✅ Frozen   |
+| IR validator (ajv)   | ✅ 11 tests |
+| Golden fixtures      | ✅ 3 files  |
+| Compatibility Runner | ⏳ Next     |
+| AST/VM migration     | ⏳ Planned  |
+| Metadata Loader      | ⏳ Planned  |
 
 See `AGENTS.md` for detailed roadmap.
 

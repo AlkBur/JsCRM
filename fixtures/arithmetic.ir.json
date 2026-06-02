@@ -1,78 +1,78 @@
 {
   "irVersion": 1,
   "generator": { "tool": "handwritten", "version": "0.1" },
-  "features": [],
   "module": {
     "name": "Тесты.Арифметика",
-    "globals": [],
-    "procedures": [],
-    "functions": [
-      {
-        "kind": "function",
-        "name": "Тест_Арифметика",
-        "export": false,
-        "params": [],
-        "body": [
-          {
-            "kind": "return",
-            "value": {
-              "kind": "binary",
-              "op": "+",
-              "left": { "kind": "number", "value": 2 },
-              "right": {
+    "body": {
+      "routines": [
+        {
+          "kind": "function",
+          "name": "Тест_Арифметика",
+          "export": false,
+          "params": [],
+          "body": [
+            {
+              "kind": "return",
+              "value": {
                 "kind": "binary",
-                "op": "*",
+                "op": "Плюс",
                 "left": { "kind": "number", "value": 2 },
-                "right": { "kind": "number", "value": 2 }
+                "right": {
+                  "kind": "binary",
+                  "op": "Умножить",
+                  "left": { "kind": "number", "value": 2 },
+                  "right": { "kind": "number", "value": 2 }
+                }
               }
             }
-          }
-        ]
-      },
-      {
-        "kind": "function",
-        "name": "Тест_Сравнение",
-        "export": false,
-        "params": [],
-        "body": [
-          {
-            "kind": "return",
-            "value": {
-              "kind": "binary",
-              "op": "и",
-              "left": {
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "Тест_Сравнение",
+          "export": false,
+          "params": [],
+          "body": [
+            {
+              "kind": "return",
+              "value": {
                 "kind": "binary",
-                "op": ">",
-                "left": { "kind": "number", "value": 5 },
-                "right": { "kind": "number", "value": 3 }
-              },
-              "right": {
-                "kind": "binary",
-                "op": "<",
-                "left": { "kind": "number", "value": 1 },
-                "right": { "kind": "number", "value": 2 }
+                "op": "И",
+                "left": {
+                  "kind": "binary",
+                  "op": "Больше",
+                  "left": { "kind": "number", "value": 5 },
+                  "right": { "kind": "number", "value": 3 }
+                },
+                "right": {
+                  "kind": "binary",
+                  "op": "Меньше",
+                  "left": { "kind": "number", "value": 1 },
+                  "right": { "kind": "number", "value": 2 }
+                }
               }
             }
-          }
-        ]
-      },
-      {
-        "kind": "function",
-        "name": "Тест_Строки",
-        "export": false,
-        "params": [],
-        "body": [
-          {
-            "kind": "return",
-            "value": {
-              "kind": "binary",
-              "op": "+",
-              "left": { "kind": "string", "value": "a" },
-              "right": { "kind": "string", "value": "b" }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "Тест_Строки",
+          "export": false,
+          "params": [],
+          "body": [
+            {
+              "kind": "return",
+              "value": {
+                "kind": "binary",
+                "op": "Плюс",
+                "left": { "kind": "string", "value": "a" },
+                "right": { "kind": "string", "value": "b" }
+              }
             }
-          }
-        ]
-      }
-    ]
+          ]
+        }
+      ],
+      "globals": []
+    }
   }
 }

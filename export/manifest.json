@@ -1,11 +1,7 @@
 {
-  "irVersion": 1,
-  "generatedAt": "2026-06-01T09:00:00Z",
-  "modules": [
-    {
-      "name": "ОбщийМодуль.Тесты",
-      "ir": "ir/ОбщийМодуль.Тесты.ir.json",
-      "results": "tests/ОбщийМодуль.Тесты.results.json"
-    }
-  ]
+	"irVersion": 1,
+	"generatedAt": "2026-06-03T00:42:17",
+	"modules": [
+		"ОбщийМодульТестов"
+	]
 }
