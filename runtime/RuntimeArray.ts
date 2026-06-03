@@ -1,3 +1,10 @@
+// RuntimeArray implements 1C Массив — a growable list of Values.
+//
+// Supports index access, iteration (for each), and mutating methods.
+//
+// Responsibility: ordered Value storage with array semantics.
+// Non-responsibility: fixed-size arrays, typed arrays, table-part behavior.
+
 import type { Value } from "./types";
 import type { RuntimeObject } from "./types";
 

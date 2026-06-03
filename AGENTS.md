@@ -9,7 +9,7 @@ Primary source of truth: **IR v1** — a JSON-based Intermediate Representation 
 
 IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**38 tests, 0 failures.**
+**40 tests, 0 failures.**
 
 ## Runtime Layer Rules
 
@@ -18,16 +18,23 @@ IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 - Every runtime object must implement `RuntimeObject` and expose `typeName`
 - Builtins are registered via `BuiltinRegistry`, never hardcoded in VM
 
+### Program invariants
+- Program is immutable after loading
+- Program owns modules and routine registry
+- VM never stores routines itself
+- All function resolution goes through `resolveFunction()`
+- Duplicate routine names are fatal configuration errors (throw `DuplicateRoutineError`)
+
 ## Architecture Layers
 
 ```
 Layer 1  IR v1 (frozen)              ✅ DONE
 Layer 2  VM + Golden Tests           ✅ DONE
-Layer 3  Runtime (3A)                ← NOW
-Layer 4  Metadata                    ← Week 4
-Layer 5  Symbol Index                ← Month 2
-Layer 6  Dependency Graph            ← Month 3
-Layer 7  Web IDE                     ← Month 4
+Layer 3  Runtime + Multi-module      ✅ DONE
+Layer 4  Metadata                    ← NEXT
+Layer 5  Symbol Index                ← TBD
+Layer 6  Dependency Graph            ← TBD
+Layer 7  Web IDE                     ← TBD
 ```
 
 ## 📁 Project Structure
@@ -63,6 +70,7 @@ Layer 7  Web IDE                     ← Month 4
   index.ts                — 14 builtin functions (СтрДлина, Дата, ...)
 
 /src                      ← Runtime implementation
+  Program.ts              — Multi-module container (manifest loader + routine registry)
   vm.ts                   — IR v1 interpreter (async, Value-typed)
   legacy/
     ast.ts                — AST types (legacy, frozen)
@@ -101,10 +109,10 @@ Layer 7  Web IDE                     ← Month 4
 
 ## 🚫 What NOT to build yet
 
-- Metadata layer (Layer 5)
-- Symbol Index (Layer 6)
-- Dependency Graph (Layer 7)
-- Web IDE (Layer 8)
+- Metadata layer (Layer 4)
+- Symbol Index (Layer 5)
+- Dependency Graph (Layer 6)
+- Web IDE (Layer 7)
 - DynamicList / QueryRuntime
 - Virtual Scroll / ViewportManager
 - Solid.js client
@@ -113,7 +121,10 @@ Layer 7  Web IDE                     ← Month 4
 
 ## 📐 Code Conventions
 
-- No comments in code
+- Comments describe architecture and intent, not implementation
+- Every module must have a header comment: purpose, responsibility, boundaries, non-responsibilities
+- Inline comments explain only invariants and design decisions ("why", not "what")
+- Comments that duplicate code are forbidden
 - Only what the current test needs
 - Single-file per concept
 - Prefer `const` over `let`, avoid `any`

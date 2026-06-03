@@ -1,9 +1,19 @@
-import { readdirSync, existsSync } from "fs";
+// Compatibility Runner — loads IR modules via Program, executes via VM,
+// and diffs results against 1C reference results.
+//
+// This is the primary regression detection tool.
+// Tests are driven by export/tests/*.results.json, not by IR file names.
+//
+// Responsibility: validate that VM produces correct 1C-compatible output.
+// Non-responsibility: unit testing, IR schema validation, module loading.
+
+import { readdirSync } from "fs";
 import { join } from "path";
 import { VM } from "../src/vm";
 import type { Value } from "../runtime/types";
 import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../builtins/index";
+import { Program } from "../src/Program";
 
 interface TestResult {
   name: string;
@@ -46,27 +56,18 @@ function deepEqual(a: unknown, b: unknown): boolean {
 export function runCompatibilityTests(exportDir: string): { pass: number; fail: number; results: { name: string; expected: unknown; actual: unknown; pass: boolean }[] } {
   const registry = new BuiltinRegistry();
   registerBuiltins(registry);
-  const vm = new VM(registry);
+
+  const program = Program.loadFromManifest(exportDir);
+  const vm = new VM(program, registry);
 
   let passCount = 0;
   let failCount = 0;
   const testResults: { name: string; expected: unknown; actual: unknown; pass: boolean }[] = [];
 
-  const irFiles = readdirSync(join(exportDir, "ir")).filter(f => f.endsWith(".json"));
+  const resultFiles = readdirSync(join(exportDir, "tests")).filter(f => f.endsWith(".results.json"));
 
-  for (const irFile of irFiles) {
-    const moduleName = irFile.replace(/\.json$/, "");
-    const resultsFile = join(exportDir, "tests", `${moduleName}.results.json`);
-
-    if (!existsSync(resultsFile)) {
-      console.error(`  Results file not found: ${resultsFile}`);
-      continue;
-    }
-
-    const ir = loadJSON<{ irVersion: number; module: { body: { routines: { name: string; export: boolean; kind: string; params: unknown[]; body: unknown[] }[] } } }>(join(exportDir, "ir", irFile));
-    const results = loadJSON<ResultsFile>(resultsFile);
-
-    vm.loadModule(ir);
+  for (const rf of resultFiles) {
+    const results = loadJSON<ResultsFile>(join(exportDir, "tests", rf));
 
     for (const test of results.tests) {
       try {

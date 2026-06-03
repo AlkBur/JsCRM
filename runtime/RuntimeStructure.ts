@@ -1,3 +1,11 @@
+// RuntimeStructure implements 1C Структура — a map of string keys to Values.
+//
+// Supports property access (obj.Ключ), method access (obj.Вставить, obj.Свойство),
+// and iteration (hidden keys via keys()).
+//
+// Responsibility: provide key-value storage with 1C semantics.
+// Non-responsibility: recursion, nesting limits, table-part behavior.
+
 import type { Value } from "./types";
 import type { RuntimeObject } from "./types";
 

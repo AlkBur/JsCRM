@@ -265,7 +265,11 @@
 			<Constant>БухгалтерскийУчет</Constant>
 			<Constant>РейтингНадежности</Constant>
 			<Catalog>Пользователи</Catalog>
-			<Document>Документ1</Document>
+			<Catalog>Оргаинизации</Catalog>
+			<Document>ЗаказКлиента</Document>
+			<Document>ЗаказПоставщику</Document>
+			<Enum>ТипДоговора</Enum>
+			<Enum>ТипОрганизации</Enum>
 			<DataProcessor>collections</DataProcessor>
 		</ChildObjects>
 	</Configuration>

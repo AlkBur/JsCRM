@@ -1,3 +1,15 @@
+// Builtin function implementations for the 1C platform runtime.
+//
+// This module registers all available builtins with the BuiltinRegistry
+// at startup. Builtins are first-class 1C functions accessible from any module
+// without qualification.
+//
+// Responsibility: implement 1C platform builtins (СтрДлина, Дата, ТипЗнч, etc.)
+// Non-responsibility: user-defined functions, module routines, metadata methods.
+//
+// Invariant: user routines are resolved BEFORE builtins in the call chain,
+// so user-defined functions can shadow builtins.
+
 import type { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { RuntimeStructure } from "../runtime/RuntimeStructure";
 

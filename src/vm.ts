@@ -1,15 +1,26 @@
-import type { BuiltinRegistry } from "../runtime/BuiltinRegistry";
+// VM executes IR v1 routines.
+//
+// Responsibility:
+//   - evaluate expressions (arithmetic, logic, calls, etc.)
+//   - execute statements (assign, if, for, while, try, etc.)
+//   - resolve routines and builtins via resolveFunction()
+//
+// VM does not own modules or routine storage.
+// All routine lookup goes through Program.
+// All builtin lookup goes through BuiltinRegistry.
+//
+// Invariant: resolveFunction() is the single point of function resolution.
+// Duplicate routine names are caught at Program load time, never at runtime.
+
+import type { BuiltinRegistry, BuiltinFn } from "../runtime/BuiltinRegistry";
 import type { Value } from "../runtime/types";
 import { RuntimeStructure } from "../runtime/RuntimeStructure";
 import { RuntimeArray } from "../runtime/RuntimeArray";
+import { Program, type Routine } from "./Program";
 
-interface Routine {
-  kind: "procedure" | "function";
-  name: string;
-  export: boolean;
-  params: { name: string; byRef: boolean; defaultValue?: unknown }[];
-  body: Stmt[];
-}
+type ResolvedFunction =
+  | { kind: "routine"; routine: Routine }
+  | { kind: "builtin"; fn: BuiltinFn };
 
 type Stmt =
   | { kind: "assign"; target: LValue; expr: Expr }
@@ -67,26 +78,32 @@ class ContinueSignal extends Error {
 }
 
 export class VM {
-  private routines = new Map<string, Routine>();
+  private program: Program;
   private builtins: BuiltinRegistry;
   private vars: Record<string, Value> = {};
   private result: Value = undefined;
   lastError = "";
 
-  constructor(builtins: BuiltinRegistry) {
+  constructor(program: Program, builtins: BuiltinRegistry) {
+    this.program = program;
     this.builtins = builtins;
   }
 
-  loadModule(data: { irVersion: number; module: { body: { routines: Routine[] } } }): void {
-    this.routines.clear();
-    for (const r of data.module.body.routines) {
-      this.routines.set(r.name, r);
-    }
+  private resolveFunction(name: string): ResolvedFunction {
+    const routine = this.program.findRoutine(name);
+    if (routine) return { kind: "routine", routine: routine.routine };
+
+    const builtin = this.builtins.get(name);
+    if (builtin) return { kind: "builtin", fn: builtin };
+
+    throw new Error(`Функция не определена: ${name}`);
   }
 
   call(name: string, args: Value[] = []): Value {
-    const routine = this.routines.get(name);
-    if (!routine) throw new Error(`Функция не определена: ${name}`);
+    const resolved = this.resolveFunction(name);
+    if (resolved.kind === "builtin") return resolved.fn(args);
+
+    const routine = resolved.routine;
     this.lastError = "";
     const prevVars = this.vars;
     this.vars = {};
@@ -191,17 +208,18 @@ export class VM {
       case "call": {
         if (stmt.name !== undefined) {
           const args = stmt.args.map(a => this.evalExpr(a));
-          const fn = this.routines.get(stmt.name);
-          if (fn) {
+          const resolved = this.resolveFunction(stmt.name);
+          if (resolved.kind === "builtin") {
+            resolved.fn(args);
+          } else {
             const saved = this.vars;
             this.vars = {};
+            const fn = resolved.routine;
             for (let i = 0; i < fn.params.length; i++) {
               this.vars[fn.params[i].name] = i < args.length ? args[i] : null;
             }
             this.execStmts(fn.body);
             this.vars = saved;
-          } else if (this.builtins.has(stmt.name)) {
-            this.builtins.get(stmt.name)!(args);
           }
         } else if (stmt.object && stmt.method) {
           const obj = this.evalExpr(stmt.object);
@@ -351,10 +369,9 @@ export class VM {
       case "call": {
         if (expr.name !== undefined) {
           const args = expr.args.map(a => this.evalExpr(a));
-          const fn = this.routines.get(expr.name);
-          if (fn) return this.call(expr.name, args);
-          if (this.builtins.has(expr.name)) return this.builtins.get(expr.name)!(args);
-          throw new Error(`Функция не определена: ${expr.name}`);
+          const resolved = this.resolveFunction(expr.name);
+          if (resolved.kind === "builtin") return resolved.fn(args);
+          return this.call(expr.name, args);
         }
         if (expr.object && expr.method) {
           const obj = this.evalExpr(expr.object);

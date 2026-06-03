@@ -1,3 +1,12 @@
+// IR v1 TypeScript types — mirrors ir-schema-v1.json exactly.
+//
+// These types are used at IR load time and in VM type annotations.
+// They are part of the frozen IR v1 contract and must not be changed
+// without updating the JSON schema simultaneously.
+//
+// Responsibility: provide compile-time type safety for IR data.
+// Non-responsibility: runtime validation (handled by ir-validator.ts).
+
 export interface IRRoot {
   irVersion: 1;
   generator?: { tool: string; version: string };
