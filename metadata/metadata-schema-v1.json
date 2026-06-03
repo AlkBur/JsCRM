@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://jscrm.dev/metadata-schema-v1.json",
+  "title": "1C Metadata v1",
+  "description": "Static configuration structure — read-only, no execution logic",
+
+  "type": "object",
+  "properties": {
+    "configurationName": { "type": "string" },
+    "configurationUuid": { "type": "string" },
+
+    "commonModules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/commonModule" }
+    },
+    "catalogs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/metadataObject" }
+    },
+    "documents": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/metadataObject" }
+    },
+    "enumerations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/metadataObject" }
+    }
+  },
+  "required": [
+    "configurationName",
+    "configurationUuid",
+    "commonModules",
+    "catalogs",
+    "documents",
+    "enumerations"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "commonModule": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "export": { "type": "boolean" },
+        "server": { "type": "boolean" },
+        "client": { "type": "boolean" }
+      },
+      "required": ["name", "export", "server", "client"],
+      "additionalProperties": false
+    },
+
+    "metadataObject": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "uuid": { "type": "string" }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    }
+  }
+}

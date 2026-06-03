@@ -1,0 +1,72 @@
+{
+	"commonModules": [
+		{
+			"name": "ОбщийМодульТестов",
+			"export": true,
+			"server": true,
+			"client": false
+		},
+		{
+			"name": "ТестыБлок1",
+			"export": true,
+			"server": true,
+			"client": false
+		},
+		{
+			"name": "ТестыБлок2",
+			"export": true,
+			"server": true,
+			"client": false
+		},
+		{
+			"name": "ТестыБлок3",
+			"export": true,
+			"server": true,
+			"client": false
+		},
+		{
+			"name": "ТестыБлок4",
+			"export": true,
+			"server": true,
+			"client": true
+		},
+		{
+			"name": "ТестыБлок5",
+			"export": true,
+			"server": true,
+			"client": true
+		}
+	],
+	"catalogs": [
+		{
+			"name": "Оргаинизации",
+			"uuid": "205e6fb1-ec6f-4058-b2bd-ec3a9c279a44"
+		},
+		{
+			"name": "Пользователи",
+			"uuid": "ca54bf7b-d811-4877-a67d-05fded063d56"
+		}
+	],
+	"documents": [
+		{
+			"name": "ЗаказКлиента",
+			"uuid": "b1e95c06-16a4-4a6b-91f6-949e3420cd04"
+		},
+		{
+			"name": "ЗаказПоставщику",
+			"uuid": "4047eecd-ff74-4d8f-aadf-7f155c8d18aa"
+		}
+	],
+	"enumerations": [
+		{
+			"name": "ТипДоговора",
+			"uuid": "1d5870b8-920a-4d1e-a4c2-39aa29c4faff"
+		},
+		{
+			"name": "ТипОрганизации",
+			"uuid": "70f075ca-7cb0-4cf2-8dc5-f0c23ccc31a4"
+		}
+	],
+	"configurationName": "ТестоваяКонфигурация",
+	"configurationUuid": "f4c587f1-b61c-463b-98e7-91b6a729c0f8"
+}

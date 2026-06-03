@@ -31,7 +31,7 @@ IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 Layer 1  IR v1 (frozen)              ✅ DONE
 Layer 2  VM + Golden Tests           ✅ DONE
 Layer 3  Runtime + Multi-module      ✅ DONE
-Layer 4  Metadata                    ← NEXT
+Layer 4  Metadata                    ✅ DONE
 Layer 5  Symbol Index                ← TBD
 Layer 6  Dependency Graph            ← TBD
 Layer 7  Web IDE                     ← TBD
@@ -54,6 +54,11 @@ Layer 7  Web IDE                     ← TBD
   manifest.json           — versioned module index
   ir/*.json
   tests/*.results.json
+
+/metadata                 ← Metadata Layer
+  metadata-schema-v1.json — JSON Schema (additionalProperties: false)
+  metadata-types.ts       — TS interfaces matching schema
+  MetadataModel.ts        — Immutable read-only model
 
 /compat                   ← Compatibility Runner
   runner.ts               — load IR → VM → diff with expected
@@ -109,7 +114,6 @@ Layer 7  Web IDE                     ← TBD
 
 ## 🚫 What NOT to build yet
 
-- Metadata layer (Layer 4)
 - Symbol Index (Layer 5)
 - Dependency Graph (Layer 6)
 - Web IDE (Layer 7)
@@ -129,6 +133,13 @@ Layer 7  Web IDE                     ← TBD
 - Single-file per concept
 - Prefer `const` over `let`, avoid `any`
 - Error messages in Russian
+
+## 📋 Metadata Layer Rules
+
+- Metadata is a read-only structural model of the 1C configuration
+- Metadata is independent of execution (IR/VM) and must not reference runtime concepts
+- Metadata is declarative only — no logic, resolution rules, or computed fields
+- Metadata is immutable after loading (readonly arrays)
 
 ## 🧬 IR v1 Contract (FROZEN)
 

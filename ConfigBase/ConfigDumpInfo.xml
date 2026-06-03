@@ -5,7 +5,7 @@
 		<Metadata name="Catalog.Пользователи" id="ca54bf7b-d811-4877-a67d-05fded063d56" configVersion="eb15143caaefc0409e61ce1d1ccb2c2100000000">
 			<Metadata name="Catalog.Пользователи.Attribute.Идентификатор" id="2628a672-d548-47cf-a250-6cb3838492fb"/>
 		</Metadata>
-		<Metadata name="CommonModule.ОбщийМодульТестов" id="acb6729c-7f33-4389-a351-760eea202a85" configVersion="89af916d523a814b8a5f3720f01d096f00000000"/>
+		<Metadata name="CommonModule.ОбщийМодульТестов" id="acb6729c-7f33-4389-a351-760eea202a85" configVersion="877cc18af020704ab2edcd34a3c41d2e00000000"/>
 		<Metadata name="CommonModule.ОбщийМодульТестов.Module" id="acb6729c-7f33-4389-a351-760eea202a85.0" configVersion="30c4478f1ff5224caeee077b0fe191c500000000"/>
 		<Metadata name="CommonModule.ТестыБлок1" id="2cbf8d54-9746-4618-aeb7-a51b94a01303" configVersion="9b7db90ed57e35479058fbb59d8465f300000000"/>
 		<Metadata name="CommonModule.ТестыБлок1.Module" id="2cbf8d54-9746-4618-aeb7-a51b94a01303.0" configVersion="f54d1b6251969a498c87e6a7918f471800000000"/>
@@ -13,10 +13,10 @@
 		<Metadata name="CommonModule.ТестыБлок2.Module" id="8d8e8b43-73c9-4e61-a1d6-237ec40df6a5.0" configVersion="f47f7cb083d3764d899e90432f42bb5500000000"/>
 		<Metadata name="CommonModule.ТестыБлок3" id="59466768-f739-40e2-82a6-080e937d9aa1" configVersion="9dbbbfe1e2dd6a4da8e0420f251ea35b00000000"/>
 		<Metadata name="CommonModule.ТестыБлок3.Module" id="59466768-f739-40e2-82a6-080e937d9aa1.0" configVersion="7fbec55f9f55324aaa348e5e008da55c00000000"/>
-		<Metadata name="CommonModule.ТестыБлок4" id="916afeeb-f025-4cfd-80ba-de6b6c0d737a" configVersion="0a6cd1e798091b4dbb24d8880e481a6800000000"/>
-		<Metadata name="CommonModule.ТестыБлок4.Module" id="916afeeb-f025-4cfd-80ba-de6b6c0d737a.0" configVersion="452f51c6e2e3a94da8329c98fd5bdc7c00000000"/>
-		<Metadata name="CommonModule.ТестыБлок5" id="072c07d1-d6e5-4046-bff8-1712d5985d65" configVersion="f43221de2fa41741b76bfcd8854e1bc400000000"/>
-		<Metadata name="CommonModule.ТестыБлок5.Module" id="072c07d1-d6e5-4046-bff8-1712d5985d65.0" configVersion="8a77e5c992d2d74aa2f02a948f174e0400000000"/>
+		<Metadata name="CommonModule.ТестыБлок4" id="916afeeb-f025-4cfd-80ba-de6b6c0d737a" configVersion="177c96de34903942a899920bb7cc884200000000"/>
+		<Metadata name="CommonModule.ТестыБлок4.Module" id="916afeeb-f025-4cfd-80ba-de6b6c0d737a.0" configVersion="b71584ef7802f3469b132005bff27bda00000000"/>
+		<Metadata name="CommonModule.ТестыБлок5" id="072c07d1-d6e5-4046-bff8-1712d5985d65" configVersion="9c3bc6678e8c3c4684ac042d1f862a1700000000"/>
+		<Metadata name="CommonModule.ТестыБлок5.Module" id="072c07d1-d6e5-4046-bff8-1712d5985d65.0" configVersion="d0f9d2fcab366641ab1a809f3da10f3300000000"/>
 		<Metadata name="Configuration.ТестоваяКонфигурация" id="f4c587f1-b61c-463b-98e7-91b6a729c0f8" configVersion="3a0f1d6493846b45b33f4bcb2d4dbd4000000000"/>
 		<Metadata name="Configuration.ТестоваяКонфигурация.MainSectionCommandInterface" id="303d59b4-f550-49f0-8d87-9dbdb37de1f0.9" configVersion="0c45872e1d005b41a7b7e71a295c3da300000000"/>
 		<Metadata name="Configuration.ТестоваяКонфигурация.ManagedApplicationModule" id="303d59b4-f550-49f0-8d87-9dbdb37de1f0.6" configVersion="b3329c480e7ca3409d9811ad3bf9d2f900000000"/>
