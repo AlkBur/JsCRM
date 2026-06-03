@@ -7,7 +7,7 @@ interface Routine {
   kind: "procedure" | "function";
   name: string;
   export: boolean;
-  params: { name: string; byValue: boolean; defaultValue: unknown }[];
+  params: { name: string; byRef: boolean; defaultValue?: unknown }[];
   body: Stmt[];
 }
 

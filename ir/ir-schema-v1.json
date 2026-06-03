@@ -100,15 +100,10 @@
       "type": "object",
       "properties": {
         "name": { "type": "string" },
-        "byValue": { "type": "boolean" },
-        "defaultValue": {
-          "oneOf": [
-            { "type": "null" },
-            { "$ref": "#/$defs/expr" }
-          ]
-        }
+        "byRef": { "type": "boolean" },
+        "defaultValue": { "$ref": "#/$defs/expr" }
       },
-      "required": ["name", "byValue", "defaultValue"],
+      "required": ["name", "byRef"],
       "additionalProperties": false
     },
 

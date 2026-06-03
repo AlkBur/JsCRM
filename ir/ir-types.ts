@@ -28,8 +28,8 @@ export interface Routine {
 
 export interface Param {
   name: string;
-  byValue: boolean;
-  defaultValue: null | Expr;
+  byRef: boolean;
+  defaultValue?: Expr;
 }
 
 export type Stmt =

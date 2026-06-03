@@ -10,7 +10,7 @@
           "name": "ПриИзмененииСуммы",
           "export": true,
           "params": [
-            { "name": "Объект", "byValue": false, "defaultValue": null }
+            { "name": "Объект", "byRef": true }
           ],
           "body": [
             {

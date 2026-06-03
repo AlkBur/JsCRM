@@ -1,2 +1,5 @@
 node_modules/
 *.db
+
+# 1C exporter config dump
+ConfigBase/CommonModules

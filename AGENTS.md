@@ -165,7 +165,7 @@ module.body.globals: GlobalVar[]
 Exporter must match schema exactly. No normalizers on Bun side.
 
 ### Param
-`{name, byValue: boolean, defaultValue: null | Expr}`
+`{name, byRef: boolean, defaultValue?: Expr}`
 
 ### Optional metadata
 `nodeId` and `loc` are optional on any node.

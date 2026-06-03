@@ -10,7 +10,7 @@
           "name": "ВызватьПроцедуруТест",
           "export": false,
           "params": [
-            { "name": "Объект", "byValue": false, "defaultValue": null }
+            { "name": "Объект", "byRef": true }
           ],
           "body": [
             {

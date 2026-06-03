@@ -714,8 +714,7 @@
 					"params": [
 						{
 							"name": "Объект",
-							"byValue": false,
-							"defaultValue": null
+							"byRef": true
 						}
 					],
 					"body": [
@@ -776,8 +775,7 @@
 					"params": [
 						{
 							"name": "ЗначПерем",
-							"byValue": false,
-							"defaultValue": null
+							"byRef": true
 						}
 					],
 					"body": [
