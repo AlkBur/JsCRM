@@ -307,7 +307,8 @@
         { "$ref": "#/$defs/exprCallMethod" },
         { "$ref": "#/$defs/exprNew" },
         { "$ref": "#/$defs/exprBinary" },
-        { "$ref": "#/$defs/exprUnary" }
+        { "$ref": "#/$defs/exprUnary" },
+        { "$ref": "#/$defs/exprIf" }
       ]
     },
 
@@ -472,9 +473,21 @@
           "type": "string",
           "enum": ["Минус", "Не"]
         },
-        "right": { "$ref": "#/$defs/expr" }
+        "value": { "$ref": "#/$defs/expr" }
       },
-      "required": ["kind", "op", "right"],
+      "required": ["kind", "op", "value"],
+      "additionalProperties": false
+    },
+
+    "exprIf": {
+      "type": "object",
+      "properties": {
+        "kind": { "const": "if" },
+        "cond": { "$ref": "#/$defs/expr" },
+        "then": { "$ref": "#/$defs/expr" },
+        "else": { "$ref": "#/$defs/expr" }
+      },
+      "required": ["kind", "cond", "then", "else"],
       "additionalProperties": false
     },
 

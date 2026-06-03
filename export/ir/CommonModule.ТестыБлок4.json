@@ -1,0 +1,175 @@
+{
+	"irVersion": 1,
+	"generator": {
+		"tool": "1C Exporter",
+		"version": "0.1"
+	},
+	"module": {
+		"name": "ТестыБлок4",
+		"body": {
+			"routines": [
+				{
+					"kind": "function",
+					"name": "Тест_Прервать",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": {
+								"kind": "variable",
+								"name": "Сумма"
+							},
+							"expr": {
+								"kind": "number",
+								"value": 0
+							}
+						},
+						{
+							"kind": "for",
+							"body": [
+								{
+									"kind": "if",
+									"cond": {
+										"kind": "binary",
+										"op": "Больше",
+										"left": {
+											"kind": "variable",
+											"name": "i"
+										},
+										"right": {
+											"kind": "number",
+											"value": 5
+										}
+									},
+									"then": [
+										{
+											"kind": "break"
+										}
+									],
+									"else": []
+								},
+								{
+									"kind": "assign",
+									"target": {
+										"kind": "variable",
+										"name": "Сумма"
+									},
+									"expr": {
+										"kind": "binary",
+										"op": "Плюс",
+										"left": {
+											"kind": "variable",
+											"name": "Сумма"
+										},
+										"right": {
+											"kind": "variable",
+											"name": "i"
+										}
+									}
+								}
+							],
+							"variable": "i",
+							"start": {
+								"kind": "number",
+								"value": 1
+							},
+							"end": {
+								"kind": "number",
+								"value": 10
+							}
+						},
+						{
+							"kind": "return",
+							"value": {
+								"kind": "variable",
+								"name": "Сумма"
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_Продолжить",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": {
+								"kind": "variable",
+								"name": "Сумма"
+							},
+							"expr": {
+								"kind": "number",
+								"value": 0
+							}
+						},
+						{
+							"kind": "for",
+							"body": [
+								{
+									"kind": "if",
+									"cond": {
+										"kind": "binary",
+										"op": "Равно",
+										"left": {
+											"kind": "variable",
+											"name": "i"
+										},
+										"right": {
+											"kind": "number",
+											"value": 3
+										}
+									},
+									"then": [
+										{
+											"kind": "continue"
+										}
+									],
+									"else": []
+								},
+								{
+									"kind": "assign",
+									"target": {
+										"kind": "variable",
+										"name": "Сумма"
+									},
+									"expr": {
+										"kind": "binary",
+										"op": "Плюс",
+										"left": {
+											"kind": "variable",
+											"name": "Сумма"
+										},
+										"right": {
+											"kind": "variable",
+											"name": "i"
+										}
+									}
+								}
+							],
+							"variable": "i",
+							"start": {
+								"kind": "number",
+								"value": 1
+							},
+							"end": {
+								"kind": "number",
+								"value": 5
+							}
+						},
+						{
+							"kind": "return",
+							"value": {
+								"kind": "variable",
+								"name": "Сумма"
+							}
+						}
+					]
+				}
+			],
+			"globals": []
+		}
+	}
+}

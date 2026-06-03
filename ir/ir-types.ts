@@ -149,7 +149,8 @@ export type Expr =
   | ExprCallMethod
   | ExprNew
   | ExprBinary
-  | ExprUnary;
+  | ExprUnary
+  | ExprIf;
 
 export interface ExprNumber {
   kind: "number";
@@ -237,7 +238,15 @@ export interface ExprBinary {
 export interface ExprUnary {
   kind: "unary";
   op: "Минус" | "Не";
-  right: Expr;
+  value: Expr;
+  meta?: Meta;
+}
+
+export interface ExprIf {
+  kind: "if";
+  cond: Expr;
+  then: Expr;
+  else: Expr;
   meta?: Meta;
 }
 

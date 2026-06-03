@@ -9,7 +9,7 @@ Primary source of truth: **IR v1** — a JSON-based Intermediate Representation 
 
 IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**30 tests, 0 failures.**
+**38 tests, 0 failures.**
 
 ## Runtime Layer Rules
 
@@ -150,7 +150,7 @@ module.body.globals: GlobalVar[]
 - `foreach` uses `variable` (not `item`)
 
 ### Expr nodes
-- `number`, `string`, `boolean`, `null`, `undefined`, `variable`, `member`, `index`, `call`, `new`, `binary`, `unary`
+- `number`, `string`, `boolean`, `null`, `undefined`, `variable`, `member`, `index`, `call`, `new`, `binary`, `unary`, `if`
 - `call` uses `{name: string, args: Expr[]}` (function) or `{object, method, args}` (method)
 - `new` uses `{type: string, args: [{key, value}]}` (not flat Expr[])
 - `binary.op` = Russian: `Плюс`, `Минус`, `Умножить`, `Разделить`, `Больше`, `Меньше`, `БольшеИлиРавно`, `МеньшеИлиРавно`, `Равно`, `НеРавно`, `И`, `Или`
@@ -166,6 +166,9 @@ Exporter must match schema exactly. No normalizers on Bun side.
 
 ### Param
 `{name, byRef: boolean, defaultValue?: Expr}`
+
+### results.json rule
+`results.json` contains runtime values, not IR nodes. Since JSON has no `undefined`, both 1C `Null` and `Неопределено` serialize as JSON `null`. Runner normalizes via `normalizeResult()` before comparison. This is part of the frozen contract.
 
 ### Optional metadata
 `nodeId` and `loc` are optional on any node.

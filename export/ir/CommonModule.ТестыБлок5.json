@@ -1,0 +1,118 @@
+{
+	"irVersion": 1,
+	"generator": {
+		"tool": "1C Exporter",
+		"version": "0.1"
+	},
+	"module": {
+		"name": "ТестыБлок5",
+		"body": {
+			"routines": [
+				{
+					"kind": "function",
+					"name": "Тест_Деление",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "binary",
+								"op": "Разделить",
+								"left": {
+									"kind": "number",
+									"value": 10
+								},
+								"right": {
+									"kind": "number",
+									"value": 3
+								}
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_УнарныйМинус",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "binary",
+								"op": "Плюс",
+								"left": {
+									"kind": "unary",
+									"op": "Минус",
+									"value": {
+										"kind": "number",
+										"value": 5
+									}
+								},
+								"right": {
+									"kind": "number",
+									"value": 10
+								}
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_БольшеИлиРавно",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "if",
+								"cond": {
+									"kind": "binary",
+									"op": "БольшеИлиРавно",
+									"left": {
+										"kind": "number",
+										"value": 5
+									},
+									"right": {
+										"kind": "number",
+										"value": 5
+									}
+								},
+								"then": {
+									"kind": "string",
+									"value": "Да"
+								},
+								"else": {
+									"kind": "string",
+									"value": "Нет"
+								}
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_Отрицания",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "unary",
+								"op": "Не",
+								"value": {
+									"kind": "boolean",
+									"value": true
+								}
+							}
+						}
+					]
+				}
+			],
+			"globals": []
+		}
+	}
+}

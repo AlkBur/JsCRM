@@ -1,6 +1,7 @@
 import { readdirSync, existsSync } from "fs";
 import { join } from "path";
 import { VM } from "../src/vm";
+import type { Value } from "../runtime/types";
 import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../builtins/index";
 
@@ -16,6 +17,12 @@ interface ResultsFile {
 
 function loadJSON<T>(file: string): T {
   return JSON.parse(require("fs").readFileSync(file, "utf8")) as T;
+}
+
+function normalizeResult(value: Value): unknown {
+  if (value === undefined) return null;
+  if (value instanceof Date) return value.toISOString();
+  return value;
 }
 
 function deepEqual(a: unknown, b: unknown): boolean {
@@ -63,7 +70,7 @@ export function runCompatibilityTests(exportDir: string): { pass: number; fail: 
 
     for (const test of results.tests) {
       try {
-        const actual = vm.call(test.name);
+        const actual = normalizeResult(vm.call(test.name));
         const pass = deepEqual(actual, test.result);
         testResults.push({ name: test.name, expected: test.result, actual, pass });
         if (pass) passCount++;

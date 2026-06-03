@@ -1,0 +1,278 @@
+{
+	"irVersion": 1,
+	"generator": {
+		"tool": "1C Exporter",
+		"version": "0.1"
+	},
+	"module": {
+		"name": "ТестыБлок1",
+		"body": {
+			"routines": [
+				{
+					"kind": "function",
+					"name": "Тест_СтрДлина",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "СтрДлина",
+								"args": [
+									{
+										"kind": "string",
+										"value": "Привет"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_Лев",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "Лев",
+								"args": [
+									{
+										"kind": "string",
+										"value": "Привет"
+									},
+									{
+										"kind": "number",
+										"value": 2
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_Прав",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "Прав",
+								"args": [
+									{
+										"kind": "string",
+										"value": "Привет"
+									},
+									{
+										"kind": "number",
+										"value": 2
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_Сред",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "Сред",
+								"args": [
+									{
+										"kind": "string",
+										"value": "Привет"
+									},
+									{
+										"kind": "number",
+										"value": 3
+									},
+									{
+										"kind": "number",
+										"value": 2
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_ВРег",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "ВРег",
+								"args": [
+									{
+										"kind": "string",
+										"value": "привет"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_НРег",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "НРег",
+								"args": [
+									{
+										"kind": "string",
+										"value": "ПРИВЕТ"
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_СокрЛП",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "СокрЛП",
+								"args": [
+									{
+										"kind": "string",
+										"value": "  Привет  "
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_ТипЗнч",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "binary",
+								"op": "Плюс",
+								"left": {
+									"kind": "binary",
+									"op": "Плюс",
+									"left": {
+										"kind": "binary",
+										"op": "Плюс",
+										"left": {
+											"kind": "binary",
+											"op": "Плюс",
+											"left": {
+												"kind": "call",
+												"name": "Строка",
+												"args": [
+													{
+														"kind": "call",
+														"name": "ТипЗнч",
+														"args": [
+															{
+																"kind": "number",
+																"value": 10
+															}
+														]
+													}
+												]
+											},
+											"right": {
+												"kind": "string",
+												"value": ","
+											}
+										},
+										"right": {
+											"kind": "call",
+											"name": "ТипЗнч",
+											"args": [
+												{
+													"kind": "string",
+													"value": "abc"
+												}
+											]
+										}
+									},
+									"right": {
+										"kind": "string",
+										"value": ","
+									}
+								},
+								"right": {
+									"kind": "call",
+									"name": "ТипЗнч",
+									"args": [
+										{
+											"kind": "boolean",
+											"value": true
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_Число",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "binary",
+								"op": "Плюс",
+								"left": {
+									"kind": "call",
+									"name": "Число",
+									"args": [
+										{
+											"kind": "string",
+											"value": "123"
+										}
+									]
+								},
+								"right": {
+									"kind": "number",
+									"value": 1
+								}
+							}
+						}
+					]
+				}
+			],
+			"globals": []
+		}
+	}
+}

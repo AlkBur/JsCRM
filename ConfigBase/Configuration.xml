@@ -255,6 +255,11 @@
 			<Language>English</Language>
 			<Role>Admin</Role>
 			<CommonModule>ОбщийМодульТестов</CommonModule>
+			<CommonModule>ТестыБлок1</CommonModule>
+			<CommonModule>ТестыБлок2</CommonModule>
+			<CommonModule>ТестыБлок3</CommonModule>
+			<CommonModule>ТестыБлок4</CommonModule>
+			<CommonModule>ТестыБлок5</CommonModule>
 			<Constant>НазваниеОрганизации</Constant>
 			<Constant>ДатаОснования</Constant>
 			<Constant>БухгалтерскийУчет</Constant>

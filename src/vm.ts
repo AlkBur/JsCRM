@@ -37,7 +37,8 @@ type Expr =
   | { kind: "call"; name?: string; object?: Expr; method?: string; args: Expr[] }
   | { kind: "new"; type: string; args: { key: string; value: Expr }[] }
   | { kind: "binary"; op: string; left: Expr; right: Expr }
-  | { kind: "unary"; op: string; right: Expr };
+  | { kind: "unary"; op: string; value: Expr }
+  | { kind: "if"; cond: Expr; then: Expr; else: Expr };
 
 type LValue =
   | { kind: "variable"; name: string }
@@ -314,13 +315,15 @@ export class VM {
         }
       }
       case "unary": {
-        const right = this.evalExpr(expr.right);
+        const val = this.evalExpr(expr.value);
         switch (expr.op) {
-          case "Минус": return -(right as number);
-          case "Не": return !right;
+          case "Минус": return -(val as number);
+          case "Не": return !val;
           default: throw new Error(`Неизвестная унарная операция: ${expr.op}`);
         }
       }
+      case "if":
+        return this.evalExpr(this.evalExpr(expr.cond) ? expr.then : expr.else);
       case "member": {
         const obj = this.evalExpr(expr.object);
         if (obj === null || obj === undefined) throw new Error("Значение не определено");
