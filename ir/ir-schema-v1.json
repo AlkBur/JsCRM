@@ -475,7 +475,7 @@
         "kind": { "const": "unary" },
         "op": {
           "type": "string",
-          "enum": ["-", "Не"]
+          "enum": ["Минус", "Не"]
         },
         "right": { "$ref": "#/$defs/expr" }
       },

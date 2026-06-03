@@ -236,7 +236,7 @@ export interface ExprBinary {
 
 export interface ExprUnary {
   kind: "unary";
-  op: "-" | "Не";
+  op: "Минус" | "Не";
   right: Expr;
   meta?: Meta;
 }

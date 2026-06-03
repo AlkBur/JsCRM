@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import { VM } from "../src/vm";
-import { parse } from "../src/parser";
+import { VM } from "../src/legacy/vm";
+import { parse } from "../src/legacy/parser";
 import { RuntimeObject } from "../src/runtime-object";
 
 test("Обработчик ПриИзмененииСуммы: Сумма=100 -> НДС=20", async () => {

@@ -7,14 +7,33 @@ Primary source of truth: **IR v1** — a JSON-based Intermediate Representation 
 
 ## ✅ Current Status
 
-IR v1 schema finalized and synchronized with 1C exporter. Export/ files validated.
+IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**26+ tests, 0 failures.**
+**30 tests, 0 failures.**
+
+## Runtime Layer Rules
+
+- Runtime objects are first-class entities
+- VM must never use raw JS objects or arrays to represent 1C runtime types
+- Every runtime object must implement `RuntimeObject` and expose `typeName`
+- Builtins are registered via `BuiltinRegistry`, never hardcoded in VM
+
+## Architecture Layers
+
+```
+Layer 1  IR v1 (frozen)              ✅ DONE
+Layer 2  VM + Golden Tests           ✅ DONE
+Layer 3  Runtime (3A)                ← NOW
+Layer 4  Metadata                    ← Week 4
+Layer 5  Symbol Index                ← Month 2
+Layer 6  Dependency Graph            ← Month 3
+Layer 7  Web IDE                     ← Month 4
+```
 
 ## 📁 Project Structure
 
 ```
-/ir                       ← IR v1 contract (frozen)
+/ir                       ← IR v1 contract (FROZEN)
   ir-schema-v1.json       — JSON Schema (additionalProperties: false)
   ir-types.ts             — TS interfaces matching schema
   ir-validator.ts         — ajv validator (used at IR load time)
@@ -30,14 +49,25 @@ IR v1 schema finalized and synchronized with 1C exporter. Export/ files validate
   tests/*.results.json
 
 /compat                   ← Compatibility Runner
-  runner.ts
+  runner.ts               — load IR → VM → diff with expected
 
 /compat-reports           ← Generated compat reports
 
-/src                      ← Runtime implementation (to be migrated to IR v1)
-  ast.ts                  — AST types (pre-migration, will be rewritten)
-  vm.ts                   — Async interpreter (pre-migration)
-  parser.ts               — 1C subset parser (test-only mode)
+/runtime                  ← Runtime Layer
+  types.ts                — Value type + RuntimeObject interface
+  BuiltinRegistry.ts      — Builtin function registry
+  RuntimeStructure.ts     — Structure object (Map<string, Value>)
+  RuntimeArray.ts         — Array object (Value[])
+
+/builtins
+  index.ts                — 14 builtin functions (СтрДлина, Дата, ...)
+
+/src                      ← Runtime implementation
+  vm.ts                   — IR v1 interpreter (async, Value-typed)
+  legacy/
+    ast.ts                — AST types (legacy, frozen)
+    parser.ts             — 1C subset parser (test-only mode)
+    vm.ts                 — Legacy VM on AST types
   runtime-object.ts       — Observable data object
   server.ts               — Bun HTTP + WebSocket server
   db.ts                   — SQLite via bun:sqlite
@@ -47,34 +77,10 @@ IR v1 schema finalized and synchronized with 1C exporter. Export/ files validate
   index.html              — HTML + vanilla JS client
 
 /tests
-  ir-validator.test.ts    — IR schema validation tests
-  vm.test.ts              — 11 VM unit tests (pre-migration)
+  ir-validator.test.ts    — 17 IR schema validation tests
+  legacy/
+    vm.test.ts            — 11 legacy VM unit tests on parser+AST
   integration.test.ts     — 4 integration tests
-```
-
-## 🧭 Roadmap
-
-```
-P0  IR v1 contract        ✅ DONE
-    ir-schema-v1.json, ir-types.ts, ir-validator.ts
-    3 golden fixtures, validator tests
-    Exporter produces valid IR: module.body.routines, Russian ops,
-    try/catch/throw, else: Stmt[], no elseIf
-
-P1  Compatibility Runner  ← NEXT
-    compat/runner.ts — load IR → VM → diff with expected
-    compat-reports/*.report.json
-    fixture-based tests
-
-P2  Migrate AST + VM      ← AFTER P1
-    src/ast.ts → IR v1 types (lvalue, while, foreach, break/continue)
-    src/vm.ts  → assign(lvalue), while, break/continue, return without value
-    src/parser.ts → simplified, test-only mode
-
-P3  Metadata + E2E
-    Metadata Loader (from 1C export)
-    RuntimeObject → metadata-aware
-    Document "ЗаказПокупателя" full scenario
 ```
 
 ## 🔧 Stack
@@ -91,10 +97,14 @@ P3  Metadata + E2E
 - `bun test` for unit + integration
 - IR validation on every fixture load
 - Compatibility Runner: load export/ → VM → diff with 1C reference results
-- Manual browser testing for WebSocket + form binding
+- Golden tests: IR fixtures → VM → JSON snapshots
 
 ## 🚫 What NOT to build yet
 
+- Metadata layer (Layer 5)
+- Symbol Index (Layer 6)
+- Dependency Graph (Layer 7)
+- Web IDE (Layer 8)
 - DynamicList / QueryRuntime
 - Virtual Scroll / ViewportManager
 - Solid.js client
@@ -109,7 +119,21 @@ P3  Metadata + E2E
 - Prefer `const` over `let`, avoid `any`
 - Error messages in Russian
 
-## 🧬 IR v1 Contract (frozen)
+## 🧬 IR v1 Contract (FROZEN)
+
+### ❌ Forbidden (no IR v2)
+
+- adding nodes
+- changing field names
+- changing statement semantics
+- changing call formats
+- introducing normalizers
+
+### ✅ Allowed
+
+- builtin functions
+- runtime objects
+- tests
 
 ### Module structure
 ```
@@ -127,10 +151,10 @@ module.body.globals: GlobalVar[]
 
 ### Expr nodes
 - `number`, `string`, `boolean`, `null`, `undefined`, `variable`, `member`, `index`, `call`, `new`, `binary`, `unary`
-- `call` uses `{name: string, args: Expr[]}` (not `callee: Expr`)
+- `call` uses `{name: string, args: Expr[]}` (function) or `{object, method, args}` (method)
 - `new` uses `{type: string, args: [{key, value}]}` (not flat Expr[])
 - `binary.op` = Russian: `Плюс`, `Минус`, `Умножить`, `Разделить`, `Больше`, `Меньше`, `БольшеИлиРавно`, `МеньшеИлиРавно`, `Равно`, `НеРавно`, `И`, `Или`
-- `unary.op` = `-`, `Не`
+- `unary.op` = `Минус`, `Не`
 
 ### Else rule (critical)
 `if.else` is **always** `Stmt[]`. Never a single object.

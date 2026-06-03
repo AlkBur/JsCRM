@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import { VM } from "../src/vm";
-import { parse } from "../src/parser";
+import { VM } from "../../src/legacy/vm";
+import { parse } from "../../src/legacy/parser";
 
 function exec(code: string, vars?: Record<string, any>): Promise<any> {
   const ast = parse(code);
