@@ -7,7 +7,22 @@ Primary source of truth: **IR v1** — a JSON-based Intermediate Representation 
 
 ### Long-term architecture
 ```
-1C → export/ → Snapshot → MetadataDiff → MigrationPlan → SQL
+                Workspace
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+    Sources of truth          Index Layer
+ Program + MetadataModel           │
+                                   │
+          ┌──────────────┬─────────┴──────────┐
+          │              │                    │
+         VM             LSP               Explorer
+          │              │                    │
+          └──────────────┴────────────────────┘
+                             │
+                        Sync Engine
+                             │
+                            SQL
 ```
 Synchronization & Migration Engine (Layer 10) orchestrates the full pipeline.
 
@@ -42,13 +57,24 @@ Layer 5  Symbol Index                     ✅ DONE
 Layer 6  Dependency Graph (queries)        ✅ DONE
 Layer 7  Metadata v2                       ✅ DONE
 Layer 8  Language Server (Navigation Core) ✅ DONE (Phase 8.1)
-Layer 9  Web IDE                           ← TBD
+Layer 9  Explorer + Web IDE                 ← TBD
 Layer 10 Synchronization & Migration       ← FUTURE
 ```
 
+## 🏛️ Architectural Style
+
+JsCRM is a query-driven platform.
+
+- Program and MetadataModel are immutable sources of truth.
+- Indexes are derived immutable projections.
+- Adapters (LSP, Web UI, SQL, Synchronization) are thin layers over indexes.
+- New features should introduce new queries, not new models.
+- State duplication is forbidden.
+- No layer may become an alternative source of truth.
+
 ## 🏛️ Architecture Principles
 
-### Three-layer data model (frozen)
+### Data layers
 ```
 IR → execution layer
 Metadata → structural layer
@@ -59,6 +85,46 @@ These layers are independent and must not be mixed.
 - IR contains executable logic.
 - Metadata contains object structure (no execution logic or runtime concepts).
 - SymbolIndex contains searchable names only.
+
+Updated layer model:
+
+```
+Execution Layer
+    Program + VM
+
+Structural Layer
+    MetadataModel
+
+Index Layer
+    SymbolIndex
+    MetadataIndex
+    DependencyGraph
+    LocationIndex
+
+Adapter Layer
+    LSP
+    REST API
+    Explorer UI
+
+Projection Layer (future)
+    Sync Engine
+    SQL
+```
+
+### Adapter Layer
+Adapters translate external protocols into index queries.
+
+Examples:
+- LSP (JSON-RPC → SymbolIndex, LocationIndex, DependencyGraph)
+- REST API (HTTP → all indexes)
+- Explorer UI (React → REST API → indexes)
+- Synchronization Engine (MetadataModel → Canonical Model → SQL)
+
+Adapter rules:
+- contain no business logic
+- contain no source of truth
+- never modify indexes
+- never reconstruct semantics from IR
 
 ### Source of truth vs derived indexes
 `Program` and `MetadataModel` are immutable sources of truth.
@@ -155,14 +221,25 @@ Properties:
   src/
     main.tsx              — React entry
     App.tsx               — Main app (tree + detail + breadcrumb + search)
-    app.css               — Styles
+    vite-env.d.ts         — CSS Modules type declarations
     types.ts              — Type mirror (TreeNode, FieldType)
     api.ts                — API client
+    styles/
+      tokens.css          — Design tokens (CSS variables)
+      app.css             — Shell layout only
     components/
-      TreeView.tsx        — Tree view (recursive, expand/collapse, search filter)
-      DetailPanel.tsx     — Detail panel (attributes, ТЧ, forms, commands)
-      Breadcrumb.tsx      — Breadcrumb navigation
-      SearchBar.tsx       — Search input
+      TreeView/
+        TreeView.tsx      — Tree view (recursive, expand/collapse, search filter)
+        TreeView.module.css
+      DetailPanel/
+        DetailPanel.tsx   — Detail panel (attributes, ТЧ, forms, commands)
+        DetailPanel.module.css
+      Breadcrumb/
+        Breadcrumb.tsx    — Breadcrumb navigation
+        Breadcrumb.module.css
+      SearchBar/
+        SearchBar.tsx     — Search input
+        SearchBar.module.css
 
 /docs                     — Architecture specifications
   index-layer-contract.md — Index layer responsibilities, prohibitions, invariants
@@ -209,7 +286,7 @@ Properties:
 - **Database**: SQLite (bun:sqlite)
 - **Transport**: WebSocket (built-in Bun)
 - **Validation**: ajv (JSON Schema)
-- **Client**: HTML + vanilla JS (Solid.js post-MVP)
+- **Client**: React 19, Vite 6, TypeScript, CSS Modules, CSS Variables
 
 ## 🧪 Testing Strategy
 
@@ -248,7 +325,6 @@ bun run bench/runner.ts --save     — update baseline after intentional archite
 - Synchronization Engine (Layer 10)
 - DynamicList / QueryRuntime
 - Virtual Scroll / ViewportManager
-- Solid.js client
 - Table parts (ТЧ)
 - Full type system
 - Do not generate SQL directly from MetadataModel
@@ -488,6 +564,33 @@ interface ExplorerUIState {
   searchFilter: string;          // локальный фильтр по имени (substring)
 }
 ```
+
+### Rendering model
+UI rendering is client-side only (CSR). Server provides data exclusively via JSON API:
+- Index Layer data
+- LSP responses
+- optional query endpoints
+
+Server MUST NOT render UI structure (no SSR). SSR would duplicate the Index Layer and create a second model of tree structure, which violates the single-source-of-truth principle. SSR may be reconsidered at Phase 9+ (Web IDE with 100k+ node configs, multi-user, or cloud IDE scenarios), but is explicitly excluded for Explorer v1 and LSP Phase 8.x.
+
+### Workspace Contract
+
+Workspace is the composition root of the platform.
+
+Workspace owns:
+- Program
+- MetadataModel
+- SymbolIndex
+- MetadataIndex
+- DependencyGraph
+- LocationIndex
+- WorkspaceStats (readonly, computed once at construction)
+
+Workspace contains no business logic and no I/O.
+I/O is the responsibility of WorkspaceLoader (loadWorkspace).
+
+All adapters (LSP, REST, Bench, Explorer, Sync Engine)
+must depend on Workspace instead of assembling indexes manually.
 
 ### LSP / Navigation Layer Rules
 - LSP is index-driven, NOT IR-driven.

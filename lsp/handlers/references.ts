@@ -5,7 +5,7 @@
 // Handler returns empty array for unresolvable positions.
 
 import type { DependencyGraph } from "../../src/DependencyGraph";
-import type { LocationIndex, LSPLocation } from "../LocationIndex";
+import type { LocationIndex, LSPLocation } from "../../src/LocationIndex";
 
 interface ReferenceParams {
   textDocument: { uri: string };

@@ -1,3 +1,5 @@
+import styles from "./Breadcrumb.module.css";
+
 interface Props {
   nodeId: string;
 }
@@ -21,11 +23,11 @@ export default function Breadcrumb({ nodeId }: Props) {
   }
 
   return (
-    <div className="breadcrumb">
+    <div className={styles.root}>
       {labels.map((label, i) => (
         <span key={i}>
-          {i > 0 && <span> / </span>}
-          <span className="part">{label}</span>
+          {i > 0 && <span className={styles.separator}>/</span>}
+          <span className={styles.part}>{label}</span>
         </span>
       ))}
     </div>

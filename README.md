@@ -62,7 +62,7 @@ bun bench:save         # обновить baseline
 - **TypeScript** — strict mode
 - **SQLite** — `bun:sqlite`
 - **ajv** — JSON Schema validation
-- **HTML + vanilla JS** — client
+- **React 19 + Vite 6** — Configuration Explorer client (CSR)
 
 Этот проект полностью генерируется AI.
 Полный план работ, архитектурные принципы и правила — в [AGENTS.md](AGENTS.md).

@@ -1,22 +1,14 @@
 import { expect, test } from "bun:test";
 import { join } from "path";
-import { Program } from "../src/Program";
-import { SymbolIndex } from "../src/SymbolIndex";
-import { MetadataModel } from "../metadata/MetadataModel";
-import { DependencyGraph } from "../src/DependencyGraph";
-import { LocationIndex } from "../lsp/LocationIndex";
+import { loadWorkspace } from "../src/WorkspaceLoader";
 import { handleDefinition } from "../lsp/handlers/definition";
 import { handleReferences } from "../lsp/handlers/references";
 
 const exportDir = join(__dirname, "..", "export");
 
 function buildDeps() {
-  const program = Program.loadFromManifest(exportDir);
-  const metadata = MetadataModel.loadFromFile(join(exportDir, "metadata.json"));
-  const symbolIndex = SymbolIndex.build(program, metadata);
-  const dependencyGraph = DependencyGraph.build(program);
-  const locationIndex = LocationIndex.build(program, exportDir);
-  return { program, symbolIndex, dependencyGraph, locationIndex };
+  const workspace = loadWorkspace(exportDir);
+  return { program: workspace.program, symbolIndex: workspace.symbolIndex, dependencyGraph: workspace.dependencyGraph, locationIndex: workspace.locationIndex };
 }
 
 test("LocationIndex — built from Program", () => {

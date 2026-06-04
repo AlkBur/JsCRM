@@ -8,25 +8,16 @@
 // No document sync, no hover, no diagnostics — just navigation.
 
 import { join } from "path";
-import { Program } from "../src/Program";
-import { SymbolIndex } from "../src/SymbolIndex";
-import { MetadataModel } from "../metadata/MetadataModel";
-import { DependencyGraph } from "../src/DependencyGraph";
-import { LocationIndex } from "./LocationIndex";
+import { loadWorkspace } from "../src/WorkspaceLoader";
 import { readMessage, writeMessage, writeLog } from "./transport";
 import { handleDefinition } from "./handlers/definition";
 import { handleReferences } from "./handlers/references";
 
 const exportDir = join(__dirname, "..", "export");
-
-const program = Program.loadFromManifest(exportDir);
-const metadata = MetadataModel.loadFromFile(join(exportDir, "metadata.json"));
-const symbolIndex = SymbolIndex.build(program, metadata);
-const dependencyGraph = DependencyGraph.build(program);
-const locationIndex = LocationIndex.build(program, exportDir);
+const workspace = loadWorkspace(exportDir);
 
 writeLog(
-  `Layer 8.1 ready: ${program.getAllRoutines().length} routines, ${symbolIndex.size} symbols, ${dependencyGraph.getAllNodes().length} graph nodes, ${locationIndex.size} locations`,
+  `Layer 8.1 ready: ${workspace.stats.routines} routines, ${workspace.stats.symbols} symbols, ${workspace.stats.graphNodes} graph nodes, ${workspace.stats.locations} locations`,
 );
 
 async function main(): Promise<void> {
@@ -55,12 +46,12 @@ async function main(): Promise<void> {
         process.exit(0);
       }
       case "textDocument/definition": {
-        const result = handleDefinition(msg.params, locationIndex);
+        const result = handleDefinition(msg.params, workspace.locationIndex);
         writeMessage(id, result);
         break;
       }
       case "textDocument/references": {
-        const result = handleReferences(msg.params, dependencyGraph, locationIndex);
+        const result = handleReferences(msg.params, workspace.dependencyGraph, workspace.locationIndex);
         writeMessage(id, result);
         break;
       }

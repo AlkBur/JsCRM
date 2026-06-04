@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import type { TreeNode } from "./types";
 import { fetchTree, fetchNode } from "./api";
-import TreeView from "./components/TreeView";
-import DetailPanel from "./components/DetailPanel";
-import Breadcrumb from "./components/Breadcrumb";
-import SearchBar from "./components/SearchBar";
-import "./app.css";
+import TreeView from "./components/TreeView/TreeView";
+import DetailPanel from "./components/DetailPanel/DetailPanel";
+import Breadcrumb from "./components/Breadcrumb/Breadcrumb";
+import SearchBar from "./components/SearchBar/SearchBar";
+import "./styles/app.css";
 
 export default function App() {
   const [tree, setTree] = useState<TreeNode[]>([]);

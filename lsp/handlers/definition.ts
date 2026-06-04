@@ -4,7 +4,7 @@
 // Without meta.loc in IR, position-to-symbol resolution is not possible.
 // Handler returns null for unresolvable positions.
 
-import type { LocationIndex, LSPLocation } from "../LocationIndex";
+import type { LocationIndex, LSPLocation } from "../../src/LocationIndex";
 
 interface DefinitionParams {
   textDocument: { uri: string };

@@ -12,6 +12,7 @@
 
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { loadWorkspace } from "../src/WorkspaceLoader";
 import { bench as benchVM } from "./suites/vm.bench";
 import { bench as benchGraph } from "./suites/graph.bench";
 import { bench as benchIndex } from "./suites/index.bench";
@@ -69,9 +70,13 @@ function loadBaseline(): Record<string, unknown> | null {
 async function main(): Promise<void> {
   console.log(`Warmup: ${WARMUP}, Iterations: ${ITERATIONS}\n`);
 
-  const vmResult = benchVM(exportDir, WARMUP, ITERATIONS);
-  const graphResult = benchGraph(exportDir, WARMUP, ITERATIONS);
-  const indexResult = benchIndex(exportDir, WARMUP, ITERATIONS);
+  console.error("Loading workspace...");
+  const workspace = loadWorkspace(exportDir);
+  console.error(`Workspace loaded: ${workspace.stats.routines} routines, ${workspace.stats.symbols} symbols, ${workspace.stats.graphNodes} nodes\n`);
+
+  const vmResult = benchVM(workspace, exportDir, WARMUP, ITERATIONS);
+  const graphResult = benchGraph(workspace, WARMUP, ITERATIONS);
+  const indexResult = benchIndex(workspace, WARMUP, ITERATIONS);
 
   const current: Record<string, unknown> = {
     vm: { totalAvg: vmResult.totalAvg, p95: vmResult.p95, breakdown: vmResult.breakdown },

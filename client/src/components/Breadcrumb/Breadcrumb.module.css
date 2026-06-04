@@ -1,0 +1,15 @@
+.root {
+  font-size: var(--font-size-small);
+  color: var(--color-muted);
+  margin-bottom: var(--spacing-2);
+}
+
+.separator {
+  color: var(--color-muted);
+  margin: 0 2px;
+}
+
+.part {
+  color: var(--color-accent);
+  cursor: default;
+}

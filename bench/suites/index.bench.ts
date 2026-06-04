@@ -1,7 +1,4 @@
-import { join } from "path";
-import { Program } from "../../src/Program";
-import { SymbolIndex } from "../../src/SymbolIndex";
-import { MetadataModel } from "../../metadata/MetadataModel";
+import type { Workspace } from "../../src/Workspace";
 
 export interface IndexBenchResult {
   runtimeSymbol: { avg: number; count: number };
@@ -9,16 +6,14 @@ export interface IndexBenchResult {
   missingSymbol: { avg: number; count: number };
 }
 
-export function bench(exportDir: string, warmup: number, iterations: number): IndexBenchResult {
-  const program = Program.loadFromManifest(exportDir);
-  const metadata = MetadataModel.loadFromFile(join(exportDir, "metadata.json"));
-  const index = SymbolIndex.build(program, metadata);
+export function bench(workspace: Workspace, warmup: number, iterations: number): IndexBenchResult {
+  const index = workspace.symbolIndex;
 
-  const runtimeSymbols = program.getAllRoutines().map(r => r.routine.name);
+  const runtimeSymbols = workspace.program.getAllRoutines().map(r => r.routine.name);
   const metadataSymbols = [
-    ...metadata.catalogs.map(c => c.name),
-    ...metadata.documents.map(d => d.name),
-    ...metadata.enumerations.map(e => e.name),
+    ...workspace.metadata.catalogs.map(c => c.name),
+    ...workspace.metadata.documents.map(d => d.name),
+    ...workspace.metadata.enumerations.map(e => e.name),
   ];
   const missingSymbols = ["НесуществующаяФункция", "X", "A", "B", "C"];
 

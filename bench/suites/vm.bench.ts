@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from "fs";
 import { VM } from "../../src/vm";
 import { BuiltinRegistry } from "../../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../../builtins/index";
-import { Program } from "../../src/Program";
+import type { Workspace } from "../../src/Workspace";
 
 export interface VMBenchResult {
   totalAvg: number;
@@ -38,11 +38,10 @@ function walkNode(node: unknown, counts: Record<string, number>): void {
   }
 }
 
-export function bench(exportDir: string, warmup: number, iterations: number): VMBenchResult {
+export function bench(workspace: Workspace, exportDir: string, warmup: number, iterations: number): VMBenchResult {
   const registry = new BuiltinRegistry();
   registerBuiltins(registry);
-  const program = Program.loadFromManifest(exportDir);
-  const vm = new VM(program, registry);
+  const vm = new VM(workspace.program, registry);
 
   const testsDir = join(exportDir, "tests");
   const testNames: string[] = [];
@@ -52,7 +51,7 @@ export function bench(exportDir: string, warmup: number, iterations: number): VM
   }
 
   const opCounts: Record<string, number> = {};
-  for (const ri of program.getAllRoutines()) {
+  for (const ri of workspace.program.getAllRoutines()) {
     for (const stmt of ri.routine.body) walkNode(stmt, opCounts);
   }
 

@@ -1,0 +1,74 @@
+.root {
+}
+
+.title {
+  font-size: var(--font-size-large);
+  margin-bottom: var(--spacing-3);
+  color: var(--color-text);
+}
+
+.section {
+  margin-bottom: var(--spacing-4);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-base);
+  color: var(--color-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-base);
+}
+
+.table th {
+  text-align: left;
+  padding: var(--spacing-1) var(--spacing-2);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.table td {
+  padding: var(--spacing-1) var(--spacing-2);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.table tr:hover td {
+  background: var(--color-hover);
+}
+
+.typeLabel {
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+}
+
+.requiredStar {
+  color: #c62828;
+  margin-left: 2px;
+}
+
+.empty {
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+  font-style: italic;
+}
+
+.subTitle {
+  font-size: var(--font-size-base);
+  margin: var(--spacing-1) 0;
+  color: #444;
+}
+
+.enumList {
+  list-style: none;
+  font-size: var(--font-size-base);
+}
+
+.enumItem {
+  padding: 3px 0;
+}
