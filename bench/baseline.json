@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-06-04T13:12:05.068Z",
+  "suites": {
+    "vm": {
+      "totalAvg": 0.16534499999999966,
+      "p95": 0.36419999999999675,
+      "breakdown": {
+        "binaryOp": {
+          "count": 37
+        },
+        "newObject": {
+          "count": 22
+        },
+        "methodCall": {
+          "count": 30
+        },
+        "ifExpr": {
+          "count": 10
+        },
+        "loop": {
+          "count": 6
+        },
+        "functionCall": {
+          "count": 20
+        }
+      }
+    },
+    "graph": {
+      "findPath": {
+        "avg": 0.005753075000000003,
+        "count": 4
+      },
+      "getReachableFrom": {
+        "avg": 0.003916799999999932,
+        "count": 3
+      },
+      "detectCycles": {
+        "avg": 0.021817900000000202,
+        "count": 1
+      }
+    },
+    "index": {
+      "runtimeSymbol": {
+        "avg": 0.000026430909090908,
+        "count": 55
+      },
+      "metadataSymbol": {
+        "avg": 0.000037784615384603826,
+        "count": 13
+      },
+      "missingSymbol": {
+        "avg": 0.00003611999999998833,
+        "count": 5
+      }
+    }
+  }
+}

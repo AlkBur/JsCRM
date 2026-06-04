@@ -50,6 +50,9 @@ See `AGENTS.md` for detailed roadmap.
 - **ajv** — JSON Schema validation
 - **HTML + vanilla JS** — client
 
+Этот проект полностью генерируется AI.
+Полный план работ, архитектурные принципы и правила — в [AGENTS.md](AGENTS.md).
+
 ## License
 
 MIT

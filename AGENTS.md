@@ -150,6 +150,15 @@ Properties:
 /docs                     — Architecture specifications
   index-layer-contract.md — Index layer responsibilities, prohibitions, invariants
   lsp-roadmap.md          — LSP phases 8.1 → 8.4, constraints, excluded features
+  architecture-stable-release-0.md — ASR-0 baseline freeze
+
+/bench                    — Performance benchmarks (Layer 2.5)
+  runner.ts               — Regression harness + baseline comparison
+  baseline.json           — Pinned architectural snapshot
+  suites/
+    vm.bench.ts           — VM execution (50 golden tests, op breakdown)
+    graph.bench.ts        — DependencyGraph queries (findPath, reachable, cycles)
+    index.bench.ts        — SymbolIndex lookups (runtime, metadata, missing)
 
 /lsp                      ← Language Server (Layer 8, Phase 8.1)
   server.ts               — stdio JSON-RPC main loop
@@ -191,6 +200,30 @@ Properties:
 - IR validation on every fixture load
 - Compatibility Runner: load export/ → VM → diff with 1C reference results
 - Golden tests: IR fixtures → VM → JSON snapshots
+
+## 📊 Performance Benchmarking
+
+Performance benchmarks используются для отслеживания архитектурной деградации системы.
+
+Они выполняются:
+- перед релизом архитектурных изменений
+- при подозрении на деградацию VM / Graph / Index
+- при обновлении baseline
+
+### CLI
+
+```
+bun run bench/runner.ts           — run benchmarks and compare with baseline
+bun run bench/runner.ts --save     — update baseline after intentional architectural changes
+```
+
+### Правила
+
+- Baseline — pinned architectural snapshot, не является средним значением
+- Отклонение количества операций >10% делает сравнение некорректным
+- Warmup (10 iterations) обязателен и не измеряется
+- Benchmark НЕ является обязательным шагом для каждого коммита
+- Используется как инструмент диагностики, а не CI gate
 
 ## 🚫 What NOT to build yet
 
