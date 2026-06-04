@@ -15,7 +15,7 @@ Synchronization & Migration Engine (Layer 9) orchestrates the full pipeline.
 
 IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**51 tests, 0 failures (bun test) + 40 golden tests (compat runner).**
+**64 tests, 0 failures (bun test) + 40 golden tests (compat runner).**
 
 ## Runtime Layer Rules
 
@@ -40,9 +40,10 @@ Layer 3  Runtime + Multi-module           ✅ DONE
 Layer 4  Metadata                         ✅ DONE
 Layer 5  Symbol Index                     ✅ DONE
 Layer 6  Dependency Graph                 ✅ DONE
-Layer 7  Metadata v2 + Language Server    ← TBD
-Layer 8  Web IDE                          ← TBD
-Layer 9  Synchronization & Migration      ← FUTURE
+Layer 7  Metadata v2                       ✅ DONE
+Layer 8  Language Server                   ← TBD
+Layer 9  Web IDE                           ← TBD
+Layer 10 Synchronization & Migration       ← FUTURE
 ```
 
 ## 📁 Project Structure
@@ -65,8 +66,11 @@ Layer 9  Synchronization & Migration      ← FUTURE
 
 /metadata                 ← Metadata Layer
   metadata-schema-v1.json — JSON Schema (additionalProperties: false)
-  metadata-types.ts       — TS interfaces matching schema
-  MetadataModel.ts        — Immutable read-only model
+  metadata-schema-v2.json — JSON Schema v2 (attributes, ТЧ, forms, commands)
+  metadata-types.ts       — v1 TS types (frozen)
+  metadata-types-v2.ts    — v2 TS types (FieldType discriminated union)
+  MetadataModel.ts        — Immutable model (auto-detects v1/v2)
+  MetadataIndex.ts        — Attribute-level search (Layer 7)
 
 /symbols                  ← Symbol types (Layer 5)
   symbol-types.ts         — SymbolKind + SymbolInfo
@@ -116,6 +120,7 @@ Layer 9  Synchronization & Migration      ← FUTURE
     vm.test.ts            — 11 legacy VM unit tests on parser+AST
   integration.test.ts     — 4 integration tests
   dependency-graph.test.ts — 14 DependencyGraph tests (Layer 6)
+  metadata-v2.test.ts      — 13 Metadata v2 + MetadataIndex tests (Layer 7)
 ```
 
 ## 🔧 Stack
@@ -136,9 +141,9 @@ Layer 9  Synchronization & Migration      ← FUTURE
 
 ## 🚫 What NOT to build yet
 
-- Metadata v2 + Language Server (Layer 7)
-- Web IDE (Layer 8)
-- Synchronization Engine (Layer 9)
+- Language Server (Layer 8)
+- Web IDE (Layer 9)
+- Synchronization Engine (Layer 10)
 - DynamicList / QueryRuntime
 - Virtual Scroll / ViewportManager
 - Solid.js client

@@ -253,6 +253,11 @@
 		<ChildObjects>
 			<Language>Русский</Language>
 			<Language>English</Language>
+			<Subsystem>ОтделЗакупок</Subsystem>
+			<Subsystem>ОтделПродаж</Subsystem>
+			<Subsystem>Бухгалтерия</Subsystem>
+			<Subsystem>ОтделЗарплаты</Subsystem>
+			<Subsystem>ОбщийОтдел</Subsystem>
 			<Role>Admin</Role>
 			<CommonModule>ОбщийМодульТестов</CommonModule>
 			<CommonModule>ТестыБлок1</CommonModule>
@@ -265,11 +270,18 @@
 			<Constant>БухгалтерскийУчет</Constant>
 			<Constant>РейтингНадежности</Constant>
 			<Catalog>Пользователи</Catalog>
-			<Catalog>Оргаинизации</Catalog>
+			<Catalog>Организации</Catalog>
+			<Catalog>Номенклатура</Catalog>
+			<Catalog>Контрагенты</Catalog>
+			<Catalog>Сотрудники</Catalog>
+			<Catalog>ДоговорыКонтрагентов</Catalog>
 			<Document>ЗаказКлиента</Document>
 			<Document>ЗаказПоставщику</Document>
 			<Enum>ТипДоговора</Enum>
 			<Enum>ТипОрганизации</Enum>
+			<Enum>СемейноеПоложение</Enum>
+			<Enum>ВидыНоменклатуры</Enum>
+			<Enum>ВидыУчебногоЗаведения</Enum>
 			<DataProcessor>collections</DataProcessor>
 		</ChildObjects>
 	</Configuration>

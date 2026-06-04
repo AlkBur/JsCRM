@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://jscrm.dev/metadata-schema-v2.json",
+  "title": "1C Metadata v2",
+  "description": "Static configuration structure with attributes, tabular sections, forms, commands — read-only, no execution logic",
+
+  "type": "object",
+  "required": ["version", "configurationName", "configurationUuid", "commonModules", "catalogs", "documents", "enumerations"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": "2" },
+    "configurationName": { "type": "string" },
+    "configurationUuid": { "type": "string" },
+
+    "commonModules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "export", "server", "client"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "export": { "type": "boolean" },
+          "server": { "type": "boolean" },
+          "client": { "type": "boolean" }
+        }
+      }
+    },
+
+    "catalogs": { "$ref": "#/definitions/MetadataObjectList" },
+    "documents": { "$ref": "#/definitions/MetadataObjectList" },
+    "enumerations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "uuid", "values"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "uuid": { "type": "string" },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["uuid", "name"],
+              "additionalProperties": false,
+              "properties": {
+                "uuid": { "type": "string" },
+                "name": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "MetadataObjectList": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/MetadataObject" }
+    },
+
+    "MetadataObject": {
+      "type": "object",
+      "required": ["name", "uuid", "attributes", "tabularSections", "forms", "commands"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "uuid": { "type": "string" },
+        "attributes": { "$ref": "#/definitions/AttributeList" },
+        "tabularSections": { "$ref": "#/definitions/TabularSectionList" },
+        "forms": { "$ref": "#/definitions/FormList" },
+        "commands": { "$ref": "#/definitions/CommandList" }
+      }
+    },
+
+    "AttributeList": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Attribute" }
+    },
+
+    "Attribute": {
+      "type": "object",
+      "required": ["name", "type", "required"],
+      "additionalProperties": false,
+      "properties": {
+        "uuid": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "$ref": "#/definitions/FieldType" },
+        "required": { "type": "boolean" }
+      }
+    },
+
+    "FieldType": {
+      "oneOf": [
+        { "$ref": "#/definitions/StringType" },
+        { "$ref": "#/definitions/NumberType" },
+        { "$ref": "#/definitions/DateType" },
+        { "$ref": "#/definitions/BooleanType" },
+        { "$ref": "#/definitions/RefType" },
+        { "$ref": "#/definitions/EnumType" },
+        { "$ref": "#/definitions/UnionType" }
+      ]
+    },
+
+    "StringType": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "string" },
+        "length": { "type": "integer", "minimum": 0 },
+        "format": { "type": "string", "enum": ["uuid", "email", "phone"] }
+      }
+    },
+
+    "NumberType": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "number" },
+        "precision": { "type": "integer", "minimum": 0 },
+        "scale": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "DateType": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "date" }
+      }
+    },
+
+    "BooleanType": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "boolean" }
+      }
+    },
+
+    "RefType": {
+      "type": "object",
+      "required": ["kind", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "ref" },
+        "target": { "type": "string" }
+      }
+    },
+
+    "EnumType": {
+      "type": "object",
+      "required": ["kind", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "enum" },
+        "target": { "type": "string" }
+      }
+    },
+
+    "UnionType": {
+      "type": "object",
+      "required": ["kind", "options"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "union" },
+        "options": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/StringType" },
+              { "$ref": "#/definitions/NumberType" },
+              { "$ref": "#/definitions/DateType" },
+              { "$ref": "#/definitions/BooleanType" },
+              { "$ref": "#/definitions/RefType" },
+              { "$ref": "#/definitions/EnumType" }
+            ]
+          }
+        }
+      }
+    },
+
+    "TabularSectionList": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/TabularSection" }
+    },
+
+    "TabularSection": {
+      "type": "object",
+      "required": ["name", "attributes"],
+      "additionalProperties": false,
+      "properties": {
+        "uuid": { "type": "string" },
+        "name": { "type": "string" },
+        "attributes": { "$ref": "#/definitions/AttributeList" }
+      }
+    },
+
+    "FormList": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Form" }
+    },
+
+    "Form": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["ordinary", "managed"] }
+      }
+    },
+
+    "CommandList": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Command" }
+    },
+
+    "Command": {
+      "type": "object",
+      "required": ["name", "handler"],
+      "additionalProperties": false,
+      "properties": {
+        "uuid": { "type": "string" },
+        "name": { "type": "string" },
+        "handler": { "type": "string" }
+      }
+    }
+  }
+}

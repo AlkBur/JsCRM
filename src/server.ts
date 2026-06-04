@@ -1,6 +1,7 @@
 import { join } from "path";
 import { Program } from "./Program";
 import { MetadataModel } from "../metadata/MetadataModel";
+import { MetadataIndex } from "../metadata/MetadataIndex";
 import { SymbolIndex } from "./SymbolIndex";
 import { DependencyGraph } from "./DependencyGraph";
 import { VM } from "./vm";
@@ -12,6 +13,7 @@ const exportDir = join(__dirname, "..", "export");
 const program = Program.loadFromManifest(exportDir);
 const metadata = MetadataModel.loadFromFile(join(exportDir, "metadata.json"));
 const index = SymbolIndex.build(program, metadata);
+const metaIndex = MetadataIndex.build(metadata);
 const graph = DependencyGraph.build(program);
 const registry = new BuiltinRegistry();
 registerBuiltins(registry);
@@ -46,6 +48,7 @@ const server = Bun.serve({
 
     if (path === "/api/status") {
       return json({
+        version: metadata.version,
         modules: program.getModules().length,
         routines: program.getAllRoutines().length,
         symbols: index.size,
@@ -53,6 +56,10 @@ const server = Bun.serve({
         catalogs: metadata.catalogs.length,
         documents: metadata.documents.length,
         enumerations: metadata.enumerations.length,
+        attributes: metaIndex.attributeCount,
+        tabularSections: metaIndex.tabularSectionCount,
+        forms: metaIndex.formCount,
+        commands: metaIndex.commandCount,
       });
     }
 
@@ -86,6 +93,16 @@ const server = Bun.serve({
         enumerations: metadata.enumerations,
         commonModules: metadata.commonModules,
       });
+    }
+
+    if (path.startsWith("/api/metadataIndex")) {
+      const parent = url.searchParams.get("parent") ?? "";
+      const kind = url.searchParams.get("kind") ?? "attributes";
+      if (kind === "attributes") return json(metaIndex.getAttributes(parent || undefined));
+      if (kind === "tabularSections") return json(metaIndex.getTabularSections(parent || undefined));
+      if (kind === "forms") return json(metaIndex.getForms(parent || undefined));
+      if (kind === "commands") return json(metaIndex.getCommands(parent || undefined));
+      return json({ error: "Unknown kind" }, 400);
     }
 
     if (path.startsWith("/api/ir/")) {
@@ -134,3 +151,4 @@ console.log(`  Modules: ${program.getModules().length}`);
 console.log(`  Routines: ${program.getAllRoutines().length}`);
 console.log(`  Symbols: ${index.size}`);
 console.log(`  Graph nodes: ${graph.getAllNodes().length}`);
+console.log(`  Metadata: v${metadata.version}, ${metaIndex.attributeCount} attributes, ${metaIndex.tabularSectionCount} tabular sections`);

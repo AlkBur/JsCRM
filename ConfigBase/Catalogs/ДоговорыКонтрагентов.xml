@@ -1,34 +1,34 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.20">
-	<Catalog uuid="205e6fb1-ec6f-4058-b2bd-ec3a9c279a44">
+	<Catalog uuid="b72a8f2e-d12e-4970-9522-9981bc522000">
 		<InternalInfo>
-			<xr:GeneratedType name="CatalogObject.Оргаинизации" category="Object">
-				<xr:TypeId>b03126a5-b522-495f-bb1a-cb83c5e3aefa</xr:TypeId>
-				<xr:ValueId>f6a38918-e625-4a6c-b29a-c02bfc4d436d</xr:ValueId>
+			<xr:GeneratedType name="CatalogObject.ДоговорыКонтрагентов" category="Object">
+				<xr:TypeId>bc299649-072c-4438-ba06-6f8fd71a8406</xr:TypeId>
+				<xr:ValueId>33fdaa08-0c69-40b6-b3f6-ecda6cc9872a</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="CatalogRef.Оргаинизации" category="Ref">
-				<xr:TypeId>50ba0ee4-f304-4b8d-97be-45eb51433d95</xr:TypeId>
-				<xr:ValueId>6453985d-13e3-424d-825b-99102a000726</xr:ValueId>
+			<xr:GeneratedType name="CatalogRef.ДоговорыКонтрагентов" category="Ref">
+				<xr:TypeId>5538a924-dcdb-441b-92fc-790b1a858d9f</xr:TypeId>
+				<xr:ValueId>66ac61ef-96b5-4495-b914-f5d74f4b7cec</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="CatalogSelection.Оргаинизации" category="Selection">
-				<xr:TypeId>eac64081-b0b6-4716-b953-8edf3c93273c</xr:TypeId>
-				<xr:ValueId>25df82db-7044-4e87-964e-a7985dfd2441</xr:ValueId>
+			<xr:GeneratedType name="CatalogSelection.ДоговорыКонтрагентов" category="Selection">
+				<xr:TypeId>90dcbedf-fbf2-4d4b-ab75-f751fcd6a393</xr:TypeId>
+				<xr:ValueId>875e6343-a8f4-47f8-a07a-576a5337e3e5</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="CatalogList.Оргаинизации" category="List">
-				<xr:TypeId>926bfe06-9820-445c-a8d2-a5388e021664</xr:TypeId>
-				<xr:ValueId>5e937fad-12b9-4bae-8516-20f319ae7b2e</xr:ValueId>
+			<xr:GeneratedType name="CatalogList.ДоговорыКонтрагентов" category="List">
+				<xr:TypeId>1fa3d54b-226d-4372-ac74-15b8bb058992</xr:TypeId>
+				<xr:ValueId>4edf954e-818b-47b2-bc7c-041fd66becc1</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="CatalogManager.Оргаинизации" category="Manager">
-				<xr:TypeId>fdca5ea6-2b4d-4578-a1f0-9401e58ae0c9</xr:TypeId>
-				<xr:ValueId>84854e54-0aca-4edb-b158-af04f98ce9c6</xr:ValueId>
+			<xr:GeneratedType name="CatalogManager.ДоговорыКонтрагентов" category="Manager">
+				<xr:TypeId>e4f0f42c-129d-47c7-9c27-5839d82d2376</xr:TypeId>
+				<xr:ValueId>26fbffa6-02ec-465c-bbc1-5575b4c5252b</xr:ValueId>
 			</xr:GeneratedType>
 		</InternalInfo>
 		<Properties>
-			<Name>Оргаинизации</Name>
+			<Name>ДоговорыКонтрагентов</Name>
 			<Synonym>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Оргаинизации</v8:content>
+					<v8:content>Договоры контрагентов</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
@@ -38,7 +38,9 @@
 			<LevelCount>2</LevelCount>
 			<FoldersOnTop>true</FoldersOnTop>
 			<UseStandardCommands>true</UseStandardCommands>
-			<Owners/>
+			<Owners>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.Контрагенты</xr:Item>
+			</Owners>
 			<SubordinationUse>ToItems</SubordinationUse>
 			<CodeLength>9</CodeLength>
 			<DescriptionLength>25</DescriptionLength>
@@ -54,8 +56,8 @@
 			<QuickChoice>false</QuickChoice>
 			<ChoiceMode>BothWays</ChoiceMode>
 			<InputByString>
-				<xr:Field>Catalog.Оргаинизации.StandardAttribute.Description</xr:Field>
-				<xr:Field>Catalog.Оргаинизации.StandardAttribute.Code</xr:Field>
+				<xr:Field>Catalog.ДоговорыКонтрагентов.StandardAttribute.Description</xr:Field>
+				<xr:Field>Catalog.ДоговорыКонтрагентов.StandardAttribute.Code</xr:Field>
 			</InputByString>
 			<SearchStringModeOnInputByString>Begin</SearchStringModeOnInputByString>
 			<FullTextSearchOnInputByString>DontUse</FullTextSearchOnInputByString>

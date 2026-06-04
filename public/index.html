@@ -121,7 +121,7 @@
       renderSymbols(allSymbols);
       renderModules();
       renderMetadata();
-      document.getElementById("symbol-count").textContent = status.symbols + " symbols, " + status.routines + " routines, " + status.modules + " modules, " + status.graphNodes + " graph nodes";
+      document.getElementById("symbol-count").textContent = "v" + status.version + " — " + status.symbols + " symbols, " + status.routines + " routines, " + status.modules + " modules, " + status.graphNodes + " graph nodes, " + status.attributes + " attrs";
       loadUnused();
     }
 
@@ -166,12 +166,12 @@
       }
       if (data.catalogs && data.catalogs.length) {
         html += '<div class="meta-section"><h3>Справочники (' + data.catalogs.length + ')</h3>';
-        data.catalogs.forEach(c => html += '<div class="meta-item">' + esc(c.name) + '</div>');
+        data.catalogs.forEach(c => html += '<div class="meta-item" style="cursor:pointer;color:#4A90D9" onclick="showDetail(\'' + esc(c.name) + '\',\'catalog\')">' + esc(c.name) + ' <span style="font-size:11px;color:#999">▼</span></div>');
         html += '</div>';
       }
       if (data.documents && data.documents.length) {
         html += '<div class="meta-section"><h3>Документы (' + data.documents.length + ')</h3>';
-        data.documents.forEach(d => html += '<div class="meta-item">' + esc(d.name) + '</div>');
+        data.documents.forEach(d => html += '<div class="meta-item" style="cursor:pointer;color:#4A90D9" onclick="showDetail(\'' + esc(d.name) + '\',\'document\')">' + esc(d.name) + ' <span style="font-size:11px;color:#999">▼</span></div>');
         html += '</div>';
       }
       if (data.enumerations && data.enumerations.length) {
@@ -179,7 +179,51 @@
         data.enumerations.forEach(e => html += '<div class="meta-item">' + esc(e.name) + '</div>');
         html += '</div>';
       }
+      html += '<div id="meta-detail" style="display:none"></div>';
       document.getElementById("metadata-content").innerHTML = html;
+    }
+
+    async function showDetail(name, kind) {
+      const attrs = await api("/api/metadataIndex?parent=" + encodeURIComponent(name) + "&kind=attributes");
+      const tabs = await api("/api/metadataIndex?parent=" + encodeURIComponent(name) + "&kind=tabularSections");
+      const forms = await api("/api/metadataIndex?parent=" + encodeURIComponent(name) + "&kind=forms");
+      const cmds = await api("/api/metadataIndex?parent=" + encodeURIComponent(name) + "&kind=commands");
+      let html = '<div class="card" style="margin-top:8px"><h3 style="font-size:14px;margin:0 0 8px">' + esc(name) + ' — атрибуты</h3>';
+      if (attrs.length) {
+        html += attrs.map(a => '<div class="meta-item" style="font-size:12px">' + esc(a.attribute.name) + ' <span style="color:#999">' + typeLabel(a.attribute.type) + (a.attribute.required ? ' *' : '') + '</span></div>').join("");
+      } else {
+        html += '<div class="meta-item" style="color:#999;font-size:12px">(нет реквизитов)</div>';
+      }
+      if (tabs.length) {
+        tabs.forEach(t => {
+          html += '<h4 style="font-size:13px;margin:8px 0 4px">ТЧ ' + esc(t.section.name) + '</h4>';
+          t.section.attributes.forEach(a => html += '<div class="meta-item" style="font-size:12px;padding-left:12px">' + esc(a.name) + ' <span style="color:#999">' + typeLabel(a.type) + '</span></div>');
+        });
+      }
+      if (forms.length) {
+        html += '<h4 style="font-size:13px;margin:8px 0 4px">Формы</h4>';
+        forms.forEach(f => html += '<div class="meta-item" style="font-size:12px">' + esc(f.form.name) + ' (' + f.form.type + ')</div>');
+      }
+      if (cmds.length) {
+        html += '<h4 style="font-size:13px;margin:8px 0 4px">Команды</h4>';
+        cmds.forEach(c => html += '<div class="meta-item" style="font-size:12px">' + esc(c.command.name) + '</div>');
+      }
+      html += '</div>';
+      const el = document.getElementById("meta-detail");
+      el.innerHTML = html;
+      el.style.display = "block";
+    }
+
+    function typeLabel(t) {
+      if (typeof t === "string") return t;
+      if (t.kind === "string") return "Строка" + (t.length ? "(" + t.length + ")" : "");
+      if (t.kind === "number") return "Число(" + (t.precision||0) + "," + (t.scale||0) + ")";
+      if (t.kind === "date") return "Дата";
+      if (t.kind === "boolean") return "Булево";
+      if (t.kind === "ref") return "Ссылка: " + t.target;
+      if (t.kind === "enum") return "Перечисление: " + t.target;
+      if (t.kind === "union") return "Составной (" + t.options.length + ")";
+      return JSON.stringify(t);
     }
 
     async function runFunction() {

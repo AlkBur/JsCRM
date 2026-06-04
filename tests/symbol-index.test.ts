@@ -14,7 +14,7 @@ function buildIndex(): SymbolIndex {
 
 test("build — total symbol count", () => {
   const index = buildIndex();
-  expect(index.size).toBe(54);
+  expect(index.size).toBe(61);
 });
 
 test("find — function symbol", () => {
