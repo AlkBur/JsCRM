@@ -15,7 +15,7 @@ Synchronization & Migration Engine (Layer 10) orchestrates the full pipeline.
 
 IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**64 tests, 0 failures (bun test) + 40 golden tests (compat runner).**
+**64 tests, 0 failures (bun test) + 50 golden tests (compat runner).**
 
 ## Runtime Layer Rules
 
@@ -39,7 +39,7 @@ Layer 2  VM + Golden Tests                ✅ DONE
 Layer 3  Runtime + Multi-module           ✅ DONE
 Layer 4  Metadata                         ✅ DONE
 Layer 5  Symbol Index                     ✅ DONE
-Layer 6  Dependency Graph                 ✅ DONE
+Layer 6  Dependency Graph (queries)        ✅ DONE
 Layer 7  Metadata v2                       ✅ DONE
 Layer 8  Language Server                   ← TBD
 Layer 9  Web IDE                           ← TBD

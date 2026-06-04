@@ -13,8 +13,21 @@ function buildIndex(): SymbolIndex {
 }
 
 test("build — total symbol count", () => {
-  const index = buildIndex();
-  expect(index.size).toBe(61);
+  const exportDir = join(__dirname, "..", "export");
+  const program = Program.loadFromManifest(exportDir);
+  const metadata = MetadataModel.loadFromFile(join(exportDir, "metadata.json"));
+  const index = SymbolIndex.build(program, metadata);
+  const uniqueModules = new Set([
+    ...program.getModules().map(m => m.name),
+    ...metadata.commonModules.map(m => m.name),
+  ]);
+  expect(index.size).toBe(
+    uniqueModules.size
+    + program.getAllRoutines().length
+    + metadata.catalogs.length
+    + metadata.documents.length
+    + metadata.enumerations.length
+  );
 });
 
 test("find — function symbol", () => {

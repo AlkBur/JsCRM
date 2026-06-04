@@ -115,6 +115,109 @@ export class DependencyGraph {
     }
     return Object.freeze(result);
   }
+
+  findPath(from: string, to: string): readonly string[] | null {
+    if (!this.has(from) || !this.has(to)) return null;
+    if (from === to) return Object.freeze([from]);
+
+    const visited = new Set<string>([from]);
+    const queue: string[] = [from];
+    const predecessor = new Map<string, string>();
+
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      const callees = this.outgoing.get(current);
+      if (!callees) continue;
+
+      for (const next of callees) {
+        if (visited.has(next)) continue;
+        visited.add(next);
+        predecessor.set(next, current);
+        if (next === to) {
+          const path: string[] = [];
+          let node: string | undefined = to;
+          while (node !== undefined) {
+            path.unshift(node);
+            node = predecessor.get(node);
+          }
+          return Object.freeze(path);
+        }
+        queue.push(next);
+      }
+    }
+
+    return null;
+  }
+
+  getReachableFrom(entry: string): readonly string[] {
+    if (!this.has(entry)) return Object.freeze([]);
+
+    const visited = new Set<string>([entry]);
+    const stack: string[] = [entry];
+
+    while (stack.length > 0) {
+      const current = stack.pop()!;
+      const callees = this.outgoing.get(current);
+      if (!callees) continue;
+      for (const next of callees) {
+        if (visited.has(next)) continue;
+        visited.add(next);
+        stack.push(next);
+      }
+    }
+
+    return Object.freeze([...visited].sort());
+  }
+
+  detectCycles(): readonly (readonly string[])[] {
+    const WHITE = 0, GRAY = 1, BLACK = 2;
+    const color = new Map<string, number>();
+    for (const name of this.allNodes) color.set(name, WHITE);
+
+    const cycles: string[][] = [];
+    const pathStack: string[] = [];
+    const seenKeys = new Set<string>();
+
+    const visit = (node: string): void => {
+      color.set(node, GRAY);
+      pathStack.push(node);
+
+      const callees = this.outgoing.get(node);
+      if (callees) {
+        for (const next of callees) {
+          const nextColor = color.get(next)!;
+          if (nextColor === GRAY) {
+            const cycle = pathStack.slice(pathStack.indexOf(next));
+            cycle.push(next);
+            const key = normalizeCycleKey(cycle);
+            if (!seenKeys.has(key)) {
+              seenKeys.add(key);
+              cycles.push(cycle);
+            }
+          } else if (nextColor === WHITE) {
+            visit(next);
+          }
+        }
+      }
+
+      pathStack.pop();
+      color.set(node, BLACK);
+    };
+
+    for (const name of this.allNodes) {
+      if (color.get(name) === WHITE) visit(name);
+    }
+
+    return Object.freeze(cycles.map(c => Object.freeze(c)));
+  }
+}
+
+function normalizeCycleKey(cycle: string[]): string {
+  const body = cycle.slice(0, -1);
+  const min = body.reduce((a, b) => a < b ? a : b);
+  const idx = body.indexOf(min);
+  const canonical = [...body.slice(idx), ...body.slice(0, idx)];
+  return canonical.join("\x00");
 }
 
 function walkBody(

@@ -1,0 +1,441 @@
+{
+	"irVersion": 1,
+	"generator": {
+		"tool": "handwritten",
+		"version": "0.1"
+	},
+	"module": {
+		"name": "ТестыБлок6",
+		"body": {
+			"routines": [
+				{
+					"kind": "function",
+					"name": "Тест_ИВУсловии",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "A" },
+							"expr": { "kind": "boolean", "value": true }
+						},
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "B" },
+							"expr": { "kind": "boolean", "value": false }
+						},
+						{
+							"kind": "if",
+							"cond": {
+								"kind": "binary",
+								"op": "И",
+								"left": { "kind": "variable", "name": "A" },
+								"right": { "kind": "variable", "name": "B" }
+							},
+							"then": [
+								{ "kind": "return", "value": { "kind": "number", "value": 1 } }
+							],
+							"else": [
+								{ "kind": "return", "value": { "kind": "number", "value": 0 } }
+							]
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_ИлиВУсловии",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "A" },
+							"expr": { "kind": "boolean", "value": false }
+						},
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "B" },
+							"expr": { "kind": "boolean", "value": true }
+						},
+						{
+							"kind": "if",
+							"cond": {
+								"kind": "binary",
+								"op": "Или",
+								"left": { "kind": "variable", "name": "A" },
+								"right": { "kind": "variable", "name": "B" }
+							},
+							"then": [
+								{ "kind": "return", "value": { "kind": "number", "value": 1 } }
+							],
+							"else": [
+								{ "kind": "return", "value": { "kind": "number", "value": 0 } }
+							]
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_НеВУсловии",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "A" },
+							"expr": { "kind": "boolean", "value": true }
+						},
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "B" },
+							"expr": { "kind": "boolean", "value": false }
+						},
+						{
+							"kind": "if",
+							"cond": {
+								"kind": "unary",
+								"op": "Не",
+								"value": {
+									"kind": "binary",
+									"op": "И",
+									"left": { "kind": "variable", "name": "A" },
+									"right": { "kind": "variable", "name": "B" }
+								}
+							},
+							"then": [
+								{ "kind": "return", "value": { "kind": "number", "value": 1 } }
+							],
+							"else": [
+								{ "kind": "return", "value": { "kind": "number", "value": 0 } }
+							]
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_ВложенныйИф",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "if",
+								"cond": { "kind": "boolean", "value": true },
+								"then": {
+									"kind": "if",
+									"cond": { "kind": "boolean", "value": false },
+									"then": { "kind": "number", "value": 1 },
+									"else": { "kind": "number", "value": 2 }
+								},
+								"else": { "kind": "number", "value": 3 }
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_СтруктураСМассивом",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "Ст" },
+							"expr": {
+								"kind": "new",
+								"type": "Структура",
+								"args": [
+									{
+										"key": "Ключ",
+										"value": {
+											"kind": "new",
+											"type": "Массив",
+											"args": []
+										}
+									}
+								]
+							}
+						},
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"object": {
+									"kind": "member",
+									"object": { "kind": "variable", "name": "Ст" },
+									"property": "Ключ"
+								},
+								"method": "Количество",
+								"args": []
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_ПустойМассив",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "М" },
+							"expr": {
+								"kind": "new",
+								"type": "Массив",
+								"args": []
+							}
+						},
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"object": { "kind": "variable", "name": "М" },
+								"method": "Количество",
+								"args": []
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "ПолучитьПоле",
+					"export": false,
+					"params": [
+						{ "name": "Структ", "byRef": false }
+					],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "member",
+								"object": { "kind": "variable", "name": "Структ" },
+								"property": "Поле"
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_ПередатьСтруктуру",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "С" },
+							"expr": {
+								"kind": "new",
+								"type": "Структура",
+								"args": [
+									{ "key": "Поле", "value": { "kind": "number", "value": 42 } }
+								]
+							}
+						},
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "ПолучитьПоле",
+								"args": [
+									{ "kind": "variable", "name": "С" }
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "ПолучитьКоличество",
+					"export": false,
+					"params": [
+						{ "name": "М", "byRef": false }
+					],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"object": { "kind": "variable", "name": "М" },
+								"method": "Количество",
+								"args": []
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_ПередатьМассив",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "М" },
+							"expr": {
+								"kind": "new",
+								"type": "Массив",
+								"args": []
+							}
+						},
+						{
+							"kind": "call",
+							"object": { "kind": "variable", "name": "М" },
+							"method": "Добавить",
+							"args": [
+								{ "kind": "number", "value": 10 }
+							]
+						},
+						{
+							"kind": "call",
+							"object": { "kind": "variable", "name": "М" },
+							"method": "Добавить",
+							"args": [
+								{ "kind": "number", "value": 20 }
+							]
+						},
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "ПолучитьКоличество",
+								"args": [
+									{ "kind": "variable", "name": "М" }
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "ПолучитьРазмерМассиваИзСтруктуры",
+					"export": false,
+					"params": [
+						{ "name": "Структ", "byRef": false }
+					],
+					"body": [
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"object": {
+									"kind": "member",
+									"object": { "kind": "variable", "name": "Структ" },
+									"property": "Массив"
+								},
+								"method": "Количество",
+								"args": []
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_МассивВСтруктуреВФункции",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "М" },
+							"expr": {
+								"kind": "new",
+								"type": "Массив",
+								"args": []
+							}
+						},
+						{
+							"kind": "call",
+							"object": { "kind": "variable", "name": "М" },
+							"method": "Добавить",
+							"args": [
+								{ "kind": "number", "value": 5 }
+							]
+						},
+						{
+							"kind": "call",
+							"object": { "kind": "variable", "name": "М" },
+							"method": "Добавить",
+							"args": [
+								{ "kind": "number", "value": 10 }
+							]
+						},
+						{
+							"kind": "call",
+							"object": { "kind": "variable", "name": "М" },
+							"method": "Добавить",
+							"args": [
+								{ "kind": "number", "value": 15 }
+							]
+						},
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "С" },
+							"expr": {
+								"kind": "new",
+								"type": "Структура",
+								"args": [
+									{ "key": "Массив", "value": { "kind": "variable", "name": "М" } }
+								]
+							}
+						},
+						{
+							"kind": "return",
+							"value": {
+								"kind": "call",
+								"name": "ПолучитьРазмерМассиваИзСтруктуры",
+								"args": [
+									{ "kind": "variable", "name": "С" }
+								]
+							}
+						}
+					]
+				},
+				{
+					"kind": "function",
+					"name": "Тест_СтруктураВСтруктуре",
+					"export": true,
+					"params": [],
+					"body": [
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "Внутр" },
+							"expr": {
+								"kind": "new",
+								"type": "Структура",
+								"args": [
+									{ "key": "Значение", "value": { "kind": "number", "value": 99 } }
+								]
+							}
+						},
+						{
+							"kind": "assign",
+							"target": { "kind": "variable", "name": "С" },
+							"expr": {
+								"kind": "new",
+								"type": "Структура",
+								"args": [
+									{ "key": "Вложенная", "value": { "kind": "variable", "name": "Внутр" } }
+								]
+							}
+						},
+						{
+							"kind": "return",
+							"value": {
+								"kind": "member",
+								"object": {
+									"kind": "member",
+									"object": { "kind": "variable", "name": "С" },
+									"property": "Вложенная"
+								},
+								"property": "Значение"
+							}
+						}
+					]
+				}
+			],
+			"globals": []
+		}
+	}
+}

@@ -10,8 +10,10 @@ function buildGraph(): DependencyGraph {
 }
 
 test("build — total nodes", () => {
-  const graph = buildGraph();
-  expect(graph.getAllNodes().length).toBe(42);
+  const exportDir = join(__dirname, "..", "export");
+  const program = Program.loadFromManifest(exportDir);
+  const graph = DependencyGraph.build(program);
+  expect(graph.getAllNodes().length).toBe(program.getAllRoutines().length);
 });
 
 test("getCallees — Тест_Функция calls Удвоить", () => {
@@ -104,4 +106,49 @@ test("findUnused — empty array for unknown", () => {
   const graph = buildGraph();
   expect(graph.getCallers("Неизвестно")).toEqual([]);
   expect(graph.getCallees("Неизвестно")).toEqual([]);
+});
+
+test("findPath — Тест_ПередатьСтруктуру → ПолучитьПоле", () => {
+  const graph = buildGraph();
+  const path = graph.findPath("Тест_ПередатьСтруктуру", "ПолучитьПоле");
+  expect(path).toEqual(["Тест_ПередатьСтруктуру", "ПолучитьПоле"]);
+});
+
+test("findPath — Тест_ПередатьМассив → ПолучитьКоличество", () => {
+  const graph = buildGraph();
+  const path = graph.findPath("Тест_ПередатьМассив", "ПолучитьКоличество");
+  expect(path).toEqual(["Тест_ПередатьМассив", "ПолучитьКоличество"]);
+});
+
+test("findPath — no path between unrelated routines", () => {
+  const graph = buildGraph();
+  expect(graph.findPath("Тест_ИВУсловии", "ПолучитьПоле")).toBeNull();
+});
+
+test("findPath — from === to returns [node]", () => {
+  const graph = buildGraph();
+  expect(graph.findPath("Удвоить", "Удвоить")).toEqual(["Удвоить"]);
+});
+
+test("getReachableFrom — Тест_ПередатьМассив reaches ПолучитьКоличество", () => {
+  const graph = buildGraph();
+  const reachable = graph.getReachableFrom("Тест_ПередатьМассив");
+  expect(reachable).toContain("ПолучитьКоличество");
+});
+
+test("getReachableFrom — isolated routine returns only itself", () => {
+  const graph = buildGraph();
+  const reachable = graph.getReachableFrom("Тест_ИВУсловии");
+  expect(reachable).toContain("Тест_ИВУсловии");
+  expect(reachable.length).toBe(1);
+});
+
+test("getReachableFrom — unknown entry returns empty array", () => {
+  const graph = buildGraph();
+  expect(graph.getReachableFrom("НесуществующаяФункция")).toEqual([]);
+});
+
+test("detectCycles — no cycles in current data", () => {
+  const graph = buildGraph();
+  expect(graph.detectCycles()).toEqual([]);
 });
