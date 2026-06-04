@@ -24,7 +24,7 @@ function readStdin(): Buffer {
       if (idx >= 0) {
         header = full.slice(0, idx);
         const match = header.match(/Content-Length:\s*(\d+)/i);
-        if (match) bodyLength = parseInt(match[1], 10);
+        if (match && match[1] !== undefined) bodyLength = parseInt(match[1], 10);
         const remaining = full.slice(idx + 4);
         if (remaining.length >= bodyLength) {
           return Buffer.from(remaining.slice(0, bodyLength), "utf8");

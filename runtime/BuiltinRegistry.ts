@@ -11,9 +11,9 @@
 // Invariant: builtins are read-only after registration.
 // The lastError field is set by VM during try/catch for ИнформацияОбОшибке.
 
-import type { Value } from "./types";
+import type { BuiltinArg, Value } from "./types";
 
-export type BuiltinFn = (args: Value[]) => Value;
+export type BuiltinFn = (args: readonly BuiltinArg[]) => Value;
 
 export class BuiltinRegistry {
   private map = new Map<string, BuiltinFn>();

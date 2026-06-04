@@ -15,7 +15,7 @@ interface ReferenceParams {
 
 function resolveModuleName(uri: string): string | null {
   const match = uri.match(/CommonModule\.(.+)\.json$/);
-  return match ? match[1] : null;
+  return match ? (match[1] ?? null) : null;
 }
 
 export function handleReferences(

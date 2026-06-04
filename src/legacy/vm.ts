@@ -158,12 +158,13 @@ export class VM {
           case "Структура": {
             const result: Record<string, any> = {};
             if (expr.args.length > 0) {
-              const keysVal = await this.evalExpr(expr.args[0], vars);
+              const keysVal = await this.evalExpr(expr.args[0]!, vars);
               if (typeof keysVal === "string") {
                 const keyArray = keysVal.split(",");
                 for (let i = 0; i < keyArray.length; i++) {
-                  const key = keyArray[i].trim();
-                  result[key] = expr.args[i + 1] ? await this.evalExpr(expr.args[i + 1], vars) : undefined;
+                  const key = keyArray[i]!.trim();
+                  const arg = expr.args[i + 1];
+                  result[key] = arg ? await this.evalExpr(arg, vars) : undefined;
                 }
               }
             }

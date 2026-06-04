@@ -126,7 +126,7 @@ const server = Bun.serve({
     if (path.startsWith("/api/node/")) {
       const nodeId = path.slice("/api/node/".length);
       const parts = nodeId.split(".");
-      const entityKind = parts[0];
+      const entityKind = parts[0] ?? "";
       const entityName = parts[1];
       const subKind = parts[2];
 

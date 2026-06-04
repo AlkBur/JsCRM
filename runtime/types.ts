@@ -23,3 +23,5 @@ export type Value =
   | null
   | undefined
   | RuntimeObject;
+
+export type BuiltinArg = Value | undefined;

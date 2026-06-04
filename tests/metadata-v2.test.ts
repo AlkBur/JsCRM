@@ -30,8 +30,8 @@ test("findCatalogV2 — returns full v2 data", () => {
   const cat = m.findCatalogV2("Контрагенты");
   expect(cat).toBeDefined();
   expect(cat!.attributes.length).toBe(3);
-  expect(cat!.attributes[0].name).toBe("ПолноеНаименование");
-  expect(cat!.attributes[0].type).toEqual({ kind: "string", length: 100 });
+  expect(cat!.attributes[0]!.name).toBe("ПолноеНаименование");
+  expect(cat!.attributes[0]!.type).toEqual({ kind: "string", length: 100 });
   expect(cat!.forms.length).toBeGreaterThan(0);
 });
 
@@ -46,7 +46,7 @@ test("findDocumentV2 — returns full v2 data", () => {
   expect(doc).toBeDefined();
   expect(doc!.attributes.length).toBe(2);
   expect(doc!.tabularSections.length).toBe(1);
-  expect(doc!.tabularSections[0].name).toBe("Товары");
+  expect(doc!.tabularSections[0]!.name).toBe("Товары");
 });
 
 test("findEnumerationV2 — returns values", () => {
@@ -54,7 +54,7 @@ test("findEnumerationV2 — returns values", () => {
   const en = m.findEnumerationV2("ВидыНоменклатуры");
   expect(en).toBeDefined();
   expect(en!.values.length).toBe(2);
-  expect(en!.values[0].name).toBe("Товар");
+  expect(en!.values[0]!.name).toBe("Товар");
 });
 
 test("findEnumerationV2 — empty values array", () => {
@@ -68,10 +68,10 @@ test("attribute — field type discriminated union", () => {
   const m = loadModel();
   const cat = m.findCatalogV2("Контрагенты")!;
 
-  const str = cat.attributes[0].type as FieldType;
+  const str = cat.attributes[0]!.type as FieldType;
   expect(str).not.toHaveProperty("kind", "ref");
 
-  const ref = m.findDocumentV2("ЗаказКлиента")!.attributes[0].type as FieldType;
+  const ref = m.findDocumentV2("ЗаказКлиента")!.attributes[0]!.type as FieldType;
   if (typeof ref !== "string" && "kind" in ref) {
     expect(ref.kind).toBe("ref");
     expect((ref as { kind: string; target: string }).target).toContain("Catalog");
@@ -81,7 +81,7 @@ test("attribute — field type discriminated union", () => {
 test("attribute — enum kind is separate from ref", () => {
   const m = loadModel();
   const cat = m.findCatalogV2("Номенклатура")!;
-  const enumAttr = cat.attributes[0].type as FieldType;
+  const enumAttr = cat.attributes[0]!.type as FieldType;
   if (typeof enumAttr !== "string" && "kind" in enumAttr) {
     expect(enumAttr.kind).toBe("enum");
     expect((enumAttr as { kind: string; target: string }).target).toBe("ВидыНоменклатуры");
@@ -97,7 +97,7 @@ test("MetadataIndex — build and query", () => {
 
   const kontrAttrs = idx.getAttributes("Контрагенты");
   expect(kontrAttrs.length).toBe(3);
-  expect(kontrAttrs[0].parentKind).toBe("catalog");
+  expect(kontrAttrs[0]!.parentKind).toBe("catalog");
 });
 
 test("MetadataIndex — find by parent", () => {

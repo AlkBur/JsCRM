@@ -108,7 +108,8 @@ export class VM {
     const prevVars = this.vars;
     this.vars = {};
     for (let i = 0; i < routine.params.length; i++) {
-      this.vars[routine.params[i].name] = i < args.length ? args[i] : null;
+      const param = routine.params[i]!;
+      this.vars[param.name] = i < args.length ? args[i]! : null;
     }
     try {
       this.execStmts(routine.body as Stmt[]);
@@ -216,7 +217,8 @@ export class VM {
             this.vars = {};
             const fn = resolved.routine;
             for (let i = 0; i < fn.params.length; i++) {
-              this.vars[fn.params[i].name] = i < args.length ? args[i] : null;
+              const param = fn.params[i]!;
+              this.vars[param.name] = i < args.length ? args[i]! : null;
             }
             this.execStmts(fn.body as Stmt[]);
             this.vars = saved;

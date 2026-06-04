@@ -72,11 +72,11 @@ export function bench(workspace: Workspace, exportDir: string, warmup: number, i
 
   const sorted = [...times].sort((a, b) => a - b);
   const avg = times.reduce((a, b) => a + b, 0) / times.length;
-  const p95idx = Math.ceil(sorted.length * 0.95) - 1;
+  const p95idx = Math.max(0, Math.ceil(sorted.length * 0.95) - 1);
 
   return {
     totalAvg: avg,
-    p95: sorted[Math.max(0, p95idx)],
+    p95: sorted[p95idx]!,
     breakdown: Object.fromEntries(
       Object.entries(opCounts).map(([k, v]) => [k, { count: v }]),
     ),

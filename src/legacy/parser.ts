@@ -30,7 +30,7 @@ class Parser {
   }
 
   private consume(expected?: string): string {
-    const ch = this.code[this.pos++];
+    const ch = this.code[this.pos++] ?? "";
     if (expected !== undefined && ch !== expected) {
       throw new ParseError(`Ожидается "${expected}", получено "${ch}"`, this.pos - 1);
     }
@@ -48,7 +48,7 @@ class Parser {
   private matchKeyword(keyword: string): boolean {
     if (this.startsWith(keyword)) {
       const after = this.pos + keyword.length;
-      if (after < this.code.length && /[а-яА-Яa-zA-Z0-9_]/.test(this.code[after])) return false;
+      if (after < this.code.length && /[а-яА-Яa-zA-Z0-9_]/.test(this.code[after] ?? "")) return false;
       this.pos = after;
       return true;
     }

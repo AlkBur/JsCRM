@@ -30,7 +30,7 @@ Synchronization & Migration Engine (Layer 10) orchestrates the full pipeline.
 
 IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**80 tests, 0 failures (bun test) + 50 golden tests (compat runner).**
+**91 tests, 0 failures (bun test) + 50 golden tests (compat runner).**
 
 ## Runtime Layer Rules
 
@@ -198,8 +198,12 @@ Properties:
 
 /src                      ← Runtime implementation
   Program.ts              — Multi-module container (manifest loader + routine registry)
+  Workspace.ts             — Workspace interface (composition root)
+  WorkspaceLoader.ts      — loadWorkspace(exportDir)
+  workspace-types.ts      — WorkspaceStats interface
   SymbolIndex.ts          — Searchable index of all named entities (Layer 5)
   DependencyGraph.ts      — Call graph across routines (Layer 6)
+  LocationIndex.ts        — Symbol → URI/range mapping (Layer 8.1)
   vm.ts                   — IR v1 interpreter (async, Value-typed)
   legacy/
     ast.ts                — AST types (legacy, frozen)
@@ -599,3 +603,28 @@ must depend on Workspace instead of assembling indexes manually.
   SymbolIndex, DependencyGraph, LocationIndex.
 - LSP MUST NOT reconstruct semantics from IR. Any semantic query must be
   answered by DependencyGraph, SymbolIndex, or LocationIndex.
+
+## 🛡️ Type Hardening Pass (Layer 0.5)
+
+Type hardening — отдельный архитектурный слой, обеспечивающий type-level safety.
+
+### Completed
+- `tsconfig.json`: `strict: true`, `noUncheckedIndexedAccess: true`
+- `BuiltinArg = Value | undefined` — `undefined` в аргументах встроенных функций — это 1С-контракт, не баг типа
+- `BuiltinFn` widened to `(args: readonly BuiltinArg[]) => Value`
+- `exactOptionalPropertyTypes` permanently excluded (слишком дорого для IR v1 optional полей)
+- Все indexed access errors исправлены по категориям:
+  1. **1C semantics** → widen types (`BuiltinArg`)
+  2. **Loop invariant** → `!` (`routine.params[i]!`, `args[i]!`)
+  3. **Regex/split** → guards (`parts[0] ?? ""`, `match[1] ?? null`)
+  4. **Map.get after has** → признаны отсутствующими (rely on `has()` contract)
+
+### Metrics
+```
+bun run typecheck  → 0 errors
+bun test           → 91 pass, 0 fail (8 files, 534 expect calls)
+bun run compat     → 50 pass, 0 fail
+```
+
+### Verification gates (CI)
+- `.github/workflows/ci.yml`: `bun install` → `typecheck` → `test`
