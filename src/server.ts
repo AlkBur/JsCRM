@@ -1,136 +1,115 @@
-import type { Server } from "bun";
-import { parse } from "./parser";
+import { join } from "path";
+import { Program } from "./Program";
+import { MetadataModel } from "../metadata/MetadataModel";
+import { SymbolIndex } from "./SymbolIndex";
 import { VM } from "./vm";
-import { RuntimeObject } from "./runtime-object";
-import { DocRepository } from "./db";
+import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
+import { registerBuiltins } from "../builtins/index";
 
-const repo = new DocRepository();
-const vm = new VM();
+const exportDir = join(__dirname, "..", "export");
 
-type Session = {
-  obj: RuntimeObject;
-  id: string;
-};
+const program = Program.loadFromManifest(exportDir);
+const metadata = MetadataModel.loadFromFile(join(exportDir, "metadata.json"));
+const index = SymbolIndex.build(program, metadata);
+const registry = new BuiltinRegistry();
+registerBuiltins(registry);
+const vm = new VM(program, registry);
 
-let currentId = 0;
-const sessions = new Map<string, Session>();
-const handlers = new Map<string, (obj: RuntimeObject) => Promise<void>>();
-
-async function loadHandlers(): Promise<void> {
-  const glob = new Bun.Glob("*.1c");
-  for await (const file of glob.scan("src/handlers")) {
-    const name = file.replace(/\.1c$/, "");
-    const code = await Bun.file(`src/handlers/${file}`).text();
-    try {
-      const ast = parse(code);
-      handlers.set(name, async (obj: RuntimeObject) => {
-        const vars: Record<string, any> = { Объект: obj };
-        await vm.execute(ast, vars);
-      });
-      console.log(`Загружен обработчик: ${name}`);
-    } catch (e) {
-      console.error(`Ошибка загрузки ${file}:`, e);
-    }
-  }
+function json(data: unknown, status = 200): Response {
+  return new Response(JSON.stringify(data, null, 2), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
 }
 
-function createSession(id?: string): Session {
-  const sessionId = id ?? `order-${++currentId}`;
-  const obj = new RuntimeObject();
-  const existing = repo.load(sessionId);
-  if (existing) {
-    obj.load(existing);
-  } else {
-    obj.load({ Сумма: 0, НДС: 0 });
+function moduleIR(name: string): unknown {
+  for (const m of program.getModules()) {
+    if (m.name === name) {
+      return m;
+    }
   }
-  const session = { obj, id: sessionId };
-  sessions.set(sessionId, session);
-  return session;
+  return null;
 }
 
 const server = Bun.serve({
   port: 3000,
-  async fetch(req, server: Server) {
-    if (server.upgrade(req)) return;
-
+  async fetch(req) {
     const url = new URL(req.url);
+    const method = req.method;
+    const path = url.pathname;
 
-    if (url.pathname === "/") {
-      return new Response(Bun.file("public/index.html"));
+    if (path === "/" || path === "/index.html") {
+      return new Response(Bun.file(join(__dirname, "..", "public", "index.html")));
     }
 
-    if (url.pathname === "/api/form") {
-      const form = {
-        fields: [
-          { id: "Сумма", type: "number", dataPath: "Сумма", event: "ПриИзмененииСуммы", label: "Сумма" },
-          { id: "НДС", type: "number", dataPath: "НДС", readOnly: true, label: "НДС" },
-        ],
-      };
-      return Response.json(form);
+    if (path === "/api/status") {
+      return json({
+        modules: program.getModules().length,
+        routines: program.getAllRoutines().length,
+        symbols: index.size,
+        catalogs: metadata.catalogs.length,
+        documents: metadata.documents.length,
+        enumerations: metadata.enumerations.length,
+      });
     }
 
-    if (url.pathname === "/api/data") {
-      let session = sessions.values().next().value;
-      if (!session) {
-        session = createSession();
+    if (path === "/api/symbols") {
+      const q = url.searchParams.get("q");
+      if (q) {
+        const lower = q.toLowerCase();
+        return json(index.getAll().filter(s => s.name.toLowerCase().includes(lower)));
       }
-      return Response.json(session.obj.toJSON());
+      return json(index.getAll());
     }
 
-    if (url.pathname === "/api/save" && req.method === "POST") {
-      const body: any = await req.json();
-      const id = body.id ?? "order-1";
-      repo.save(id, body.data);
-      return Response.json({ status: "ok" });
+    if (path === "/api/modules") {
+      return json(program.getModules().map(m => ({
+        name: m.name,
+        routineCount: m.routines.length,
+      })));
     }
 
-    if (url.pathname === "/api/load" && req.method === "POST") {
-      const body: any = await req.json();
-      const data = repo.load(body.id);
-      if (!data) return Response.json({ status: "not_found" }, { status: 404 });
-      const session = createSession(body.id);
-      session.obj.load(data);
-      return Response.json(session.obj.toJSON());
+    if (path.startsWith("/api/modules/")) {
+      const name = path.slice("/api/modules/".length);
+      const mod = program.getModules().find(m => m.name === name);
+      if (!mod) return json({ error: "Module not found" }, 404);
+      return json(mod);
     }
 
-    return new Response("Not found", { status: 404 });
-  },
-  websocket: {
-    async message(ws, message) {
-      let session = sessions.get(ws.data?.sessionId);
-      if (!session) {
-        session = createSession();
-        sessions.set(ws.data?.sessionId ?? String(++currentId), session);
-      }
+    if (path === "/api/metadata") {
+      return json({
+        catalogs: metadata.catalogs,
+        documents: metadata.documents,
+        enumerations: metadata.enumerations,
+        commonModules: metadata.commonModules,
+      });
+    }
 
-      let msg: any;
+    if (path.startsWith("/api/ir/")) {
+      const name = path.slice("/api/ir/".length);
+      const ir = moduleIR(name);
+      if (!ir) return json({ error: "Module not found" }, 404);
+      return json(ir);
+    }
+
+    if (path === "/api/run" && method === "POST") {
       try {
-        msg = JSON.parse(message as string);
-      } catch {
-        ws.send(JSON.stringify({ error: "Неверный JSON" }));
-        return;
+        const body: { name?: string; args?: unknown[] } = await req.json();
+        if (!body.name) return json({ success: false, error: "Missing name" }, 400);
+        const args: unknown[] = body.args ?? [];
+        const result = vm.call(body.name, args);
+        return json({ success: true, result });
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        return json({ success: false, error: msg });
       }
+    }
 
-      if (msg.type === "change") {
-        const { field, value } = msg;
-        session.obj.set(field, value);
-
-        if (msg.handler) {
-          const handler = handlers.get(msg.handler);
-          if (handler) {
-            await handler(session.obj);
-          }
-        }
-
-        const changedFields = [msg.handler ? "НДС" : null, field].filter(Boolean) as string[];
-        const uniqueFields = [...new Set(changedFields)];
-        for (const f of uniqueFields) {
-          ws.send(JSON.stringify({ type: "patch", field: f, value: session.obj.get(f) }));
-        }
-      }
-    },
+    return json({ error: "Not found" }, 404);
   },
 });
 
-await loadHandlers();
-console.log(`Сервер запущен на http://localhost:${server.port}`);
+console.log(`Server: http://localhost:${server.port}`);
+console.log(`  Modules: ${program.getModules().length}`);
+console.log(`  Routines: ${program.getAllRoutines().length}`);
+console.log(`  Symbols: ${index.size}`);

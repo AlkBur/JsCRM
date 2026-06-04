@@ -84,6 +84,14 @@ export class Program {
     return this.routines.get(name);
   }
 
+  getModules(): readonly ModuleInfo[] {
+    return this.modules;
+  }
+
+  getAllRoutines(): readonly RoutineInfo[] {
+    return [...this.routines.values()];
+  }
+
   static loadFromManifest(exportDir: string): Program {
     const manifestPath = join(exportDir, "manifest.json");
     if (!existsSync(manifestPath)) {

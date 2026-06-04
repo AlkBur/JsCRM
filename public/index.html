@@ -2,126 +2,230 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>JsCRM — Документ "Заказ"</title>
+  <title>JsCRM — Symbol Explorer</title>
   <style>
     * { box-sizing: border-box; font-family: system-ui, sans-serif; }
-    body { max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
-    .card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    h1 { font-size: 20px; margin: 0 0 20px; color: #333; }
-    .field { margin-bottom: 16px; }
-    label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; }
-    input[type="number"] {
-      width: 100%; padding: 8px 12px; font-size: 16px; border: 1px solid #ccc;
-      border-radius: 4px; outline: none; transition: border-color 0.2s;
-    }
-    input[type="number"]:focus { border-color: #4A90D9; box-shadow: 0 0 0 2px rgba(74,144,217,0.2); }
-    input[readonly] { background: #f0f0f0; color: #555; }
-    .status { font-size: 12px; color: #999; margin-top: 16px; }
-    .status.connected { color: #4CAF50; }
-    .status.disconnected { color: #f44336; }
-    button {
-      width: 100%; padding: 10px; font-size: 16px; background: #4A90D9; color: #fff;
-      border: none; border-radius: 4px; cursor: pointer; margin-top: 8px;
-    }
+    body { margin: 0; background: #f5f5f5; display: flex; height: 100vh; }
+    .sidebar { width: 220px; background: #fff; border-right: 1px solid #ddd; padding: 16px; display: flex; flex-direction: column; }
+    .sidebar h1 { font-size: 16px; margin: 0 0 16px; color: #333; }
+    .tab { padding: 8px 12px; margin-bottom: 4px; border-radius: 6px; cursor: pointer; color: #555; font-size: 14px; }
+    .tab:hover { background: #f0f0f0; }
+    .tab.active { background: #4A90D9; color: #fff; }
+    .main { flex: 1; padding: 24px; overflow-y: auto; }
+    .card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 16px; }
+    h2 { font-size: 18px; margin: 0 0 16px; color: #333; }
+    input[type="text"], input[type="search"], textarea { width: 100%; padding: 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; outline: none; }
+    input[type="text"]:focus, input[type="search"]:focus { border-color: #4A90D9; }
+    button { padding: 8px 20px; font-size: 14px; background: #4A90D9; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
     button:hover { background: #357ABD; }
     button:active { background: #2A5F9E; }
-    .toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: 4px; color: #fff; font-size: 14px; opacity: 0; transition: opacity 0.3s; }
-    .toast.show { opacity: 1; }
-    .toast.success { background: #4CAF50; }
-    .toast.error { background: #f44336; }
+    .symbol-list { margin-top: 12px; }
+    .symbol-item { padding: 6px 8px; border-radius: 4px; cursor: default; font-size: 13px; display: flex; justify-content: space-between; }
+    .symbol-item:nth-child(even) { background: #fafafa; }
+    .symbol-item .kind { font-size: 11px; color: #999; background: #eee; padding: 2px 6px; border-radius: 3px; }
+    .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 3px; margin-left: 6px; }
+    .badge.module { background: #e3f2fd; color: #1565c0; }
+    .badge.function { background: #e8f5e9; color: #2e7d32; }
+    .badge.procedure { background: #fff3e0; color: #e65100; }
+    .badge.catalog { background: #fce4ec; color: #c62828; }
+    .badge.document { background: #f3e5f5; color: #6a1b9a; }
+    .badge.enumeration { background: #e0f2f1; color: #00695c; }
+    .result-box { background: #263238; color: #e0e0e0; padding: 12px 16px; border-radius: 6px; font-family: monospace; font-size: 13px; margin-top: 12px; white-space: pre-wrap; overflow-x: auto; }
+    .error { color: #ef5350; }
+    .count { font-size: 12px; color: #999; margin-top: 8px; }
+    .status-bar { padding: 8px 16px; background: #e8f5e9; color: #2e7d32; font-size: 13px; border-top: 1px solid #c8e6c9; text-align: center; }
+    .module-item { padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 14px; }
+    .module-item:hover { background: #f5f5f5; }
+    .meta-section { margin-bottom: 16px; }
+    .meta-section h3 { font-size: 14px; color: #666; margin: 0 0 8px; }
+    .meta-item { padding: 4px 0; font-size: 13px; }
+    textarea { font-family: monospace; font-size: 13px; min-height: 60px; resize: vertical; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Документ "Заказ"</h1>
-    <div class="field">
-      <label for="Сумма">Сумма</label>
-      <input type="number" id="Сумма" value="0" step="0.01" />
-    </div>
-    <div class="field">
-      <label for="НДС">НДС (20%)</label>
-      <input type="number" id="НДС" value="0" readonly />
-    </div>
-    <button id="saveBtn">Сохранить</button>
-    <div id="status" class="status disconnected">Нет подключения</div>
+  <div class="sidebar">
+    <h1>JsCRM Explorer</h1>
+    <div class="tab active" data-tab="symbols">Symbols</div>
+    <div class="tab" data-tab="modules">Modules</div>
+    <div class="tab" data-tab="metadata">Metadata</div>
+    <div class="tab" data-tab="run">Run</div>
+    <div class="tab" data-tab="ir">IR Viewer</div>
   </div>
-  <div id="toast" class="toast"></div>
+  <div class="main">
+    <div id="tab-symbols" class="tab-content active">
+      <div class="card">
+        <h2>Symbols</h2>
+        <input type="search" id="symbol-search" placeholder="Поиск..." oninput="searchSymbols()" />
+        <div id="symbol-list" class="symbol-list"></div>
+        <div id="symbol-count" class="count"></div>
+      </div>
+    </div>
+    <div id="tab-modules" class="tab-content">
+      <div class="card">
+        <h2>Modules</h2>
+        <div id="module-list"></div>
+      </div>
+    </div>
+    <div id="tab-metadata" class="tab-content">
+      <div class="card" id="metadata-content"></div>
+    </div>
+    <div id="tab-run" class="tab-content">
+      <div class="card">
+        <h2>Run Function</h2>
+        <input type="text" id="run-name" placeholder="Имя функции" /><br/><br/>
+        <textarea id="run-args" placeholder="Аргументы (JSON массив, опционально)"></textarea><br/><br/>
+        <button onclick="runFunction()">Выполнить</button>
+        <div id="run-result" class="result-box" style="display:none"></div>
+        <div id="run-error" class="result-box error" style="display:none"></div>
+      </div>
+    </div>
+    <div id="tab-ir" class="tab-content">
+      <div class="card">
+        <h2>IR Viewer</h2>
+        <input type="text" id="ir-search" placeholder="Имя модуля..." oninput="loadIR()" />
+        <div id="ir-output" class="result-box" style="display:none"></div>
+      </div>
+    </div>
+  </div>
 
   <script>
-    let ws = null;
-    let object = null;
+    let allSymbols = [];
+    let allModules = [];
 
-    const суммаInput = document.getElementById("Сумма");
-    const ндсInput = document.getElementById("НДС");
-    const statusEl = document.getElementById("status");
-    const saveBtn = document.getElementById("saveBtn");
-
-    function connect() {
-      ws = new WebSocket("ws://" + location.host);
-
-      ws.onopen = () => {
-        statusEl.textContent = "Подключено к серверу";
-        statusEl.className = "status connected";
-        loadData();
-      };
-
-      ws.onclose = () => {
-        statusEl.textContent = "Нет подключения";
-        statusEl.className = "status disconnected";
-        setTimeout(connect, 2000);
-      };
-
-      ws.onmessage = (event) => {
-        const patch = JSON.parse(event.data);
-        if (patch.type === "patch") {
-          if (patch.field === "НДС") {
-            ндсInput.value = patch.value;
-          }
-          if (patch.field === "Сумма") {
-            суммаInput.value = patch.value;
-          }
-        }
-      };
+    async function api(path) {
+      const res = await fetch(path);
+      return res.json();
     }
 
-    async function loadData() {
-      const res = await fetch("/api/data");
-      object = await res.json();
-      суммаInput.value = object.Сумма;
-      ндсInput.value = object.НДС;
+    async function init() {
+      allSymbols = await api("/api/symbols");
+      const status = await api("/api/status");
+      allModules = await api("/api/modules");
+
+      renderSymbols(allSymbols);
+      renderModules();
+      renderMetadata();
+      document.getElementById("symbol-count").textContent = status.symbols + " symbols, " + status.routines + " routines, " + status.modules + " modules";
     }
 
-    суммаInput.addEventListener("input", () => {
-      const value = parseFloat(суммаInput.value) || 0;
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({
-          type: "change",
-          field: "Сумма",
-          value: value,
-          handler: "ПриИзмененииСуммы"
-        }));
+    function renderSymbols(list) {
+      const el = document.getElementById("symbol-list");
+      el.innerHTML = list.map(s =>
+        '<div class="symbol-item"><span>' + esc(s.name) + (s.moduleName ? ' <span style="color:#999;font-size:11px">(' + esc(s.moduleName) + ')</span>' : '') + '</span><span class="badge ' + s.kind + '">' + s.kind + '</span></div>'
+      ).join("");
+    }
+
+    function searchSymbols() {
+      const q = document.getElementById("symbol-search").value;
+      if (!q) { renderSymbols(allSymbols); return; }
+      const lower = q.toLowerCase();
+      renderSymbols(allSymbols.filter(s => s.name.toLowerCase().includes(lower)));
+    }
+
+    function renderModules() {
+      const el = document.getElementById("module-list");
+      el.innerHTML = allModules.map(m =>
+        '<div class="module-item" onclick="showModule(\'' + esc(m.name) + '\')">' + esc(m.name) + ' <span style="color:#999;font-size:12px">(' + m.routineCount + ' routines)</span></div>'
+      ).join("");
+    }
+
+    async function showModule(name) {
+      const data = await api("/api/modules/" + encodeURIComponent(name));
+      const el = document.getElementById("ir-output");
+      el.style.display = "block";
+      el.textContent = JSON.stringify(data, null, 2);
+
+      document.querySelector('[data-tab="ir"]').click();
+      document.getElementById("ir-search").value = name;
+    }
+
+    async function renderMetadata() {
+      const data = await api("/api/metadata");
+      let html = "";
+      if (data.commonModules && data.commonModules.length) {
+        html += '<div class="meta-section"><h3>Общие модули (' + data.commonModules.length + ')</h3>';
+        data.commonModules.forEach(m => html += '<div class="meta-item">' + esc(m.name) + '</div>');
+        html += '</div>';
       }
-    });
+      if (data.catalogs && data.catalogs.length) {
+        html += '<div class="meta-section"><h3>Справочники (' + data.catalogs.length + ')</h3>';
+        data.catalogs.forEach(c => html += '<div class="meta-item">' + esc(c.name) + '</div>');
+        html += '</div>';
+      }
+      if (data.documents && data.documents.length) {
+        html += '<div class="meta-section"><h3>Документы (' + data.documents.length + ')</h3>';
+        data.documents.forEach(d => html += '<div class="meta-item">' + esc(d.name) + '</div>');
+        html += '</div>';
+      }
+      if (data.enumerations && data.enumerations.length) {
+        html += '<div class="meta-section"><h3>Перечисления (' + data.enumerations.length + ')</h3>';
+        data.enumerations.forEach(e => html += '<div class="meta-item">' + esc(e.name) + '</div>');
+        html += '</div>';
+      }
+      document.getElementById("metadata-content").innerHTML = html;
+    }
 
-    saveBtn.addEventListener("click", async () => {
-      const id = "order-1";
-      const data = { Сумма: parseFloat(суммаInput.value) || 0, НДС: parseFloat(ндсInput.value) || 0 };
-      await fetch("/api/save", {
+    async function runFunction() {
+      const name = document.getElementById("run-name").value.trim();
+      if (!name) return;
+      let args = [];
+      try {
+        const raw = document.getElementById("run-args").value.trim();
+        if (raw) args = JSON.parse(raw);
+      } catch {
+        showRunError("Invalid JSON in arguments");
+        return;
+      }
+      const res = await fetch("/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, data })
+        body: JSON.stringify({ name, args })
       });
-      showToast("Сохранено", "success");
-    });
-
-    function showToast(text, type) {
-      const toast = document.getElementById("toast");
-      toast.textContent = text;
-      toast.className = "toast " + type + " show";
-      setTimeout(() => toast.className = "toast", 2000);
+      const data = await res.json();
+      if (data.success) {
+        const el = document.getElementById("run-result");
+        el.style.display = "block";
+        el.textContent = JSON.stringify(data.result, null, 2);
+        document.getElementById("run-error").style.display = "none";
+      } else {
+        showRunError(data.error);
+      }
     }
 
-    connect();
+    function showRunError(msg) {
+      const el = document.getElementById("run-error");
+      el.style.display = "block";
+      el.textContent = "Error: " + msg;
+      document.getElementById("run-result").style.display = "none";
+    }
+
+    async function loadIR() {
+      const name = document.getElementById("ir-search").value.trim();
+      const el = document.getElementById("ir-output");
+      if (!name) { el.style.display = "none"; return; }
+      const data = await api("/api/ir/" + encodeURIComponent(name));
+      if (data && !data.error) {
+        el.style.display = "block";
+        el.textContent = JSON.stringify(data, null, 2);
+      } else {
+        el.style.display = "none";
+      }
+    }
+
+    function esc(s) { if (!s) return ""; return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById("tab-" + tab.dataset.tab).classList.add("active");
+      });
+    });
+
+    init();
   </script>
 </body>
 </html>

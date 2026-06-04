@@ -9,7 +9,7 @@ Primary source of truth: **IR v1** — a JSON-based Intermediate Representation 
 
 IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**40 tests, 0 failures.**
+**37 tests, 0 failures.**
 
 ## Runtime Layer Rules
 
@@ -32,7 +32,7 @@ Layer 1  IR v1 (frozen)              ✅ DONE
 Layer 2  VM + Golden Tests           ✅ DONE
 Layer 3  Runtime + Multi-module      ✅ DONE
 Layer 4  Metadata                    ✅ DONE
-Layer 5  Symbol Index                ← TBD
+Layer 5  Symbol Index                ✅ DONE
 Layer 6  Dependency Graph            ← TBD
 Layer 7  Web IDE                     ← TBD
 ```
@@ -60,6 +60,9 @@ Layer 7  Web IDE                     ← TBD
   metadata-types.ts       — TS interfaces matching schema
   MetadataModel.ts        — Immutable read-only model
 
+/symbols                  ← Symbol types (Layer 5)
+  symbol-types.ts         — SymbolKind + SymbolInfo
+
 /compat                   ← Compatibility Runner
   runner.ts               — load IR → VM → diff with expected
 
@@ -76,6 +79,7 @@ Layer 7  Web IDE                     ← TBD
 
 /src                      ← Runtime implementation
   Program.ts              — Multi-module container (manifest loader + routine registry)
+  SymbolIndex.ts          — Searchable index of all named entities (Layer 5)
   vm.ts                   — IR v1 interpreter (async, Value-typed)
   legacy/
     ast.ts                — AST types (legacy, frozen)
@@ -114,7 +118,6 @@ Layer 7  Web IDE                     ← TBD
 
 ## 🚫 What NOT to build yet
 
-- Symbol Index (Layer 5)
 - Dependency Graph (Layer 6)
 - Web IDE (Layer 7)
 - DynamicList / QueryRuntime
