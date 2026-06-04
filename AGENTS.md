@@ -41,7 +41,7 @@ Layer 4  Metadata                         ✅ DONE
 Layer 5  Symbol Index                     ✅ DONE
 Layer 6  Dependency Graph (queries)        ✅ DONE
 Layer 7  Metadata v2                       ✅ DONE
-Layer 8  Language Server                   ← TBD
+Layer 8  Language Server (Navigation Core) ✅ DONE (Phase 8.1)
 Layer 9  Web IDE                           ← TBD
 Layer 10 Synchronization & Migration       ← FUTURE
 ```
@@ -63,13 +63,29 @@ These layers are independent and must not be mixed.
 ### Source of truth vs derived indexes
 `Program` and `MetadataModel` are immutable sources of truth.
 
-`SymbolIndex`, `MetadataIndex`, and `DependencyGraph` are derived structures.
+`SymbolIndex`, `MetadataIndex`, `DependencyGraph`, and `LocationIndex` are derived structures.
 They contain no source of truth and can always be rebuilt from `Program` and `MetadataModel`.
 
 ### Execution must not depend on indexes
 - VM depends on Program, BuiltinRegistry.
 - VM does not depend on SymbolIndex, MetadataIndex, or DependencyGraph.
 - Indexes are optimization and navigation layers only.
+
+### Index Layer (derived models)
+Composed of:
+- **SymbolIndex** — name → `{kind, space, module}`
+- **DependencyGraph** — caller/callee edges across routines
+- **LocationIndex** — name → `{URI, range}`
+- **MetadataIndex** — attribute-level search within metadata
+
+Properties:
+- All indexes are precomputed once at startup
+- All indexes are immutable and query-only
+- All indexes are derived from `Program` and `MetadataModel`
+- LSP and Web IDE MUST use indexes only, NEVER raw IR/AST
+- Indexes contain no source of truth — can always be rebuilt
+- Indexes are monotonic: rebuilt, never mutated
+- Indexes MUST NOT infer missing semantic information — they only index existing explicit data
 
 ## 📁 Project Structure
 
@@ -131,6 +147,18 @@ They contain no source of truth and can always be rebuilt from `Program` and `Me
 /public
   index.html              — HTML + vanilla JS client
 
+/docs                     — Architecture specifications
+  index-layer-contract.md — Index layer responsibilities, prohibitions, invariants
+  lsp-roadmap.md          — LSP phases 8.1 → 8.4, constraints, excluded features
+
+/lsp                      ← Language Server (Layer 8, Phase 8.1)
+  server.ts               — stdio JSON-RPC main loop
+  transport.ts            — LSP transport (Content-Length)
+  LocationIndex.ts        — Symbol → URI/range mapping
+  handlers/
+    definition.ts         — textDocument/definition
+    references.ts         — textDocument/references
+
 /sync                     ← Synchronization & Migration Engine (FUTURE)
   Snapshot.ts              — Immutable versioned export state
   MetadataDiffer.ts        — Structural diff between snapshots
@@ -166,7 +194,6 @@ They contain no source of truth and can always be rebuilt from `Program` and `Me
 
 ## 🚫 What NOT to build yet
 
-- Language Server (Layer 8)
 - Web IDE (Layer 9)
 - Synchronization Engine (Layer 10)
 - DynamicList / QueryRuntime
@@ -250,6 +277,8 @@ Primitive strings (`"string"`, `"number"`, etc.) are forbidden — all scalars u
   - attributes
 - Metadata dependencies are modeled separately and must not be mixed
   with IR call dependencies.
+- Metadata-to-IR edges (e.g., command handler → routine) are intentionally
+  excluded from DependencyGraph. They are handled in Layer 8+ (Language Server).
 
 ## 📋 SymbolIndex Rules
 
@@ -259,6 +288,10 @@ Primitive strings (`"string"`, `"number"`, etc.) are forbidden — all scalars u
 - SymbolIndex is derived from `Program` and `MetadataModel` only.
 - Symbol names are unique within SymbolIndex.
 - Duplicate symbols are errors.
+- Every symbol has a `space` field: `"runtime"` (from Program) or `"metadata"` (from MetadataModel).
+  Program is the runtime universe; MetadataModel is the structural universe. They never merge.
+- `SymbolSpace` has two values: `runtime | metadata`. No `combined` — mixing orthogonal axes
+  is forbidden.
 
 ## ⚙️ Synchronization Engine Layer Rules (FUTURE)
 
@@ -354,3 +387,20 @@ Exporter must match schema exactly. No normalizers on Bun side.
 
 ### Optional metadata
 `nodeId` and `loc` are optional on any node.
+
+### IR Location Contract
+- `meta.loc` on Stmt/Expr nodes is OPTIONAL — IR v1 does not guarantee it.
+- LSP MUST NOT require loc — fallback to null/empty is required.
+- IR is not source of truth for IDE navigation. IR location data is optional
+  debug metadata only.
+- LocationIndex is a best-effort derived structure. It does not guarantee
+  completeness of symbol locations.
+- LSP MUST NOT depend on IR structure for navigation correctness.
+
+### LSP / Navigation Layer Rules
+- LSP is index-driven, NOT IR-driven.
+- LSP MUST NOT perform full IR traversal per request.
+- All queries must be served from precomputed indexes:
+  SymbolIndex, DependencyGraph, LocationIndex.
+- LSP MUST NOT reconstruct semantics from IR. Any semantic query must be
+  answered by DependencyGraph, SymbolIndex, or LocationIndex.

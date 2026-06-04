@@ -14,8 +14,11 @@ export type SymbolKind =
   | "document"
   | "enumeration";
 
+export type SymbolSpace = "runtime" | "metadata";
+
 export interface SymbolInfo {
   readonly name: string;
   readonly kind: SymbolKind;
+  readonly space: SymbolSpace;
   readonly moduleName?: string;
 }

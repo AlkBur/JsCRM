@@ -12,7 +12,7 @@
 
 import { Program, type RoutineInfo } from "./Program";
 import { MetadataModel } from "../metadata/MetadataModel";
-import type { SymbolInfo, SymbolKind } from "../symbols/symbol-types";
+import type { SymbolInfo, SymbolKind, SymbolSpace } from "../symbols/symbol-types";
 
 export class DuplicateSymbolError extends Error {
   constructor(
@@ -39,29 +39,29 @@ export class SymbolIndex {
     const all: SymbolInfo[] = [];
 
     for (const module of program.getModules()) {
-      add("module", module.name, undefined, symbols, all);
+      add("module", "runtime", module.name, undefined, symbols, all);
     }
 
     for (const ri of program.getAllRoutines()) {
-      add(ri.routine.kind, ri.routine.name, ri.moduleName, symbols, all);
+      add(ri.routine.kind, "runtime", ri.routine.name, ri.moduleName, symbols, all);
     }
 
     for (const cm of metadata.commonModules) {
       if (!symbols.has(cm.name)) {
-        add("module", cm.name, undefined, symbols, all);
+        add("module", "metadata", cm.name, undefined, symbols, all);
       }
     }
 
     for (const c of metadata.catalogs) {
-      add("catalog", c.name, undefined, symbols, all);
+      add("catalog", "metadata", c.name, undefined, symbols, all);
     }
 
     for (const d of metadata.documents) {
-      add("document", d.name, undefined, symbols, all);
+      add("document", "metadata", d.name, undefined, symbols, all);
     }
 
     for (const e of metadata.enumerations) {
-      add("enumeration", e.name, undefined, symbols, all);
+      add("enumeration", "metadata", e.name, undefined, symbols, all);
     }
 
     return new SymbolIndex(symbols, all);
@@ -86,6 +86,7 @@ export class SymbolIndex {
 
 function add(
   kind: SymbolKind,
+  space: SymbolSpace,
   name: string,
   moduleName: string | undefined,
   map: Map<string, SymbolInfo>,
@@ -95,7 +96,7 @@ function add(
     const existing = map.get(name)!;
     throw new DuplicateSymbolError(name, existing.kind, kind);
   }
-  const info: SymbolInfo = { name, kind, ...(moduleName ? { moduleName } : {}) };
+  const info: SymbolInfo = { name, kind, space, ...(moduleName ? { moduleName } : {}) };
   map.set(name, info);
   list.push(info);
 }
