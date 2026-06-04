@@ -15,7 +15,7 @@ Synchronization & Migration Engine (Layer 10) orchestrates the full pipeline.
 
 IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**64 tests, 0 failures (bun test) + 50 golden tests (compat runner).**
+**80 tests, 0 failures (bun test) + 50 golden tests (compat runner).**
 
 ## Runtime Layer Rules
 
@@ -141,11 +141,28 @@ Properties:
     vm.ts                 — Legacy VM on AST types
   runtime-object.ts       — Observable data object
   server.ts               — Bun HTTP + REST API (Program, Metadata, SymbolIndex, DependencyGraph, VM)
+  explorer-types.ts       — TreeNode interface + TreeProjection contract
+  tree-builder.ts         — MetadataModel → TreeNode[] pure function
   db.ts                   — SQLite via bun:sqlite
   handlers/               — .1c handler files (legacy, static)
 
 /public
   index.html              — HTML + vanilla JS client
+
+/client                   — React + Vite client (Explorer v1)
+  index.html              — HTML entry
+  vite.config.ts          — Vite config (proxy /api → localhost:3000)
+  src/
+    main.tsx              — React entry
+    App.tsx               — Main app (tree + detail + breadcrumb + search)
+    app.css               — Styles
+    types.ts              — Type mirror (TreeNode, FieldType)
+    api.ts                — API client
+    components/
+      TreeView.tsx        — Tree view (recursive, expand/collapse, search filter)
+      DetailPanel.tsx     — Detail panel (attributes, ТЧ, forms, commands)
+      Breadcrumb.tsx      — Breadcrumb navigation
+      SearchBar.tsx       — Search input
 
 /docs                     — Architecture specifications
   index-layer-contract.md — Index layer responsibilities, prohibitions, invariants
@@ -429,6 +446,48 @@ Exporter must match schema exactly. No normalizers on Bun side.
 - LocationIndex is a best-effort derived structure. It does not guarantee
   completeness of symbol locations.
 - LSP MUST NOT depend on IR structure for navigation correctness.
+
+## 📋 Tree Projection Contract
+
+### Определение
+TreeView — это чистая проекция MetadataIndex. Она не содержит доменной логики, не вычисляет структуру, не интерпретирует метаданные. Единственная ответственность — отображение существующей иерархии метаданных в виде дерева.
+
+### TreeNode
+```ts
+interface TreeNode {
+  id: string;        // стабильный идентификатор: Catalog.Имя, Document.Имя.Реквизит
+  label: string;     // отображаемое имя
+  kind: "root" | "folder" | "entity" | "attribute" | "tabular" | "form" | "command" | "enum_value";
+  parentKind?: "catalog" | "document" | "enumeration" | "";
+  metaRef?: string;  // ссылка на MetadataIndex
+  children?: TreeNode[];
+}
+```
+
+### Правила
+- `TreeBuilder` — чистая функция без состояния и побочных эффектов
+- `TreeNode.id` = стабильный составной ID, он же будет мостом к LSP bridge
+- Дерево не содержит доменной логики — только отображение metadata → TreeNode
+- React — только dumb renderer, без интерпретации структуры
+- Источник структуры — MetadataIndex, источник имён — SymbolIndex (через MetadataModel)
+
+### Node identity contract
+```
+Catalog.Организации
+Document.ЗаказКлиента
+Enum.ТипДоговора
+Catalog.Организации.Реквизит.ИНН
+Catalog.Организации.ТабличныеЧасти.Товары
+```
+
+### State model (UI only)
+```ts
+interface ExplorerUIState {
+  selectedNodeId: string | null;
+  expandedNodes: Set<string>;    // локальный UI state, не бизнес-состояние
+  searchFilter: string;          // локальный фильтр по имени (substring)
+}
+```
 
 ### LSP / Navigation Layer Rules
 - LSP is index-driven, NOT IR-driven.

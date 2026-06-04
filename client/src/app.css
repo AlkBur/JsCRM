@@ -1,0 +1,58 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #222; }
+
+.app { display: flex; height: 100vh; }
+
+.sidebar {
+  width: 280px; background: #fff; border-right: 1px solid #ddd;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.title { font-size: 15px; padding: 14px 16px 10px; color: #333; border-bottom: 1px solid #eee; }
+.tree-container { flex: 1; overflow-y: auto; padding: 8px 0; }
+
+.main { flex: 1; padding: 20px 24px; overflow-y: auto; }
+
+/* Tree */
+.tree-list { list-style: none; }
+.tree-node { }
+.tree-row {
+  display: flex; align-items: center; padding: 3px 12px; cursor: default;
+  font-size: 13px; border-radius: 2px; user-select: none;
+}
+.tree-row:hover { background: #e8f0fe; }
+.tree-row.selected { background: #d2e3fc; font-weight: 500; }
+.tree-row .chevron {
+  width: 16px; flex-shrink: 0; color: #888; font-size: 10px;
+  display: inline-block; text-align: center;
+}
+.tree-row .chevron.empty { visibility: hidden; }
+.tree-row .chevron.expanded { transform: rotate(90deg); }
+.tree-row .icon { margin-right: 4px; font-size: 12px; width: 18px; text-align: center; }
+.tree-row .label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Search */
+.search-bar { padding: 8px 12px; border-bottom: 1px solid #eee; }
+.search-bar input {
+  width: 100%; padding: 6px 10px; font-size: 13px; border: 1px solid #ccc;
+  border-radius: 4px; outline: none;
+}
+.search-bar input:focus { border-color: #4A90D9; }
+
+/* Breadcrumb */
+.breadcrumb { font-size: 12px; color: #666; margin-bottom: 8px; }
+.breadcrumb span { color: #999; }
+.breadcrumb .part { color: #4A90D9; cursor: default; }
+
+/* Detail Panel */
+.detail { }
+.detail h2 { font-size: 16px; margin-bottom: 12px; color: #333; }
+.detail-section { margin-bottom: 16px; }
+.detail-section h3 { font-size: 13px; color: #666; margin-bottom: 6px; font-weight: 600; }
+.detail-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.detail-table th { text-align: left; padding: 4px 8px; background: #fafafa; border-bottom: 1px solid #eee; font-weight: 500; color: #555; }
+.detail-table td { padding: 4px 8px; border-bottom: 1px solid #f0f0f0; }
+.detail-table tr:hover td { background: #f8f9ff; }
+.type-label { color: #888; font-size: 12px; }
+.required-star { color: #c62828; margin-left: 2px; }
+.empty-note { color: #999; font-size: 12px; font-style: italic; }
+.loading { padding: 40px; text-align: center; color: #999; }

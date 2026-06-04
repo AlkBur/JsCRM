@@ -7,6 +7,7 @@ import { DependencyGraph } from "./DependencyGraph";
 import { VM } from "./vm";
 import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../builtins/index";
+import { buildTree } from "./tree-builder";
 
 const exportDir = join(__dirname, "..", "export");
 
@@ -18,6 +19,7 @@ const graph = DependencyGraph.build(program);
 const registry = new BuiltinRegistry();
 registerBuiltins(registry);
 const vm = new VM(program, registry);
+const tree = buildTree(metadata);
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data, null, 2), {
@@ -127,6 +129,57 @@ const server = Bun.serve({
       const includeTests = url.searchParams.get("includeTests") === "true";
       const includeEntrypoints = url.searchParams.get("includeEntrypoints") === "true";
       return json({ unused: graph.findUnused({ includeTests, includeEntrypoints }) });
+    }
+
+    if (path === "/api/tree") {
+      return json(tree);
+    }
+
+    if (path.startsWith("/api/node/")) {
+      const nodeId = path.slice("/api/node/".length);
+      // Parse node ID: Catalog.Name, Document.Name, Enum.Name, etc.
+      const parts = nodeId.split(".");
+      const entityKind = parts[0]; // Catalog, Document, Enum
+      const entityName = parts[1];
+      const subKind = parts[2]; // Attributes, TabularSections, Forms, Commands — optional
+
+      if (!entityName) return json({ error: "Invalid node ID" }, 400);
+
+      if (entityKind === "Enum") {
+        const en = metadata.findEnumerationV2(entityName);
+        if (!en) return json({ error: "Enumeration not found" }, 404);
+        return json({ kind: "enumeration", name: en.name, uuid: en.uuid, values: en.values });
+      }
+
+      const parentKind = entityKind === "Catalog" ? "catalog" : entityKind === "Document" ? "document" : null;
+      if (!parentKind) return json({ error: "Unknown entity kind" }, 400);
+
+      const entity = parentKind === "catalog" ? metadata.findCatalogV2(entityName) : metadata.findDocumentV2(entityName);
+      if (!entity) return json({ error: "Entity not found" }, 404);
+
+      if (subKind === "Attributes") {
+        return json({ kind: "attributes", parentName: entityName, parentKind, items: entity.attributes });
+      }
+      if (subKind === "TabularSections") {
+        return json({ kind: "tabularSections", parentName: entityName, parentKind, items: entity.tabularSections });
+      }
+      if (subKind === "Forms") {
+        return json({ kind: "forms", parentName: entityName, parentKind, items: entity.forms });
+      }
+      if (subKind === "Commands") {
+        return json({ kind: "commands", parentName: entityName, parentKind, items: entity.commands });
+      }
+
+      // Return full entity detail
+      return json({
+        kind: parentKind,
+        name: entity.name,
+        uuid: entity.uuid,
+        attributes: entity.attributes,
+        tabularSections: entity.tabularSections,
+        forms: entity.forms,
+        commands: entity.commands,
+      });
     }
 
     if (path === "/api/run" && method === "POST") {

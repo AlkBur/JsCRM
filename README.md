@@ -25,8 +25,8 @@ Two execution paths:
 
 ```bash
 bun install
-bun test              # 26 tests, 0 fail
-bun run src/server.ts # http://localhost:3000
+bun test              # 80 tests, 0 fail
+bun dev               # http://localhost:3000
 ```
 
 ## Project Status
@@ -41,6 +41,20 @@ bun run src/server.ts # http://localhost:3000
 | Metadata Loader      | ⏳ Planned  |
 
 See `AGENTS.md` for detailed roadmap.
+
+## Launch
+
+```bash
+# API server (Bun, порт 3000)
+bun dev
+
+# React client (Vite, порт 5173, прокси /api → 3000)
+bun run client
+
+# Performance benchmarks
+bun bench              # запустить и сравнить с baseline
+bun bench:save         # обновить baseline
+```
 
 ## Tech Stack
 

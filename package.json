@@ -3,7 +3,11 @@
     "version": "0.0.1",
     "type": "module",
     "scripts": {
-        "dev": "bun run src/server.ts"
+        "dev": "bun run src/server.ts",
+        "test": "bun test",
+        "bench": "bun run bench/runner.ts",
+        "bench:save": "bun run bench/runner.ts --save",
+        "client": "bun run --cwd client dev"
     },
     "dependencies": {
         "ajv": "^8.20.0"
