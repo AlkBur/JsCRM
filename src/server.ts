@@ -2,6 +2,7 @@ import { join } from "path";
 import { Program } from "./Program";
 import { MetadataModel } from "../metadata/MetadataModel";
 import { SymbolIndex } from "./SymbolIndex";
+import { DependencyGraph } from "./DependencyGraph";
 import { VM } from "./vm";
 import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../builtins/index";
@@ -11,6 +12,7 @@ const exportDir = join(__dirname, "..", "export");
 const program = Program.loadFromManifest(exportDir);
 const metadata = MetadataModel.loadFromFile(join(exportDir, "metadata.json"));
 const index = SymbolIndex.build(program, metadata);
+const graph = DependencyGraph.build(program);
 const registry = new BuiltinRegistry();
 registerBuiltins(registry);
 const vm = new VM(program, registry);
@@ -47,6 +49,7 @@ const server = Bun.serve({
         modules: program.getModules().length,
         routines: program.getAllRoutines().length,
         symbols: index.size,
+        graphNodes: graph.getAllNodes().length,
         catalogs: metadata.catalogs.length,
         documents: metadata.documents.length,
         enumerations: metadata.enumerations.length,
@@ -92,6 +95,23 @@ const server = Bun.serve({
       return json(ir);
     }
 
+    if (path === "/api/graph") {
+      const name = url.searchParams.get("name");
+      if (name) {
+        return json({
+          callees: graph.getCallees(name),
+          callers: graph.getCallers(name),
+        });
+      }
+      return json({ nodes: graph.getAllNodes().length });
+    }
+
+    if (path === "/api/graph/unused") {
+      const includeTests = url.searchParams.get("includeTests") === "true";
+      const includeEntrypoints = url.searchParams.get("includeEntrypoints") === "true";
+      return json({ unused: graph.findUnused({ includeTests, includeEntrypoints }) });
+    }
+
     if (path === "/api/run" && method === "POST") {
       try {
         const body: { name?: string; args?: unknown[] } = await req.json();
@@ -113,3 +133,4 @@ console.log(`Server: http://localhost:${server.port}`);
 console.log(`  Modules: ${program.getModules().length}`);
 console.log(`  Routines: ${program.getAllRoutines().length}`);
 console.log(`  Symbols: ${index.size}`);
+console.log(`  Graph nodes: ${graph.getAllNodes().length}`);

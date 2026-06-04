@@ -52,6 +52,7 @@
     <div class="tab" data-tab="metadata">Metadata</div>
     <div class="tab" data-tab="run">Run</div>
     <div class="tab" data-tab="ir">IR Viewer</div>
+    <div class="tab" data-tab="graph">Graph</div>
   </div>
   <div class="main">
     <div id="tab-symbols" class="tab-content active">
@@ -88,6 +89,19 @@
         <div id="ir-output" class="result-box" style="display:none"></div>
       </div>
     </div>
+    <div id="tab-graph" class="tab-content">
+      <div class="card">
+        <h2>Call Graph</h2>
+        <input type="text" id="graph-search" placeholder="Имя функции..." oninput="loadGraph()" />
+        <div id="graph-output" class="result-box" style="display:none"></div>
+      </div>
+      <div class="card">
+        <h2>Unused Functions</h2>
+        <label><input type="checkbox" id="graph-include-tests" onchange="loadUnused()" /> Include tests</label>
+        <label style="margin-left:12px"><input type="checkbox" id="graph-include-entrypoints" onchange="loadUnused()" /> Include entrypoints</label>
+        <div id="graph-unused-output" class="result-box" style="display:none"></div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -107,7 +121,8 @@
       renderSymbols(allSymbols);
       renderModules();
       renderMetadata();
-      document.getElementById("symbol-count").textContent = status.symbols + " symbols, " + status.routines + " routines, " + status.modules + " modules";
+      document.getElementById("symbol-count").textContent = status.symbols + " symbols, " + status.routines + " routines, " + status.modules + " modules, " + status.graphNodes + " graph nodes";
+      loadUnused();
     }
 
     function renderSymbols(list) {
@@ -199,6 +214,39 @@
       el.style.display = "block";
       el.textContent = "Error: " + msg;
       document.getElementById("run-result").style.display = "none";
+    }
+
+    async function loadGraph() {
+      const name = document.getElementById("graph-search").value.trim();
+      const el = document.getElementById("graph-output");
+      if (!name) { el.style.display = "none"; return; }
+      const data = await api("/api/graph?name=" + encodeURIComponent(name));
+      if (data && data.callees) {
+        el.style.display = "block";
+        let txt = "Callees (calls):\n";
+        if (data.callees.length) txt += data.callees.map(n => "  " + n).join("\n");
+        else txt += "  (none)";
+        txt += "\n\nCallers (called by):\n";
+        if (data.callers.length) txt += data.callers.map(n => "  " + n).join("\n");
+        else txt += "  (none)";
+        el.textContent = txt;
+      } else {
+        el.style.display = "none";
+      }
+    }
+
+    async function loadUnused() {
+      const includeTests = document.getElementById("graph-include-tests").checked;
+      const includeEntrypoints = document.getElementById("graph-include-entrypoints").checked;
+      const data = await api("/api/graph/unused?includeTests=" + includeTests + "&includeEntrypoints=" + includeEntrypoints);
+      const el = document.getElementById("graph-unused-output");
+      if (data.unused && data.unused.length) {
+        el.style.display = "block";
+        el.textContent = data.unused.length + " unused functions:\n" + data.unused.map(n => "  " + n).join("\n");
+      } else {
+        el.style.display = "block";
+        el.textContent = "No unused functions found.";
+      }
     }
 
     async function loadIR() {

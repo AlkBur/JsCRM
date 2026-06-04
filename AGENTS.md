@@ -5,11 +5,17 @@
 Build a working 1C-platform compatible runtime in Bun/TypeScript/SQLite.
 Primary source of truth: **IR v1** — a JSON-based Intermediate Representation for 1C:Enterprise code.
 
+### Long-term architecture
+```
+1C → export/ → Snapshot → MetadataDiff → MigrationPlan → SQL
+```
+Synchronization & Migration Engine (Layer 9) orchestrates the full pipeline.
+
 ## ✅ Current Status
 
 IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 
-**37 tests, 0 failures.**
+**51 tests, 0 failures (bun test) + 40 golden tests (compat runner).**
 
 ## Runtime Layer Rules
 
@@ -28,13 +34,15 @@ IR v1 schema finalized and **frozen**. Exporter produces valid IR.
 ## Architecture Layers
 
 ```
-Layer 1  IR v1 (frozen)              ✅ DONE
-Layer 2  VM + Golden Tests           ✅ DONE
-Layer 3  Runtime + Multi-module      ✅ DONE
-Layer 4  Metadata                    ✅ DONE
-Layer 5  Symbol Index                ✅ DONE
-Layer 6  Dependency Graph            ← TBD
-Layer 7  Web IDE                     ← TBD
+Layer 1  IR v1 (frozen)                   ✅ DONE
+Layer 2  VM + Golden Tests                ✅ DONE
+Layer 3  Runtime + Multi-module           ✅ DONE
+Layer 4  Metadata                         ✅ DONE
+Layer 5  Symbol Index                     ✅ DONE
+Layer 6  Dependency Graph                 ✅ DONE
+Layer 7  Metadata v2 + Language Server    ← TBD
+Layer 8  Web IDE                          ← TBD
+Layer 9  Synchronization & Migration      ← FUTURE
 ```
 
 ## 📁 Project Structure
@@ -64,7 +72,7 @@ Layer 7  Web IDE                     ← TBD
   symbol-types.ts         — SymbolKind + SymbolInfo
 
 /compat                   ← Compatibility Runner
-  runner.ts               — load IR → VM → diff with expected
+  runner.ts               — load export/ → VM → diff with 1C reference results
 
 /compat-reports           ← Generated compat reports
 
@@ -80,24 +88,34 @@ Layer 7  Web IDE                     ← TBD
 /src                      ← Runtime implementation
   Program.ts              — Multi-module container (manifest loader + routine registry)
   SymbolIndex.ts          — Searchable index of all named entities (Layer 5)
+  DependencyGraph.ts      — Call graph across routines (Layer 6)
   vm.ts                   — IR v1 interpreter (async, Value-typed)
   legacy/
     ast.ts                — AST types (legacy, frozen)
     parser.ts             — 1C subset parser (test-only mode)
     vm.ts                 — Legacy VM on AST types
   runtime-object.ts       — Observable data object
-  server.ts               — Bun HTTP + WebSocket server
+  server.ts               — Bun HTTP + REST API (Program, Metadata, SymbolIndex, DependencyGraph, VM)
   db.ts                   — SQLite via bun:sqlite
   handlers/               — .1c handler files (legacy, static)
 
 /public
   index.html              — HTML + vanilla JS client
 
+/sync                     ← Synchronization & Migration Engine (FUTURE)
+  Snapshot.ts              — Immutable versioned export state
+  MetadataDiffer.ts        — Structural diff between snapshots
+  MetadataDiff.ts          — Diff result types
+  CanonicalField.ts        — DB-agnostic field model
+  MigrationPlanner.ts      — Diff → ordered operations
+  SqlGenerator.ts          — Plan → target-DB SQL
+
 /tests
   ir-validator.test.ts    — 17 IR schema validation tests
   legacy/
     vm.test.ts            — 11 legacy VM unit tests on parser+AST
   integration.test.ts     — 4 integration tests
+  dependency-graph.test.ts — 14 DependencyGraph tests (Layer 6)
 ```
 
 ## 🔧 Stack
@@ -118,13 +136,15 @@ Layer 7  Web IDE                     ← TBD
 
 ## 🚫 What NOT to build yet
 
-- Dependency Graph (Layer 6)
-- Web IDE (Layer 7)
+- Metadata v2 + Language Server (Layer 7)
+- Web IDE (Layer 8)
+- Synchronization Engine (Layer 9)
 - DynamicList / QueryRuntime
 - Virtual Scroll / ViewportManager
 - Solid.js client
 - Table parts (ТЧ)
 - Full type system
+- Do not generate SQL directly from MetadataModel
 
 ## 📐 Code Conventions
 
@@ -143,6 +163,47 @@ Layer 7  Web IDE                     ← TBD
 - Metadata is independent of execution (IR/VM) and must not reference runtime concepts
 - Metadata is declarative only — no logic, resolution rules, or computed fields
 - Metadata is immutable after loading (readonly arrays)
+
+## ⚙️ Synchronization Engine Layer Rules (FUTURE)
+
+### Principle
+SQL must never be generated directly from MetadataModel.
+1C metadata is not SQL metadata. SQL must be generated from a Canonical Model.
+
+### Canonical pipeline
+```
+1C
+ ↓
+MetadataModel
+ ↓
+Canonical Model (DB-agnostic)
+ ↓
+MetadataDiff
+ ↓
+MigrationPlan
+ ↓
+SqlGenerator
+ ↓
+PostgreSQL / SQLite / MSSQL
+```
+
+### Snapshot rules
+- Snapshots are immutable. Existing snapshots must never be modified.
+- Every export creates a new timestamped snapshot (e.g. `snapshot-2026-06-04/`).
+- Immutability enables rollback, diff history, CI replay.
+
+### Core types
+- `Snapshot` — immutable versioned export state (metadata + program)
+- `MetadataDiffer` — old MetadataModel vs new MetadataModel → MetadataDiff
+- `MetadataDiff` — structural changes (added/removed/changed catalogs, attributes, types)
+- `MigrationPlanner` — MetadataDiff → ordered list of migration operations
+- `SqlGenerator` — MigrationPlan → target-DB-specific SQL statements
+- `CanonicalField` — DB-agnostic field model between Metadata and SQL
+
+### Architectural boundaries
+- Synchronization Engine is independent from VM and Web IDE.
+- It depends on Metadata v2, SymbolIndex, DependencyGraph.
+- Not before Layer 7 (Metadata v2 with attributes and tabular parts).
 
 ## 🧬 IR v1 Contract (FROZEN)
 
