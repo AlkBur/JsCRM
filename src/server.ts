@@ -1,5 +1,6 @@
 import { join } from "path";
 import { VM } from "./vm";
+import type { Value } from "../runtime/types";
 import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../builtins/index";
 import { buildTree } from "./tree-builder";
@@ -171,7 +172,7 @@ const server = Bun.serve({
       try {
         const body: { name?: string; args?: unknown[] } = await req.json();
         if (!body.name) return json({ success: false, error: "Missing name" }, 400);
-        const args: unknown[] = body.args ?? [];
+        const args = (body.args ?? []) as Value[];
         const result = vm.call(body.name, args);
         return json({ success: true, result });
       } catch (e: unknown) {

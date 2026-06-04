@@ -52,68 +52,68 @@ export interface EnumType {
 
 export interface UnionType {
   kind: "union";
-  options: Exclude<FieldType, UnionType>[];
+  options: readonly Exclude<FieldType, UnionType>[];
 }
 
 export interface AttributeV2 {
-  uuid?: string;
-  name: string;
-  type: FieldType;
-  required: boolean;
+  readonly uuid?: string;
+  readonly name: string;
+  readonly type: FieldType;
+  readonly required: boolean;
 }
 
 export interface TabularSectionV2 {
-  uuid?: string;
-  name: string;
-  attributes: AttributeV2[];
+  readonly uuid?: string;
+  readonly name: string;
+  readonly attributes: readonly AttributeV2[];
 }
 
 export interface FormV2 {
-  name: string;
-  type: "ordinary" | "managed";
+  readonly name: string;
+  readonly type: "ordinary" | "managed";
 }
 
 export interface CommandV2 {
-  uuid?: string;
-  name: string;
-  handler: string;
+  readonly uuid?: string;
+  readonly name: string;
+  readonly handler: string;
 }
 
 export interface EnumValueV2 {
-  uuid: string;
-  name: string;
+  readonly uuid: string;
+  readonly name: string;
 }
 
 export interface CatalogV2 {
-  name: string;
-  uuid: string;
-  attributes: AttributeV2[];
-  tabularSections: TabularSectionV2[];
-  forms: FormV2[];
-  commands: CommandV2[];
+  readonly name: string;
+  readonly uuid: string;
+  readonly attributes: readonly AttributeV2[];
+  readonly tabularSections: readonly TabularSectionV2[];
+  readonly forms: readonly FormV2[];
+  readonly commands: readonly CommandV2[];
 }
 
 export interface DocumentV2 {
-  name: string;
-  uuid: string;
-  attributes: AttributeV2[];
-  tabularSections: TabularSectionV2[];
-  forms: FormV2[];
-  commands: CommandV2[];
+  readonly name: string;
+  readonly uuid: string;
+  readonly attributes: readonly AttributeV2[];
+  readonly tabularSections: readonly TabularSectionV2[];
+  readonly forms: readonly FormV2[];
+  readonly commands: readonly CommandV2[];
 }
 
 export interface EnumerationV2 {
-  name: string;
-  uuid: string;
-  values: EnumValueV2[];
+  readonly name: string;
+  readonly uuid: string;
+  readonly values: readonly EnumValueV2[];
 }
 
 export interface MetadataRootV2 {
-  version: "2";
-  configurationName: string;
-  configurationUuid: string;
-  commonModules: CommonModuleInfo[];
-  catalogs: CatalogV2[];
-  documents: DocumentV2[];
-  enumerations: EnumerationV2[];
+  readonly version: "2";
+  readonly configurationName: string;
+  readonly configurationUuid: string;
+  readonly commonModules: readonly CommonModuleInfo[];
+  readonly catalogs: readonly CatalogV2[];
+  readonly documents: readonly DocumentV2[];
+  readonly enumerations: readonly EnumerationV2[];
 }

@@ -9,9 +9,19 @@ Server-side runtime compatible with 1C:Enterprise. Executes 1C language via **IR
     ↓ (1C Exporter)
 IR v1 JSON  ←→  ir-validator (ajv)
     ↓
-  VM (Bun/TS)
+Program (immutable)
     ↓
- SQLite  ←→  WebSocket  ←→  Browser
+    ↓     MetadataModel (immutable)
+    ↓           ↓
+    ↓     SymbolIndex (derived)
+    ↓     MetadataIndex (derived)
+    ↓     DependencyGraph (derived)
+    ↓     LocationIndex (derived)
+    ↓
+Workspace (composition root)
+    ↓
+────────────────────────────────
+ VM    LSP    REST    Explorer
 ```
 
 Two execution paths:
@@ -21,26 +31,31 @@ Two execution paths:
 | Production | `export/ir/*.json` (from 1C exporter) | Real modules |
 | Testing    | `fixtures/*.json` (handwritten)       | Dev & compat |
 
+## Layer Status
+
+| Layer | Component | Status |
+|-------|-----------|--------|
+| 0     | Workspace (composition root) | ✅ |
+| 1     | IR v1 schema + validator | ✅ Frozen |
+| 2     | VM (IR interpreter) | ✅ 50 golden tests |
+| 2.5   | Benchmarks (observability) | ✅ |
+| 3     | Runtime objects (Structure, Array) | ✅ |
+| 4     | Metadata v1 | ✅ |
+| 5     | SymbolIndex | ✅ |
+| 6     | DependencyGraph | ✅ |
+| 7     | Metadata v2 + MetadataIndex | ✅ |
+| 8     | LSP Phase 8.1 (Navigation Core) | ✅ |
+| 9     | Explorer + Web IDE | ⏳ Future |
+| 10    | Synchronization & Migration | ⏳ Future |
+
 ## Quick Start
 
 ```bash
 bun install
-bun test              # 80 tests, 0 fail
-bun dev               # http://localhost:3000
+bun run typecheck     # type system
+bun test              # correctness (91 tests, 50 golden)
+bun bench             # performance regression
 ```
-
-## Project Status
-
-| Component            | Status      |
-| -------------------- | ----------- |
-| IR v1 schema         | ✅ Frozen   |
-| IR validator (ajv)   | ✅ 11 tests |
-| Golden fixtures      | ✅ 3 files  |
-| Compatibility Runner | ⏳ Next     |
-| AST/VM migration     | ⏳ Planned  |
-| Metadata Loader      | ⏳ Planned  |
-
-See `AGENTS.md` for detailed roadmap.
 
 ## Launch
 
@@ -56,16 +71,39 @@ bun bench              # запустить и сравнить с baseline
 bun bench:save         # обновить baseline
 ```
 
+## Three-Level Verification
+
+```text
+bun run typecheck    → 0 errors (type system)
+bun test             → 91 pass, 0 fail (correctness)
+bun bench            → no regression (observability)
+```
+
 ## Tech Stack
 
 - **Bun 1.3.14** — runtime, HTTP, WebSocket
 - **TypeScript** — strict mode
 - **SQLite** — `bun:sqlite`
 - **ajv** — JSON Schema validation
-- **React 19 + Vite 6** — Configuration Explorer client (CSR)
+- **React 19 + Vite 6 + CSS Modules** — Configuration Explorer (CSR)
 
-Этот проект полностью генерируется AI.
-Полный план работ, архитектурные принципы и правила — в [AGENTS.md](AGENTS.md).
+## Project Status
+
+| Component            | Status      |
+| -------------------- | ----------- |
+| IR v1 schema         | ✅ Frozen   |
+| IR validator (ajv)   | ✅ 17 tests |
+| Golden fixtures      | ✅ 3 files  |
+| VM + Runtime         | ✅ 50 tests |
+| MetadataModel v2     | ✅ 13 tests |
+| SymbolIndex          | ✅ 7 tests  |
+| DependencyGraph      | ✅ 22 tests |
+| LSP Navigation       | ✅ 8 tests  |
+| Workspace (Layer 0)  | ✅ 11 tests |
+| Compatibility Runner | ✅ 50/50    |
+| Explorer v1          | ✅ CSR      |
+
+Full architectural plan in [AGENTS.md](AGENTS.md).
 
 ## License
 

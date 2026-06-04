@@ -33,7 +33,7 @@ export class LocationIndex {
       const uri = `file:///${join(absExport, "ir", `CommonModule.${module.name}.json`).replace(/\\/g, "/")}`.replace("file:///", "file:///");
 
       for (const routine of module.routines) {
-        const loc = (routine as Record<string, unknown>).meta as
+        const loc = (routine as unknown as Record<string, unknown>).meta as
           | { loc?: { line: number; column: number } }
           | undefined;
         const line = loc?.loc?.line ?? 0;

@@ -6,7 +6,20 @@
     "strict": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "types": ["bun"]
   },
-  "include": ["src/**/*.ts"]
+  "exclude": ["src/legacy", "tests/legacy"],
+  "include": [
+    "src/**/*.ts",
+    "lsp/**/*.ts",
+    "metadata/**/*.ts",
+    "runtime/**/*.ts",
+    "symbols/**/*.ts",
+    "builtins/**/*.ts",
+    "bench/**/*.ts",
+    "tests/**/*.ts",
+    "ir/**/*.ts",
+    "compat/**/*.ts"
+  ]
 }

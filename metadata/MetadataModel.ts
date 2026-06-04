@@ -13,7 +13,7 @@
 
 import { readFileSync, existsSync } from "fs";
 import type { MetadataRoot, CommonModuleInfo, MetadataObjectInfo } from "./metadata-types";
-import type { MetadataRootV2, CatalogV2, DocumentV2, EnumerationV2 } from "./metadata-types-v2";
+import type { MetadataRootV2, CatalogV2, DocumentV2, EnumerationV2, AttributeV2, TabularSectionV2, FormV2, CommandV2 } from "./metadata-types-v2";
 
 export class MetadataModel {
   readonly version: string;
@@ -70,7 +70,7 @@ export class MetadataModel {
     }
 
     const version = String(raw.version ?? "1");
-    const commonModules = normalizeArray(raw.commonModules) as CommonModuleInfo[];
+    const commonModules = normalizeArray(raw.commonModules as CommonModuleInfo[] | undefined);
 
     if (version === "2") {
       return MetadataModel.loadV2(raw);
@@ -92,37 +92,42 @@ export class MetadataModel {
   private static loadV2(raw: Record<string, unknown>): MetadataModel {
     const v2 = raw as unknown as MetadataRootV2;
 
-    // Normalize all optional arrays
-    for (const obj of [...(v2.catalogs ?? []), ...(v2.documents ?? [])]) {
-      obj.attributes = normalizeArray(obj.attributes);
-      obj.tabularSections = normalizeArray(obj.tabularSections);
-      obj.forms = normalizeArray(obj.forms);
-      obj.commands = normalizeArray(obj.commands);
-      for (const ts of obj.tabularSections ?? []) {
-        ts.attributes = normalizeArray(ts.attributes);
-      }
-    }
-    for (const en of v2.enumerations ?? []) {
-      en.values = normalizeArray(en.values);
-    }
+    const normalizeTS = (ts: TabularSectionV2): TabularSectionV2 => ({
+      ...ts,
+      attributes: normalizeArray(ts.attributes),
+    });
+    const normalizeEntity = <T extends CatalogV2 | DocumentV2>(e: T): T => ({
+      ...e,
+      attributes: normalizeArray(e.attributes),
+      tabularSections: normalizeArray(e.tabularSections).map(normalizeTS),
+      forms: normalizeArray(e.forms),
+      commands: normalizeArray(e.commands),
+    });
+
+    const normalizedCatalogs = (v2.catalogs ?? []).map(c => normalizeEntity(c));
+    const normalizedDocuments = (v2.documents ?? []).map(d => normalizeEntity(d));
+    const normalizedEnums = (v2.enumerations ?? []).map(e => ({
+      ...e,
+      values: normalizeArray(e.values),
+    }));
 
     // Top-level catalog/doc/enum info (compatible with v1)
-    const catalogs: MetadataObjectInfo[] = (v2.catalogs ?? []).map(c => ({ name: c.name, uuid: c.uuid }));
-    const documents: MetadataObjectInfo[] = (v2.documents ?? []).map(d => ({ name: d.name, uuid: d.uuid }));
-    const enumerations: MetadataObjectInfo[] = (v2.enumerations ?? []).map(e => ({ name: e.name, uuid: e.uuid }));
+    const catalogs: MetadataObjectInfo[] = normalizedCatalogs.map(c => ({ name: c.name, uuid: c.uuid }));
+    const documents: MetadataObjectInfo[] = normalizedDocuments.map(d => ({ name: d.name, uuid: d.uuid }));
+    const enumerations: MetadataObjectInfo[] = normalizedEnums.map(e => ({ name: e.name, uuid: e.uuid }));
 
     return new MetadataModel(
       "2",
       v2.configurationName,
       v2.configurationUuid,
-      v2.commonModules ?? [],
+      normalizeArray(v2.commonModules),
       catalogs,
       documents,
       enumerations,
       {
-        catalogs: v2.catalogs ?? [],
-        documents: v2.documents ?? [],
-        enumerations: v2.enumerations ?? [],
+        catalogs: normalizedCatalogs,
+        documents: normalizedDocuments,
+        enumerations: normalizedEnums,
       },
     );
   }
@@ -205,6 +210,6 @@ function freezeEnumeration(e: EnumerationV2): EnumerationV2 {
   });
 }
 
-function normalizeArray<T>(arr: unknown): T[] {
-  return Array.isArray(arr) ? arr : [];
+function normalizeArray<T>(arr: readonly T[] | T[] | undefined): T[] {
+  return Array.isArray(arr) ? (arr as T[]) : [];
 }

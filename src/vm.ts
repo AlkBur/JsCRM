@@ -111,7 +111,7 @@ export class VM {
       this.vars[routine.params[i].name] = i < args.length ? args[i] : null;
     }
     try {
-      this.execStmts(routine.body);
+      this.execStmts(routine.body as Stmt[]);
       const r = this.result;
       this.vars = prevVars;
       return r;
@@ -176,7 +176,7 @@ export class VM {
       case "foreach": {
         const coll = this.evalExpr(stmt.collection);
         if (coll && typeof coll === "object") {
-          const iter = (coll as unknown as Record<string, unknown>)[Symbol.iterator];
+          const iter = (coll as unknown as Record<string, unknown>)[Symbol.iterator as unknown as string];
           if (typeof iter === "function") {
             for (const item of iter.call(coll)) {
               this.vars[stmt.variable] = item as Value;
@@ -218,7 +218,7 @@ export class VM {
             for (let i = 0; i < fn.params.length; i++) {
               this.vars[fn.params[i].name] = i < args.length ? args[i] : null;
             }
-            this.execStmts(fn.body);
+            this.execStmts(fn.body as Stmt[]);
             this.vars = saved;
           }
         } else if (stmt.object && stmt.method) {
@@ -273,7 +273,7 @@ export class VM {
       return obj.get(method);
     }
     if (obj && typeof obj === "object" && !Array.isArray(obj) && !(obj instanceof Date)) {
-      const val = (obj as Record<string, unknown>)[method];
+      const val = (obj as unknown as Record<string, unknown>)[method];
       if (typeof val === "function") return (val as (...a: unknown[]) => Value).call(obj, ...args);
       return val as Value;
     }
@@ -321,10 +321,10 @@ export class VM {
           }
           case "Умножить": return (left as number) * (right as number);
           case "Разделить": return (left as number) / (right as number);
-          case "Больше": return left > right;
-          case "Меньше": return left < right;
-          case "БольшеИлиРавно": return left >= right;
-          case "МеньшеИлиРавно": return left <= right;
+          case "Больше": return (left as number) > (right as number);
+          case "Меньше": return (left as number) < (right as number);
+          case "БольшеИлиРавно": return (left as number) >= (right as number);
+          case "МеньшеИлиРавно": return (left as number) <= (right as number);
           case "Равно": return left == right;
           case "НеРавно": return left != right;
           case "И": return left && right;
@@ -351,7 +351,7 @@ export class VM {
           throw new Error(`Доступ к полю у Массива: ${expr.property}`);
         }
         if (typeof obj === "object" && !Array.isArray(obj) && !(obj instanceof Date)) {
-          return (obj as Record<string, Value>)[expr.property] ?? undefined;
+          return (obj as unknown as Record<string, Value>)[expr.property] ?? undefined;
         }
         throw new Error(`Доступ к полю у значения типа ${typeof obj}`);
       }
@@ -362,7 +362,7 @@ export class VM {
         if (obj instanceof RuntimeStructure) return obj.get(String(idx));
         if (Array.isArray(obj)) return obj[Number(idx)] as Value;
         if (obj && typeof obj === "object") {
-          return (obj as Record<string, Value>)[String(idx)] ?? undefined;
+          return (obj as unknown as Record<string, Value>)[String(idx)] ?? undefined;
         }
         throw new Error("Индексация не поддерживается");
       }
@@ -431,7 +431,7 @@ export class VM {
         if (obj instanceof RuntimeStructure) {
           obj.set(target.property, value);
         } else if (obj && typeof obj === "object" && !Array.isArray(obj) && !(obj instanceof Date)) {
-          (obj as Record<string, Value>)[target.property] = value;
+          (obj as unknown as Record<string, Value>)[target.property] = value;
         }
         break;
       }
@@ -445,7 +445,7 @@ export class VM {
         } else if (Array.isArray(obj)) {
           obj[idx] = value;
         } else if (obj && typeof obj === "object") {
-          (obj as Record<string, Value>)[String(idx)] = value;
+          (obj as unknown as Record<string, Value>)[String(idx)] = value;
         }
         break;
       }

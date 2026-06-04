@@ -88,15 +88,15 @@ export class VM {
           case "-": return left - right;
           case "*": return left * right;
           case "/": return left / right;
+          case "=": return left == right;
+          case "<>": return left != right;
           case ">": return left > right;
           case "<": return left < right;
           case ">=": return left >= right;
           case "<=": return left <= right;
-          case "=": return left == right;
-          case "<>": return left != right;
           case "и": return left && right;
           case "или": return left || right;
-          default: throw new Error(`Неизвестная операция: ${expr.op}`);
+          default: throw new Error(`Неизвестная операция: ${(expr as { op: string }).op}`);
         }
       }
       case "unary": {
@@ -104,7 +104,7 @@ export class VM {
         switch (expr.op) {
           case "-": return -right;
           case "not": return !right;
-          default: throw new Error(`Неизвестная унарная операция: ${expr.op}`);
+          default: throw new Error(`Неизвестная унарная операция: ${(expr as { op: string }).op}`);
         }
       }
       case "member": {

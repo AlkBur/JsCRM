@@ -50,5 +50,5 @@ export function bench(workspace: Workspace, _warmup: number, _iterations: number
     result[name] = { avg, count: ops.filter(o => o.name === name).length };
   }
 
-  return result as GraphBenchResult;
+  return result as unknown as GraphBenchResult;
 }
