@@ -9,7 +9,7 @@ Primary source of truth: **IR v1** — a JSON-based Intermediate Representation 
 ```
 1C → export/ → Snapshot → MetadataDiff → MigrationPlan → SQL
 ```
-Synchronization & Migration Engine (Layer 9) orchestrates the full pipeline.
+Synchronization & Migration Engine (Layer 10) orchestrates the full pipeline.
 
 ## ✅ Current Status
 
@@ -45,6 +45,31 @@ Layer 8  Language Server                   ← TBD
 Layer 9  Web IDE                           ← TBD
 Layer 10 Synchronization & Migration       ← FUTURE
 ```
+
+## 🏛️ Architecture Principles
+
+### Three-layer data model (frozen)
+```
+IR → execution layer
+Metadata → structural layer
+SymbolIndex → search/navigation layer
+```
+
+These layers are independent and must not be mixed.
+- IR contains executable logic.
+- Metadata contains object structure (no execution logic or runtime concepts).
+- SymbolIndex contains searchable names only.
+
+### Source of truth vs derived indexes
+`Program` and `MetadataModel` are immutable sources of truth.
+
+`SymbolIndex`, `MetadataIndex`, and `DependencyGraph` are derived structures.
+They contain no source of truth and can always be rebuilt from `Program` and `MetadataModel`.
+
+### Execution must not depend on indexes
+- VM depends on Program, BuiltinRegistry.
+- VM does not depend on SymbolIndex, MetadataIndex, or DependencyGraph.
+- Indexes are optimization and navigation layers only.
 
 ## 📁 Project Structure
 
@@ -168,6 +193,72 @@ Layer 10 Synchronization & Migration       ← FUTURE
 - Metadata is independent of execution (IR/VM) and must not reference runtime concepts
 - Metadata is declarative only — no logic, resolution rules, or computed fields
 - Metadata is immutable after loading (readonly arrays)
+
+### Versioning
+- `metadata.json` must contain explicit `"version"` field.
+- Loaders may support legacy files without version for backward compatibility,
+  but all newly generated metadata exports must include explicit version.
+
+### Identity
+- UUID is identity.
+- Name is the symbol key and may change (rename-safe).
+- UUID enables diff, rollback, and rename refactoring.
+
+### Normalization
+- Optional arrays are normalized to `[]`.
+- Collections must never be `undefined` after loading.
+
+## 📋 Metadata v2 Layer Rules
+
+### FieldType is a discriminated union
+Supported kinds: `string`, `number`, `date`, `boolean`, `ref`, `enum`, `union`.
+
+### Scalar types are objects
+```ts
+{ kind: "string", length? }
+{ kind: "number", precision?, scale? }
+{ kind: "date" }
+{ kind: "boolean" }
+```
+Primitive strings (`"string"`, `"number"`, etc.) are forbidden — all scalars use object form.
+
+### Enum ≠ Ref
+- Enumerations use: `{ kind: "enum", target: string }`
+- References use:   `{ kind: "ref",  target: string }`
+- Enums must never be represented as refs.
+
+### Canonical naming
+- References use: `Catalog.<Name>`, `Document.<Name>`
+- Enumeration targets use enumeration name without prefix.
+
+### Union rules
+- `UnionType` is flat.
+- `options` must not contain another `UnionType`.
+- Nested unions are forbidden.
+
+### presentation
+- Presentation is a UI hint and not part of structural identity.
+- It does not affect IR execution, DependencyGraph, or symbol resolution.
+
+## 📋 DependencyGraph Rules
+
+- DependencyGraph is IR-only.
+- DependencyGraph does not analyze:
+  - metadata
+  - command handlers
+  - forms
+  - attributes
+- Metadata dependencies are modeled separately and must not be mixed
+  with IR call dependencies.
+
+## 📋 SymbolIndex Rules
+
+- SymbolIndex contains top-level symbols only:
+  `module` | `function` | `procedure` | `catalog` | `document` | `enumeration`
+- Attributes, forms, commands and tabular sections belong to `MetadataIndex`.
+- SymbolIndex is derived from `Program` and `MetadataModel` only.
+- Symbol names are unique within SymbolIndex.
+- Duplicate symbols are errors.
 
 ## ⚙️ Synchronization Engine Layer Rules (FUTURE)
 
