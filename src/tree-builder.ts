@@ -1,8 +1,16 @@
-// TreeBuilder — pure function: MetadataModel → TreeNode[]
-//
-// Transforms the metadata structure into a navigable tree.
-// TreeView is a pure projection — no domain logic, no state, no inference.
-// The tree mirrors the explicit structure from MetadataModel exactly.
+/**
+ * Responsibility:
+ *   Pure projection: MetadataModel → TreeNode[].
+ *
+ * Owns:
+ *   TreeNode structure, node identity (stable IDs), hierarchy flattening.
+ *
+ * Does NOT own:
+ *   Business logic, metadata interpretation, UI state.
+ *
+ * Used by:
+ *   Server (REST API).
+ */
 
 import { MetadataModel } from "../metadata/MetadataModel";
 import type { TreeNode, NodeKind } from "./explorer-types";

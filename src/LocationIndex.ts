@@ -1,8 +1,16 @@
-// LocationIndex maps symbol names to their declaration locations in IR files.
-//
-// Built from Program. Each routine gets a location pointing to its IR module file.
-// When IR nodes carry meta.loc, those positions are used; otherwise falls back
-// to module-level (line 0, column 0).
+/**
+ * Responsibility:
+ *   Symbol name to URI/range mapping.
+ *
+ * Owns:
+ *   Location data derived from Program and IR meta.loc.
+ *
+ * Does NOT own:
+ *   Navigation semantics, symbol resolution, file I/O.
+ *
+ * Used by:
+ *   Workspace, LSP.
+ */
 //
 // Responsibility: provide URI + range for any named symbol.
 // Non-responsibility: source code management, document sync, incremental updates.

@@ -1,8 +1,16 @@
-// LSP server — Layer 8.1 Navigation Core.
-//
-// Loads the project's export directory, builds all indices,
-// and serves textDocument/definition + textDocument/references via stdio.
-//
+/**
+ * Responsibility:
+ *   LSP stdio JSON-RPC server for navigation queries.
+ *
+ * Owns:
+ *   Transport (Content-Length), request dispatch, workspace loading.
+ *
+ * Does NOT own:
+ *   Semantic analysis, IR traversal, symbol resolution (delegates to indexes).
+ *
+ * Used by:
+ *   LSP clients (IDE editors).
+ */
 // Usage: bun run lsp/server.ts
 //
 // No document sync, no hover, no diagnostics — just navigation.

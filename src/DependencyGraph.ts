@@ -1,8 +1,16 @@
-// DependencyGraph — call graph across all routines in Program.
-//
-// Built from Program only. Tracks which routines call which other routines.
-// Used for dead code detection, call hierarchy, and impact analysis.
-//
+/**
+ * Responsibility:
+ *   Immutable call graph across all routines in Program.
+ *
+ * Owns:
+ *   Reachability (BFS), path queries, cycle detection.
+ *
+ * Does NOT own:
+ *   Metadata dependencies, semantic reconstruction, form/command analysis.
+ *
+ * Used by:
+ *   LSP, Benchmarks, Workspace.
+ */
 // Rules:
 //   - Only explicit function calls are tracked: kind === "call" with a name
 //     and no object field. Method calls (object.method) are excluded.

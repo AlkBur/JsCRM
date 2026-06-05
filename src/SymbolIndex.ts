@@ -1,8 +1,16 @@
-// SymbolIndex — searchable index of all named entities across modules and metadata.
-//
-// Built by combining Program (routines + modules) and MetadataModel (catalogs,
-// documents, enumerations). Used for lookup, navigation, and as the foundation
-// for DependencyGraph and Language Server.
+/**
+ * Responsibility:
+ *   Immutable index of top-level symbols from Program and MetadataModel.
+ *
+ * Owns:
+ *   Symbol lookup, duplicate detection, SymbolSpace (runtime | metadata).
+ *
+ * Does NOT own:
+ *   Metadata structure, execution, LSP requests.
+ *
+ * Used by:
+ *   Workspace, LSP.
+ */
 //
 // Responsibility: provide fast name→kind resolution.
 // Non-responsibility: source locations, dependency graph, type inference.

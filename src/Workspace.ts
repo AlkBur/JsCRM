@@ -1,3 +1,17 @@
+/**
+ * Responsibility:
+ *   Composition root of the platform.
+ *
+ * Owns:
+ *   Program, MetadataModel and all derived indexes.
+ *
+ * Does NOT own:
+ *   I/O, HTTP, LSP, UI, VM execution.
+ *
+ * Used by:
+ *   Server, LSP, Benchmarks, Compatibility Runner.
+ */
+
 import { Program } from "./Program";
 import { MetadataModel } from "../metadata/MetadataModel";
 import { SymbolIndex } from "./SymbolIndex";

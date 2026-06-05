@@ -1,8 +1,16 @@
-// MetadataModel — read-only structural model of the 1C configuration.
-//
-// Supports both v1 (flat) and v2 (with attributes, tabular sections, forms, commands).
-// Version detection: checks `version` field in metadata.json.
-//   - "2" → v2: stores full detailed structure
+/**
+ * Responsibility:
+ *   Read-only structural model of the 1C configuration.
+ *
+ * Owns:
+ *   v1/v2 metadata loading, catalog/document/enumeration lookup, FieldType union.
+ *
+ * Does NOT own:
+ *   Execution logic, runtime concepts, SymbolIndex data.
+ *
+ * Used by:
+ *   Workspace, SymbolIndex, MetadataIndex, TreeBuilder.
+ */
 //   - missing or any other value → v1 (backward compatible)
 //
 // Responsibility: load, validate, and provide access to configuration metadata.

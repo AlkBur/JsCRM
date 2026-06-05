@@ -1,5 +1,19 @@
+/**
+ * Responsibility:
+ *   Bun HTTP server providing REST API for Explorer and VM execution.
+ *
+ * Owns:
+ *   HTTP routes, Workspace construction, VM execution endpoint.
+ *
+ * Does NOT own:
+ *   Program, MetadataModel or indexes (delegates to Workspace).
+ *
+ * Used by:
+ *   Explorer UI (React client).
+ */
+
 import { join } from "path";
-import { VM } from "./vm";
+import { VM } from "./vm/index";
 import type { Value } from "../runtime/types";
 import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../builtins/index";

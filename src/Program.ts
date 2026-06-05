@@ -1,15 +1,16 @@
-// Program owns loaded modules and the global routine registry.
-//
-// Responsibility:
-//   - load modules from manifest.json
-//   - detect duplicate routine names (fatal error)
-//   - provide global routine lookup for the VM
-//
-// Program does not execute code and knows nothing about VM,
-// builtins, metadata, or runtime objects.
-//
-// Invariant: Program is immutable after loadFromManifest completes.
-// All function resolution goes through findRoutine().
+/**
+ * Responsibility:
+ *   Immutable container of IR modules and routine registry.
+ *
+ * Owns:
+ *   Module loading, routine lookup, duplicate detection.
+ *
+ * Does NOT own:
+ *   Execution, indexes, metadata, builtins.
+ *
+ * Used by:
+ *   VM, Workspace, SymbolIndex, DependencyGraph.
+ */
 
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";

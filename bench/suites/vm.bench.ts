@@ -1,6 +1,6 @@
 import { join } from "path";
 import { readdirSync, readFileSync } from "fs";
-import { VM } from "../../src/vm";
+import { VM } from "../../src/vm/index";
 import { BuiltinRegistry } from "../../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../../builtins/index";
 import type { Workspace } from "../../src/Workspace";

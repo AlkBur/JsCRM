@@ -9,7 +9,7 @@
 
 import { readdirSync } from "fs";
 import { join } from "path";
-import { VM } from "../src/vm";
+import { VM } from "../src/vm/index";
 import type { Value } from "../runtime/types";
 import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../builtins/index";
