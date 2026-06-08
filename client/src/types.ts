@@ -46,3 +46,25 @@ export type FieldType =
   | { kind: "ref"; target: string }
   | { kind: "enum"; target: string }
   | { kind: "union"; options: FieldType[] };
+
+// FormProjection types (mirrors src/forms/form-types.ts for client use)
+export interface FormDocument {
+  schema: string;
+  id: string;
+  owner: { kind: string; name: string };
+  attributes: unknown[];
+  commands: unknown[];
+  events: unknown[];
+  mainAttribute?: string;
+  form: { name: string; synonym?: string; type: string; uuid: string };
+  layout: FormLayoutElement;
+}
+
+export type FormLayoutElement =
+  | { view: "form" | "group" | "tabs" | "tab" | "commandBar"; id: number; name: string; title?: string; elements: FormLayoutElement[]; layout?: string; showTitle?: boolean }
+  | { view: "input"; id: number; name: string; title?: string; dataPath: string; readonly?: boolean; visible?: boolean; enabled?: boolean }
+  | { view: "button"; id: number; name: string; title?: string; visible?: boolean; enabled?: boolean }
+  | { view: "label"; id: number; name: string; title?: string; text?: string }
+  | { view: "spacer"; id: number; name: string }
+  | { view: "checkbox" | "select"; id: number; name: string; title?: string; dataPath: string }
+  | { view: "table"; id: number; name: string; title?: string; dataPath: string; columns?: Array<{ name: string; title?: string; dataPath: string }> };

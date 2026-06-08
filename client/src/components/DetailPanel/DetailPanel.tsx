@@ -1,9 +1,14 @@
-import type { FieldType } from "../../types";
+import type { FieldType, FormDocument } from "../../types";
+import FormView from "../FormView/FormView";
 import styles from "./DetailPanel.module.css";
 
 interface Props {
   nodeId: string | null;
   data: unknown;
+}
+
+function isFormDocument(v: unknown): v is FormDocument {
+  return typeof v === "object" && v !== null && "schema" in v && "layout" in v;
 }
 
 function typeLabel(t: FieldType): string {
@@ -46,6 +51,10 @@ export default function DetailPanel({ nodeId, data }: Props) {
 
   if (!data) {
     return <div className={styles.root}><p className={styles.empty}>Загрузка...</p></div>;
+  }
+
+  if (isFormDocument(data)) {
+    return <FormView form={data} />;
   }
 
   const d = data as Record<string, unknown>;

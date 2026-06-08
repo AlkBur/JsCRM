@@ -1,0 +1,91 @@
+.root {
+  padding: var(--spacing-4);
+}
+
+.title {
+  font-size: var(--font-size-large);
+  margin-bottom: var(--spacing-4);
+  color: var(--color-text);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.group {
+  display: flex;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+}
+
+.horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.groupTitle {
+  font-size: var(--font-size-small);
+  color: var(--color-muted);
+  width: 100%;
+  margin-bottom: var(--spacing-1);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 160px;
+}
+
+.fieldLabel {
+  font-size: var(--font-size-small);
+  color: var(--color-muted);
+}
+
+.fieldValue {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  padding: var(--spacing-1) var(--spacing-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-1);
+  background: var(--color-bg);
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  padding: var(--spacing-1) var(--spacing-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  background: var(--color-panel);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  cursor: default;
+  opacity: 0.6;
+}
+
+.label {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  padding: var(--spacing-1) 0;
+}
+
+.spacer {
+  height: 8px;
+}
+
+.unsupported {
+  font-size: var(--font-size-small);
+  color: var(--color-muted);
+  font-style: italic;
+  padding: var(--spacing-1) 0;
+}
