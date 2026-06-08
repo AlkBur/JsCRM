@@ -128,12 +128,16 @@ async function main(): Promise<void> {
     }
 
     const delta = pct(m.current, b.current);
+    const absoluteDelta = m.current - b.current;
+    const absoluteToleranceMs = 0.01;
     const isSmall = Math.abs(m.current) < 0.001;
     const threshold = isSmall ? 50 : 20;
 
-    if (Math.abs(delta) > threshold) {
+    if (delta > threshold && absoluteDelta > absoluteToleranceMs) {
       console.log(`  [WARN]  ${m.path}: ${m.current.toFixed(4)} ms (${delta > 0 ? "+" : ""}${delta.toFixed(1)}%)`);
       hasWarning = true;
+    } else if (delta < -threshold) {
+      console.log(`  [FAST]  ${m.path}: ${m.current.toFixed(4)} ms (${delta.toFixed(1)}%)`);
     } else {
       console.log(`  [OK]    ${m.path}: ${m.current.toFixed(4)} ms (${delta > 0 ? "+" : ""}${delta.toFixed(1)}%)`);
     }

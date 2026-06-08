@@ -139,7 +139,35 @@
 		{
 			"name": "Организации",
 			"uuid": "205e6fb1-ec6f-4058-b2bd-ec3a9c279a44",
-			"attributes": [],
+			"attributes": [
+				{
+					"uuid": "213fdd41-412e-4402-943c-c3c4dc9fa861",
+					"name": "ИНН",
+					"type": {
+						"kind": "string",
+						"length": 12
+					},
+					"required": true
+				},
+				{
+					"uuid": "41f742cb-d404-4598-92e7-6d5f9e7b658f",
+					"name": "РасчетныйСчет",
+					"type": {
+						"kind": "string",
+						"length": 12
+					},
+					"required": false
+				},
+				{
+					"uuid": "92ea6053-70ea-4b24-9a7a-43f36d73c2d3",
+					"name": "ПолноеНаименование",
+					"type": {
+						"kind": "string",
+						"length": 100
+					},
+					"required": false
+				}
+			],
 			"tabularSections": [],
 			"forms": [
 				{
@@ -336,7 +364,12 @@
 					]
 				}
 			],
-			"forms": [],
+			"forms": [
+				{
+					"name": "ФормаДокумента",
+					"type": "managed"
+				}
+			],
 			"commands": [
 				{
 					"uuid": "3b9202ac-f4a0-4a98-aa8b-7f87be71bcb7",
@@ -420,7 +453,12 @@
 					]
 				}
 			],
-			"forms": [],
+			"forms": [
+				{
+					"name": "ФормаДокумента",
+					"type": "managed"
+				}
+			],
 			"commands": []
 		}
 	],

@@ -45,7 +45,7 @@ Two execution paths:
 | 6     | DependencyGraph | ✅ |
 | 7     | Metadata v2 + MetadataIndex | ✅ |
 | 8     | LSP Phase 8.1 (Navigation Core) | ✅ |
-| 9     | Explorer + Web IDE | ⏳ Future |
+| 9     | Explorer v1 + Web IDE | ✅ Explorer CSR, Web IDE TBD |
 | 10    | Synchronization & Migration | ⏳ Future |
 
 ## Quick Start

@@ -12,7 +12,7 @@ JsCRM has reached an internal architecture convergence point. All core layers ar
 | Layer | Status | Notes |
 |-------|--------|-------|
 | 1. IR v1 | FROZEN | Schema + validator, no IRv2 allowed |
-| 2. VM + Golden Tests | STABLE | 80 unit tests, 50 golden (compat runner) |
+| 2. VM + Golden Tests | STABLE | 91 unit tests, 50 golden (compat runner) |
 | 3. Runtime + Multi-module | STABLE | Program, RuntimeStructure, RuntimeArray |
 | 4. Metadata v1 | FROZEN | Schema, types, MetadataModel |
 | 5. Symbol Index | STABLE | SymbolIndex with `SymbolSpace` (runtime / metadata) |
@@ -51,7 +51,7 @@ Extensions driven by "model beauty" or "completeness" are forbidden.
 
 ## Test statistics
 
-- `bun test`: 80 tests, 0 failures (7 test files)
+- `bun test`: 91 tests, 0 failures (8 test files)
 - `compat/runner`: 50/50 golden tests, 0 failures
 - Total routines in export: 55
 - DependencyGraph nodes: 55
