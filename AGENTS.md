@@ -124,12 +124,22 @@ New architectural changes require one of:
 
 Architecture must not evolve without pressure. Stability is preferred over elegance.
 
+## Error Handling Policy
+
+Projection layers may degrade gracefully.
+Execution layers must fail fast.
+
+Invalid or incomplete source data may be filtered when building projections,
+but execution components (VM, runtime, builtins) must never silently ignore
+errors or substitute missing behavior.
+
 ## Task-oriented navigation
 
 | To change | Look here |
 |-----------|-----------|
 | VM execution | `src/vm/`, `runtime/`, `builtins/` |
 | Metadata | `metadata/` |
+| FormProjection | `src/forms/` |
 | Navigation | `SymbolIndex`, `DependencyGraph`, `LocationIndex` |
 | LSP | `lsp/` |
 | Explorer UI | `tree-builder.ts`, `client/` |

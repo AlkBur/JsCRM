@@ -1,0 +1,130 @@
+{
+	"schema": "jscrm.form.v1",
+	"id": "Catalog.Контрагенты.ФормаЭлемента",
+	"owner": {
+		"kind": "Catalog",
+		"name": "Контрагенты"
+	},
+	"attributes": [
+		{
+			"name": "Объект",
+			"type": {
+				"kind": "ref",
+				"target": "Catalog.Контрагенты"
+			},
+			"main": true,
+			"savedData": true
+		}
+	],
+	"commands": [
+		{
+			"name": "ПроверитьИНН",
+			"title": "Проверить ИНН",
+			"handler": "ПроверитьИНН",
+			"tooltip": "Проверить ИНН"
+		}
+	],
+	"events": [
+		{
+			"source": "ПроверитьИНН",
+			"event": "onClick",
+			"handler": "Form.Command.ПроверитьИНН"
+		},
+		{
+			"source": "ИНН",
+			"event": "OnChange",
+			"handler": "ИННПриИзменении"
+		}
+	],
+	"mainAttribute": "Объект",
+	"form": {
+		"name": "ФормаЭлемента",
+		"synonym": "Форма элемента",
+		"type": "managed",
+		"uuid": "c9a5798e-3ff1-4e01-9372-7cad5cbc1e48"
+	},
+	"layout": {
+		"id": -1,
+		"view": "form",
+		"elements": [
+			{
+				"id": 19,
+				"view": "group",
+				"name": "Группа1",
+				"title": "Группа1",
+				"elements": [
+					{
+						"id": 1,
+						"view": "input",
+						"name": "Код",
+						"title": "Код",
+						"dataPath": "Объект.Code",
+						"visible": true,
+						"enabled": true,
+						"readonly": false
+					},
+					{
+						"id": 21,
+						"view": "button",
+						"name": "ПроверитьИНН",
+						"title": "ПроверитьИНН",
+						"visible": true,
+						"enabled": true
+					}
+				],
+				"layout": "horizontal",
+				"showTitle": false
+			},
+			{
+				"id": 4,
+				"view": "input",
+				"name": "Наименование",
+				"title": "Наименование",
+				"dataPath": "Объект.Description",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 7,
+				"view": "input",
+				"name": "Родитель",
+				"title": "Родитель",
+				"dataPath": "Объект.Parent",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 10,
+				"view": "input",
+				"name": "ПолноеНаименование",
+				"title": "ПолноеНаименование",
+				"dataPath": "Объект.ПолноеНаименование",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 13,
+				"view": "input",
+				"name": "ИНН",
+				"title": "ИНН",
+				"dataPath": "Объект.ИНН",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 16,
+				"view": "input",
+				"name": "РасчетныйСчет",
+				"title": "РасчетныйСчет",
+				"dataPath": "Объект.РасчетныйСчет",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			}
+		]
+	}
+}

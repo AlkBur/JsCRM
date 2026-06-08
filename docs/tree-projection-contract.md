@@ -59,3 +59,26 @@ and create a second model of tree structure, which violates the single-source-of
 principle. SSR may be reconsidered at Phase 9+ (Web IDE with 100k+ node configs,
 multi-user, or cloud IDE scenarios), but is explicitly excluded for Explorer v1
 and LSP Phase 8.x.
+
+## Projection filtering
+
+Projection layers may:
+
+- filter incomplete or invalid entities;
+- group entities;
+- reshape data for presentation.
+
+Projection layers must not:
+
+- mutate source models;
+- infer semantics;
+- become a source of truth.
+
+## Error Handling Policy
+
+Projection layers may degrade gracefully.
+Execution layers must fail fast.
+
+Invalid or incomplete source data may be filtered when building projections,
+but execution components (VM, runtime, builtins) must never silently ignore
+errors or substitute missing behavior.

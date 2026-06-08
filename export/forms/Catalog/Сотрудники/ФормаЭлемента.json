@@ -1,0 +1,115 @@
+{
+	"schema": "jscrm.form.v1",
+	"id": "Catalog.Сотрудники.ФормаЭлемента",
+	"owner": {
+		"kind": "Catalog",
+		"name": "Сотрудники"
+	},
+	"attributes": [
+		{
+			"name": "Объект",
+			"type": {
+				"kind": "ref",
+				"target": "Catalog.Сотрудники"
+			},
+			"main": true,
+			"savedData": true
+		}
+	],
+	"commands": [
+		{
+			"name": "Тест",
+			"title": "Тест",
+			"handler": "",
+			"tooltip": "Тест"
+		}
+	],
+	"events": [
+		{
+			"source": "Тест",
+			"event": "onClick",
+			"handler": "Form.Command.Тест"
+		}
+	],
+	"mainAttribute": "Объект",
+	"form": {
+		"name": "ФормаЭлемента",
+		"synonym": "Форма элемента",
+		"type": "managed",
+		"uuid": "a3ed248d-8c76-4888-9113-b2c3371f8bf1"
+	},
+	"layout": {
+		"id": -1,
+		"view": "form",
+		"elements": [
+			{
+				"id": 1,
+				"view": "input",
+				"name": "Код",
+				"title": "Код",
+				"dataPath": "Объект.Code",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 4,
+				"view": "input",
+				"name": "Наименование",
+				"title": "ФИО сокращено",
+				"dataPath": "Объект.Description",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 7,
+				"view": "input",
+				"name": "ФИО",
+				"title": "ФИО полностью",
+				"dataPath": "Объект.ФИО",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 10,
+				"view": "input",
+				"name": "ДатаРождения",
+				"title": "ДатаРождения",
+				"dataPath": "Объект.ДатаРождения",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 13,
+				"view": "input",
+				"name": "СемейноеПоложение",
+				"title": "СемейноеПоложение",
+				"dataPath": "Объект.СемейноеПоложение",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 44,
+				"view": "group",
+				"name": "ГруппаКоманднаяПанель",
+				"title": "Группа командная панель",
+				"elements": [
+					{
+						"id": 46,
+						"view": "button",
+						"name": "Тест",
+						"title": "Тест",
+						"visible": true,
+						"enabled": true
+					}
+				],
+				"layout": "horizontal",
+				"showTitle": false
+			}
+		]
+	}
+}

@@ -1,0 +1,130 @@
+{
+	"schema": "jscrm.form.v1",
+	"id": "Catalog.Организации.ФормаЭлемента",
+	"owner": {
+		"kind": "Catalog",
+		"name": "Организации"
+	},
+	"attributes": [
+		{
+			"name": "Объект",
+			"type": {
+				"kind": "ref",
+				"target": "Catalog.Организации"
+			},
+			"main": true,
+			"savedData": true
+		}
+	],
+	"commands": [
+		{
+			"name": "ПроверитьИНН",
+			"title": "Проверить ИНН",
+			"handler": "ПроверитьИНН",
+			"tooltip": "Проверить ИНН"
+		}
+	],
+	"events": [
+		{
+			"source": "ПроверитьИНН",
+			"event": "onClick",
+			"handler": "Form.Command.ПроверитьИНН"
+		},
+		{
+			"source": "ИНН",
+			"event": "OnChange",
+			"handler": "ИННПриИзменении"
+		}
+	],
+	"mainAttribute": "Объект",
+	"form": {
+		"name": "ФормаЭлемента",
+		"synonym": "Форма элемента",
+		"type": "managed",
+		"uuid": "5fd0f558-b193-47ce-bae1-05f3661ea659"
+	},
+	"layout": {
+		"id": -1,
+		"view": "form",
+		"elements": [
+			{
+				"id": 18,
+				"view": "group",
+				"name": "Группа2",
+				"title": "Группа2",
+				"elements": [
+					{
+						"id": 1,
+						"view": "input",
+						"name": "Код",
+						"title": "Код",
+						"dataPath": "Объект.Code",
+						"visible": true,
+						"enabled": true,
+						"readonly": false
+					},
+					{
+						"id": 20,
+						"view": "button",
+						"name": "ПроверитьИНН",
+						"title": "ПроверитьИНН",
+						"visible": true,
+						"enabled": true
+					}
+				],
+				"layout": "horizontal",
+				"showTitle": false
+			},
+			{
+				"id": 16,
+				"view": "group",
+				"name": "Группа1",
+				"title": "Группа1",
+				"elements": [
+					{
+						"id": 7,
+						"view": "input",
+						"name": "ИНН",
+						"title": "ИНН",
+						"dataPath": "Объект.ИНН",
+						"visible": true,
+						"enabled": true,
+						"readonly": false
+					},
+					{
+						"id": 10,
+						"view": "input",
+						"name": "РасчетныйСчет",
+						"title": "РасчетныйСчет",
+						"dataPath": "Объект.РасчетныйСчет",
+						"visible": true,
+						"enabled": true,
+						"readonly": false
+					}
+				],
+				"layout": "horizontal",
+				"showTitle": false
+			},
+			{
+				"id": 4,
+				"view": "input",
+				"name": "Наименование",
+				"title": "Наименование",
+				"dataPath": "Объект.Description",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			},
+			{
+				"id": 13,
+				"view": "input",
+				"name": "ПолноеНаименование",
+				"title": "ПолноеНаименование",
+				"dataPath": "Объект.ПолноеНаименование",
+				"visible": true,
+				"enabled": true,
+				"readonly": false
+			}
+		]
+	}
+}

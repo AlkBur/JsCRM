@@ -1,71 +1,267 @@
 # Architecture Map
 
-Start here when making changes. Links to specialized contracts in `docs/`.
+Task-oriented navigation for humans and AI agents.
 
-## Where to change things
+---
 
-| Area | Location | Contracts |
-|------|----------|-----------|
-| VM execution | `src/vm/`, `runtime/`, `builtins/` | [ir-v1-contract](ir-v1-contract.md) |
-| Metadata | `metadata/` | — |
-| Navigation | `SymbolIndex`, `DependencyGraph`, `LocationIndex` | [index-layer-contract](index-layer-contract.md) |
-| LSP | `lsp/` | [lsp-roadmap](lsp-roadmap.md) |
-| Explorer UI | `tree-builder.ts`, `client/` | [tree-projection-contract](tree-projection-contract.md) |
-| Benchmarks | `bench/` | — |
-| Workspace composition | `Workspace.ts`, `WorkspaceLoader.ts` | [workspace-contract](workspace-contract.md) |
-| Synchronization | `sync/` (future) | [sync-engine](sync-engine.md) |
+## VM execution
 
-## Ownership Map
+Responsible for IR execution.
 
-- **Program** — owns modules and routine registry
-- **MetadataModel** — owns structural metadata
-- **SymbolIndex** — owns symbol lookup
-- **DependencyGraph** — owns call graph queries
-- **LocationIndex** — owns URI/range mapping
-- **MetadataIndex** — owns attribute search
-- **Workspace** — composes all sources and indexes
-- **TreeBuilder** — builds TreeNode projection
-- **VM** — executes Program
-- **LSP** — serves navigation requests
-- **Explorer UI** — renders projections
+Directories:
 
-## Composition Roots
+* `src/vm/`
+* `runtime/`
+* `builtins/`
 
-- `WorkspaceLoader.ts` — builds Workspace (Program + MetadataModel + indexes)
-- `server.ts` — builds HTTP adapter (REST API)
-- `lsp/server.ts` — builds LSP adapter (JSON-RPC)
-- `compat/runner.ts` — builds compatibility runner (VM + golden tests)
-- `bench/runner.ts` — builds benchmark harness
+Change here when:
 
-## Project structure
+* adding runtime behavior;
+* implementing builtin functions;
+* changing expression or statement execution;
+* modifying scope or call semantics.
 
-```
-/ir             IR v1 contract (frozen)
-/fixtures       Golden IR fixtures
-/export         1C exporter output (IR + results)
-/metadata       MetadataModel, MetadataIndex, FieldType
-/symbols        SymbolKind, SymbolInfo
-/compat         Compatibility runner
-/runtime        RuntimeObject types, BuiltinRegistry
-/builtins       Builtin functions (14)
-/src/vm/        VM (executeStmt, executeExpr, callFunction, ...)
-/src/           Program, Workspace, SymbolIndex, DependencyGraph, LocationIndex, server, tree-builder
-/lsp            Language Server (JSON-RPC, definition, references)
-/bench          Performance benchmarks (regression harness)
-/docs           Architecture contracts
-/client         React + Vite Explorer UI
-/sync           Synchronization Engine (future)
-/tests          Unit + integration tests
-```
+Do NOT change:
 
-## Architecture layers
+* indexes;
+* metadata;
+* UI projections.
 
-```
-Execution Layer:      Program + VM
-Structural Layer:     MetadataModel
-Index Layer:          SymbolIndex, MetadataIndex, DependencyGraph, LocationIndex
-Adapter Layer:        LSP, REST API, Explorer UI
-Projection Layer:     Sync Engine, SQL (future)
-```
+---
 
-For detailed rules see [architecture-style](architecture-style.md).
+## Metadata
+
+Responsible for structural information.
+
+Directories:
+
+* `metadata/`
+
+Main files:
+
+* `MetadataModel.ts`
+* `MetadataIndex.ts`
+
+Change here when:
+
+* adding metadata versions;
+* introducing new object types;
+* changing field definitions.
+
+Do NOT add execution logic here.
+
+---
+
+## Navigation and indexes
+
+Responsible for immutable derived projections.
+
+Files:
+
+* `src/SymbolIndex.ts`
+* `src/DependencyGraph.ts`
+* `src/LocationIndex.ts`
+
+Change here when:
+
+* adding queries;
+* improving symbol lookup;
+* adding graph algorithms.
+
+Indexes are derived data.
+
+Indexes must never become a source of truth.
+
+Execution must not depend on indexes.
+
+---
+
+## Workspace
+
+Responsible for composition.
+
+Files:
+
+* `src/Workspace.ts`
+* `src/WorkspaceLoader.ts`
+
+Owns:
+
+* Program;
+* MetadataModel;
+* all indexes.
+
+Does NOT own:
+
+* adapters;
+* execution;
+* UI.
+
+Workspace is immutable.
+
+---
+
+## Forms
+
+Responsible for form projections.
+
+Directory:
+
+* `src/forms/`
+
+Change here when:
+
+* adding projection types;
+* filtering invalid handlers;
+* building client-facing representations.
+
+Projection layers may degrade gracefully.
+
+Execution layers must fail fast.
+
+---
+
+## Tree projections
+
+Responsible for MetadataModel → TreeNode conversion.
+
+Files:
+
+* `src/tree-builder.ts`
+
+Change here when:
+
+* adding explorer nodes;
+* changing hierarchy;
+* introducing new projections.
+
+TreeBuilder is a pure function.
+
+---
+
+## LSP
+
+Responsible for navigation protocol.
+
+Directory:
+
+* `lsp/`
+
+Change here when:
+
+* adding definition/reference queries;
+* extending JSON-RPC handlers.
+
+LSP is index-driven.
+
+LSP must not reconstruct semantics.
+
+---
+
+## REST API
+
+Responsible for HTTP transport.
+
+File:
+
+* `src/server.ts`
+
+Change here when:
+
+* adding endpoints;
+* changing request/response contracts.
+
+Server is an adapter.
+
+Business logic belongs elsewhere.
+
+---
+
+## Explorer UI
+
+Responsible for presentation.
+
+Directory:
+
+* `client/`
+
+Change here when:
+
+* adding components;
+* changing layout;
+* improving interaction.
+
+UI is a projection over indexes and metadata.
+
+Client is CSR only.
+
+---
+
+## Benchmarks
+
+Responsible for diagnostics.
+
+Directory:
+
+* `bench/`
+
+Change here when:
+
+* adding regression benchmarks;
+* updating baselines.
+
+Benchmarks are observability tools.
+
+Benchmarks are not CI gates.
+
+---
+
+## Tests
+
+Responsible for correctness.
+
+Directory:
+
+* `tests/`
+
+Additional compatibility tests:
+
+* `compat/`
+
+All architectural refactorings must preserve:
+
+* typecheck = 0 errors;
+* unit tests;
+* golden tests.
+
+---
+
+## Legacy code
+
+Directory:
+
+* `src/legacy/`
+
+Frozen.
+
+Test-only.
+
+Avoid modifications unless absolutely necessary.
+
+---
+
+## Architectural evolution
+
+New capabilities require an external consumer signal.
+
+Prefer:
+
+* new queries;
+* new projections;
+* new adapters.
+
+Avoid:
+
+* duplicate models;
+* mutable caches;
+* alternative sources of truth.
