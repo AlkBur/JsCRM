@@ -84,7 +84,7 @@ const server = Bun.serve({
     }
 
     if (path.startsWith("/api/modules/")) {
-      const name = path.slice("/api/modules/".length);
+      const name = decodeURIComponent(path.slice("/api/modules/".length));
       const mod = workspace.program.getModules().find(m => m.name === name);
       if (!mod) return json({ error: "Module not found" }, 404);
       return json(mod);
@@ -110,7 +110,7 @@ const server = Bun.serve({
     }
 
     if (path.startsWith("/api/ir/")) {
-      const name = path.slice("/api/ir/".length);
+      const name = decodeURIComponent(path.slice("/api/ir/".length));
       const ir = moduleIR(name);
       if (!ir) return json({ error: "Module not found" }, 404);
       return json(ir);
@@ -146,8 +146,12 @@ const server = Bun.serve({
     if (path.startsWith("/api/forms/")) {
       const rest = path.slice("/api/forms/".length);
       const parts = rest.split("/");
-      const objectName = parts[0];
-      const formName = parts[1];
+      let objectName: string | undefined;
+      let formName: string | undefined;
+      try {
+        objectName = decodeURIComponent(parts[0] ?? "");
+        formName = decodeURIComponent(parts[1] ?? "");
+      } catch { return json({ error: "Некорректный идентификатор формы" }, 400); }
       if (!objectName || !formName) return json({ error: "Usage: /api/forms/:object/:form" }, 400);
       const doc = workspace.formIndex.get(objectName, formName);
       if (!doc) return json({ error: "Form not found" }, 404);
@@ -159,7 +163,10 @@ const server = Bun.serve({
     }
 
     if (path.startsWith("/api/node/")) {
-      const nodeId = path.slice("/api/node/".length);
+      const encodedNodeId = path.slice("/api/node/".length);
+      let nodeId: string;
+      try { nodeId = decodeURIComponent(encodedNodeId); }
+      catch { return json({ error: "Некорректный идентификатор узла" }, 400); }
       const parts = nodeId.split(".");
       const entityKind = parts[0] ?? "";
       const entityName = parts[1];
