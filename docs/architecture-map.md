@@ -121,6 +121,30 @@ Execution layers must fail fast.
 
 ---
 
+## Snapshots
+
+Responsible for object instance data.
+
+Files:
+
+* `src/snapshots/snapshot-types.ts`
+* `src/snapshots/FilesystemSnapshotStore.ts`
+
+Change here when:
+
+* adding data storage backends;
+* implementing save/load/listing;
+* introducing exchange or sync.
+
+SnapshotStore is an adapter.
+
+Domain and UI must not depend on JSON or SQL.
+
+Forms own layout. Snapshots own values.
+FormStateStore is the only bridge between them.
+
+---
+
 ## Tree projections
 
 Responsible for MetadataModel → TreeNode conversion.

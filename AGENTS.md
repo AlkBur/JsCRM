@@ -15,16 +15,30 @@ IR v1 frozen. VM split into 11 single-responsibility modules.
 
 ```
 Signal #1: "Хочу увидеть настоящий интерфейс 1С в Web"
-  Round 1: Forms only (read-only)
+  Round 1: Forms only (read-only)              ✅
 
-Phase 2 ✅  — FormIndex + Workspace integration
-Phase 3 🔄  — TreeBuilder form nodes + REST endpoints
-Phase 4 ⬜  — React FormRenderer (Group, Field, Button)
+  Phase 2  — FormIndex + Workspace integration ✅
+  Phase 3  — TreeBuilder form nodes + REST     ✅
+  Phase 4  — React FormRenderer                ✅
 
-Out of scope:
-  DynamicList, TabularSections, Editing, Command execution, Live sync
+  Round 2A: Editable Forms (M2)                🔄
+    Цель: открыть карточку → изменить → сохранить
 
-Next signal: «Хочу увидеть список Контрагентов» → DynamicList round
+    Шаг 1  — snapshot-store-contract.md
+    Шаг 2  — src/snapshots/ (SnapshotStore interface + FS impl)
+    Шаг 3  — FormStateStore (dataPath → values bridge)
+    Шаг 4  — REST: GET/POST /api/object
+    Шаг 5  — React controlled inputs + selector + save
+
+    Out of scope:
+      DynamicList, TabularSections, Commands, Validation,
+      SQL, Live sync, VM execution
+
+  Round 2B (future): DynamicList
+  Round 3 (future):   TabularSection
+  Round 4 (future):   SQL backend
+
+Next signal: «Хочу увидеть список Контрагентов» → DynamicList
 ```
 
 ## Architecture Layers
@@ -41,8 +55,9 @@ Layer  8  LSP (Navigation Core, Phase 8.1)   ✅
 Layer  9  Explorer v1 (CSR, read-only)       ✅
          Forms Phase 1 (types + projection) ✅
          Forms Phase 2 (FormIndex)           ✅
-         Forms Phase 3 (Tree + REST)         🔄
-         Forms Phase 4 (FormRenderer)         ⬜
+         Forms Phase 3 (Tree + REST)         ✅
+         Forms Phase 4 (FormRenderer)        ✅
+         FormState + SnapshotStore           🔄
 Layer 10  Synchronization & Migration        ← FUTURE
 ```
 
@@ -144,6 +159,17 @@ New architectural changes require one of:
 
 Architecture must not evolve without pressure. Stability is preferred over elegance.
 
+## Storage Policy
+
+Storage implementations are adapters. Domain and UI must not depend on JSON or SQL.
+Start with FilesystemSnapshotStore. Introduce SqlSnapshotStore only when query complexity justifies it.
+
+## Forms / Snapshots Ownership
+
+Forms own layout. Snapshots own values. FormStateStore is the only bridge between them.
+
+UI → FormStateStore → SnapshotStore. UI never knows where data comes from.
+
 ## Error Handling Policy
 
 Projection layers may degrade gracefully.
@@ -160,6 +186,7 @@ errors or substitute missing behavior.
 | VM execution | `src/vm/`, `runtime/`, `builtins/` |
 | Metadata | `metadata/` |
 | FormProjection | `src/forms/` |
+| FormState / SnapshotStore | `src/snapshots/`, `src/forms/form-state.ts` |
 | Navigation | `SymbolIndex`, `DependencyGraph`, `LocationIndex` |
 | LSP | `lsp/` |
 | Explorer UI | `tree-builder.ts`, `client/` |
