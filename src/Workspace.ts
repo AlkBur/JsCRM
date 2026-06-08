@@ -18,6 +18,7 @@ import { SymbolIndex } from "./SymbolIndex";
 import { MetadataIndex } from "../metadata/MetadataIndex";
 import { DependencyGraph } from "./DependencyGraph";
 import { LocationIndex } from "./LocationIndex";
+import { FormIndex } from "./forms/FormIndex";
 import type { WorkspaceStats } from "./workspace-types";
 
 export class Workspace {
@@ -27,6 +28,7 @@ export class Workspace {
   readonly metadataIndex: MetadataIndex;
   readonly dependencyGraph: DependencyGraph;
   readonly locationIndex: LocationIndex;
+  readonly formIndex: FormIndex;
   readonly stats: WorkspaceStats;
 
   constructor(
@@ -36,6 +38,7 @@ export class Workspace {
     metadataIndex: MetadataIndex,
     dependencyGraph: DependencyGraph,
     locationIndex: LocationIndex,
+    formIndex: FormIndex,
   ) {
     this.program = program;
     this.metadata = metadata;
@@ -43,6 +46,7 @@ export class Workspace {
     this.metadataIndex = metadataIndex;
     this.dependencyGraph = dependencyGraph;
     this.locationIndex = locationIndex;
+    this.formIndex = formIndex;
     this.stats = {
       modules: program.getModules().length,
       routines: program.getAllRoutines().length,
@@ -55,6 +59,7 @@ export class Workspace {
       graphEdges: dependencyGraph.getAllNodes()
         .reduce((sum, n) => sum + dependencyGraph.getCallees(n).length, 0),
       locations: locationIndex.size,
+      forms: formIndex.getAllForms().length,
     };
   }
 }

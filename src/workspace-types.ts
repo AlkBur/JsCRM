@@ -9,4 +9,5 @@ export interface WorkspaceStats {
   graphNodes: number;
   graphEdges: number;
   locations: number;
+  forms: number;
 }

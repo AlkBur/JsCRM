@@ -21,3 +21,4 @@ export type {
   FormCommandBar,
 } from "./form-types";
 export { buildFormProjection } from "./form-projection";
+export { FormIndex } from "./FormIndex";

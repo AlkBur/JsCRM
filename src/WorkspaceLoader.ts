@@ -6,6 +6,7 @@ import { MetadataIndex } from "../metadata/MetadataIndex";
 import { DependencyGraph } from "./DependencyGraph";
 import { LocationIndex } from "./LocationIndex";
 import { Workspace } from "./Workspace";
+import { FormIndex } from "./forms/FormIndex";
 
 export function loadWorkspace(exportDir: string): Workspace {
   const program = Program.loadFromManifest(exportDir);
@@ -14,5 +15,6 @@ export function loadWorkspace(exportDir: string): Workspace {
   const metadataIndex = MetadataIndex.build(metadata);
   const dependencyGraph = DependencyGraph.build(program);
   const locationIndex = LocationIndex.build(program, exportDir);
-  return new Workspace(program, metadata, symbolIndex, metadataIndex, dependencyGraph, locationIndex);
+  const formIndex = new FormIndex(join(exportDir, "forms"));
+  return new Workspace(program, metadata, symbolIndex, metadataIndex, dependencyGraph, locationIndex, formIndex);
 }
