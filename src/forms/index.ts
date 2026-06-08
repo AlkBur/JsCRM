@@ -7,6 +7,7 @@ export type {
   FormEvent,
   FormMeta,
   FormLayoutElement,
+  FormLayoutForm,
   FormLayoutGroup,
   FormField,
   FormButton,

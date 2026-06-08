@@ -1,36 +1,33 @@
-/**
- * Responsibility:
- *   Pure projection: MetadataModel → TreeNode[].
- *
- * Owns:
- *   TreeNode structure, node identity (stable IDs), hierarchy flattening.
- *
- * Does NOT own:
- *   Business logic, metadata interpretation, UI state.
- *
- * Used by:
- *   Server (REST API).
- */
+// TreeBuilder — pure projection: MetadataModel + FormIndex → TreeNode[].
+//
+// Owns:
+//   TreeNode structure, node identity (stable IDs), hierarchy flattening.
+//
+// Does NOT own:
+//   Business logic, metadata interpretation, UI state.
+//
+// Used by:
+//   Server (REST API).
 
 import { MetadataModel } from "../metadata/MetadataModel";
-import type { TreeNode, NodeKind } from "./explorer-types";
+import { FormIndex } from "./forms/FormIndex";
+import type { TreeNode } from "./explorer-types";
 
-export function buildTree(metadata: MetadataModel): TreeNode[] {
+export function buildTree(metadata: MetadataModel, formIndex?: FormIndex): TreeNode[] {
   const roots: TreeNode[] = [];
 
-  // Catalogs
   if (metadata.catalogs.length > 0) {
-    const catalogNodes: TreeNode[] = metadata.catalogs.map(c => entityNode("Catalog." + c.name, c.name, "catalog"));
+    const catalogNodes: TreeNode[] = metadata.catalogs.map(c =>
+      entityNode("Catalog." + c.name, c.name, "catalog", formIndex));
     roots.push(folderNode("catalogs", "Справочники", catalogNodes));
   }
 
-  // Documents
   if (metadata.documents.length > 0) {
-    const docNodes: TreeNode[] = metadata.documents.map(d => entityNode("Document." + d.name, d.name, "document"));
+    const docNodes: TreeNode[] = metadata.documents.map(d =>
+      entityNode("Document." + d.name, d.name, "document", formIndex));
     roots.push(folderNode("documents", "Документы", docNodes));
   }
 
-  // Enumerations
   if (metadata.enumerations.length > 0) {
     const enumNodes: TreeNode[] = metadata.enumerations.map(e => {
       const id = "Enum." + e.name;
@@ -47,15 +44,7 @@ export function buildTree(metadata: MetadataModel): TreeNode[] {
           });
         }
       }
-      const node: TreeNode = {
-        id,
-        label: e.name,
-        kind: "entity",
-        parentKind: "enumeration",
-        metaRef: e.name,
-        children: children.length > 0 ? children : undefined,
-      };
-      return node;
+      return { id, label: e.name, kind: "entity", parentKind: "enumeration", metaRef: e.name, children: children.length > 0 ? children : undefined };
     });
     roots.push(folderNode("enumerations", "Перечисления", enumNodes));
   }
@@ -67,13 +56,33 @@ function folderNode(id: string, label: string, children: TreeNode[]): TreeNode {
   return { id, label, kind: "folder", children };
 }
 
-function entityNode(id: string, label: string, parentKind: "catalog" | "document"): TreeNode {
+function entityNode(id: string, label: string, parentKind: "catalog" | "document", formIndex?: FormIndex): TreeNode {
   const children: TreeNode[] = [];
   children.push({ id: id + ".Attributes", label: "Реквизиты", kind: "folder", parentKind, metaRef: label });
   children.push({ id: id + ".TabularSections", label: "Табличные части", kind: "folder", parentKind, metaRef: label });
-  children.push({ id: id + ".Forms", label: "Формы", kind: "folder", parentKind, metaRef: label });
+
+  const formChildren: TreeNode[] = [];
+  if (formIndex) {
+    const forms = formIndex.getFormsForObject(label);
+    for (const f of forms) {
+      formChildren.push({
+        id: id + ".Forms." + f.form.name,
+        label: f.form.synonym || f.form.name,
+        kind: "form",
+        parentKind,
+        metaRef: label,
+      });
+    }
+  }
+  children.push({
+    id: id + ".Forms",
+    label: "Формы",
+    kind: "folder",
+    parentKind,
+    metaRef: label,
+    children: formChildren.length > 0 ? formChildren : undefined,
+  });
+
   children.push({ id: id + ".Commands", label: "Команды", kind: "folder", parentKind, metaRef: label });
-  return {
-    id, label, kind: "entity", parentKind, metaRef: label, children,
-  };
+  return { id, label, kind: "entity", parentKind, metaRef: label, children };
 }

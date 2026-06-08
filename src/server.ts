@@ -25,7 +25,7 @@ const workspace = loadWorkspace(exportDir);
 const registry = new BuiltinRegistry();
 registerBuiltins(registry);
 const vm = new VM(workspace.program, registry);
-const tree = buildTree(workspace.metadata);
+const tree = buildTree(workspace.metadata, workspace.formIndex);
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data, null, 2), {
@@ -133,6 +133,27 @@ const server = Bun.serve({
       return json({ unused: workspace.dependencyGraph.findUnused({ includeTests, includeEntrypoints }) });
     }
 
+    if (path === "/api/forms") {
+      const all = workspace.formIndex.getAllForms();
+      const grouped: Record<string, string[]> = {};
+      for (const f of all) {
+        const key = f.owner.name;
+        (grouped[key] ??= []).push(f.form.name);
+      }
+      return json(Object.entries(grouped).map(([object, forms]) => ({ object, forms })));
+    }
+
+    if (path.startsWith("/api/forms/")) {
+      const rest = path.slice("/api/forms/".length);
+      const parts = rest.split("/");
+      const objectName = parts[0];
+      const formName = parts[1];
+      if (!objectName || !formName) return json({ error: "Usage: /api/forms/:object/:form" }, 400);
+      const doc = workspace.formIndex.get(objectName, formName);
+      if (!doc) return json({ error: "Form not found" }, 404);
+      return json(doc);
+    }
+
     if (path === "/api/tree") {
       return json(tree);
     }
@@ -145,6 +166,13 @@ const server = Bun.serve({
       const subKind = parts[2];
 
       if (!entityName) return json({ error: "Invalid node ID" }, 400);
+
+      // Form projection node: Catalog.Организации.Forms.ФормаЭлемента
+      if (parts.length === 4 && subKind === "Forms") {
+        const formDoc = workspace.formIndex.get(entityName, parts[3]!);
+        if (formDoc) return json(formDoc);
+        return json({ error: "Form not found" }, 404);
+      }
 
       if (entityKind === "Enum") {
         const en = workspace.metadata.findEnumerationV2(entityName);

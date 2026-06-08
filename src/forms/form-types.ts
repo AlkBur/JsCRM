@@ -58,6 +58,7 @@ export interface FormMeta {
 }
 
 export type FormLayoutElement =
+  | FormLayoutForm
   | FormLayoutGroup
   | FormField
   | FormButton
@@ -76,6 +77,11 @@ export interface FormLayoutBase {
   title?: string;
   visible?: boolean;
   enabled?: boolean;
+}
+
+export interface FormLayoutForm extends FormLayoutBase {
+  view: "form";
+  elements: FormLayoutElement[];
 }
 
 export interface FormLayoutGroup extends FormLayoutBase {

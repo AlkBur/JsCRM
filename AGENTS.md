@@ -11,6 +11,22 @@ Primary source of truth: **IR v1** — a frozen JSON-based Intermediate Represen
 IR v1 frozen. VM split into 11 single-responsibility modules.  
 `bun run typecheck` → 0 errors. CI: `install → typecheck → test`.
 
+## Consumer Signal
+
+```
+Signal #1: "Хочу увидеть настоящий интерфейс 1С в Web"
+  Round 1: Forms only (read-only)
+
+Phase 2 ✅  — FormIndex + Workspace integration
+Phase 3 🔄  — TreeBuilder form nodes + REST endpoints
+Phase 4 ⬜  — React FormRenderer (Group, Field, Button)
+
+Out of scope:
+  DynamicList, TabularSections, Editing, Command execution, Live sync
+
+Next signal: «Хочу увидеть список Контрагентов» → DynamicList round
+```
+
 ## Architecture Layers
 
 ```
@@ -22,7 +38,11 @@ Layer  5  Symbol Index                      ✅
 Layer  6  Dependency Graph                  ✅
 Layer  7  Metadata v2                       ✅
 Layer  8  LSP (Navigation Core, Phase 8.1)   ✅
-Layer  9  Explorer + Web IDE                 ← TBD
+Layer  9  Explorer v1 (CSR, read-only)       ✅
+         Forms Phase 1 (types + projection) ✅
+         Forms Phase 2 (FormIndex)           ✅
+         Forms Phase 3 (Tree + REST)         🔄
+         Forms Phase 4 (FormRenderer)         ⬜
 Layer 10  Synchronization & Migration        ← FUTURE
 ```
 
@@ -188,6 +208,9 @@ Rules: baseline is pinned, >10% deviation invalidates comparison,
 - Table parts (ТЧ)
 - Full type system
 - Do not generate SQL directly from MetadataModel
+- DynamicList (next round after Signal #1)
+- TabularSection rendering (next round after Signal #1)
+- Command execution in FormRenderer (Phase 4 is read-only)
 
 ## Code Conventions
 
