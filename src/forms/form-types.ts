@@ -89,6 +89,7 @@ export interface FormLayoutGroup extends FormLayoutBase {
   elements: FormLayoutElement[];
   layout?: "horizontal" | "vertical";
   showTitle?: boolean;
+  showBorder?: boolean;
 }
 
 export interface FormField extends FormLayoutBase {

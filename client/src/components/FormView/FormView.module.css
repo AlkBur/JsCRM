@@ -18,6 +18,9 @@
   display: flex;
   gap: var(--spacing-3);
   padding: var(--spacing-2);
+}
+
+.groupFramed {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-2);
 }

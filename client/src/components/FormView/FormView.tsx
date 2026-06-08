@@ -23,8 +23,9 @@ function renderElement(el: FormLayoutElement, path: string): React.ReactNode {
     case "form":
     case "group": {
       const dir = "layout" in el && el.layout === "horizontal" ? styles.horizontal : styles.vertical;
+      const frame = "showBorder" in el && el.showBorder ? styles.groupFramed : "";
       return (
-        <div key={key} className={`${styles.group} ${dir}`}>
+        <div key={key} className={`${styles.group} ${dir} ${frame}`}>
           {"showTitle" in el && el.showTitle && el.title && <span className={styles.groupTitle}>{el.title}</span>}
           {"elements" in el && el.elements.map((child, i) => renderElement(child, `${key}.${i}`))}
         </div>

@@ -61,7 +61,7 @@ export interface FormDocument {
 }
 
 export type FormLayoutElement =
-  | { view: "form" | "group" | "tabs" | "tab" | "commandBar"; id: number; name: string; title?: string; elements: FormLayoutElement[]; layout?: string; showTitle?: boolean }
+  | { view: "form" | "group" | "tabs" | "tab" | "commandBar"; id: number; name: string; title?: string; elements: FormLayoutElement[]; layout?: string; showTitle?: boolean; showBorder?: boolean }
   | { view: "input"; id: number; name: string; title?: string; dataPath: string; readonly?: boolean; visible?: boolean; enabled?: boolean }
   | { view: "button"; id: number; name: string; title?: string; visible?: boolean; enabled?: boolean }
   | { view: "label"; id: number; name: string; title?: string; text?: string }
