@@ -1,102 +1,33 @@
 {
 	"commonModules": [
 		{
-			"name": "ОбщийМодульТестов",
+			"name": "РаботаСДокументами",
 			"export": true,
-			"server": true,
-			"client": false
-		},
-		{
-			"name": "ТестыБлок1",
-			"export": true,
-			"server": true,
-			"client": false
-		},
-		{
-			"name": "ТестыБлок2",
-			"export": true,
-			"server": true,
-			"client": false
-		},
-		{
-			"name": "ТестыБлок3",
-			"export": true,
-			"server": true,
-			"client": false
-		},
-		{
-			"name": "ТестыБлок4",
-			"export": true,
-			"server": true,
+			"server": false,
 			"client": true
 		},
 		{
-			"name": "ТестыБлок5",
+			"name": "РаботаСоСправочниками",
 			"export": true,
 			"server": true,
-			"client": true
+			"client": false
 		}
 	],
 	"catalogs": [
 		{
-			"name": "ДоговорыКонтрагентов",
-			"uuid": "b72a8f2e-d12e-4970-9522-9981bc522000",
+			"name": "Клиенты",
+			"uuid": "8e0d9c78-5268-48fa-838d-bde0a9da699a",
 			"attributes": [],
 			"tabularSections": [],
 			"forms": [],
 			"commands": []
 		},
 		{
-			"name": "Контрагенты",
-			"uuid": "ef94325e-a500-4760-96be-b1c33170351d",
-			"attributes": [
-				{
-					"uuid": "3e1036ae-5906-46e9-81e3-7a4b76f3419c",
-					"name": "ПолноеНаименование",
-					"type": {
-						"kind": "string",
-						"length": 100
-					},
-					"required": false
-				},
-				{
-					"uuid": "ea0d49e6-32c9-4ff2-9bac-46439a614cb1",
-					"name": "ИНН",
-					"type": {
-						"kind": "string",
-						"length": 12
-					},
-					"required": false
-				},
-				{
-					"uuid": "8b554a00-6709-4c43-a007-8cbd75aa272d",
-					"name": "РасчетныйСчет",
-					"type": {
-						"kind": "string",
-						"length": 12
-					},
-					"required": false
-				}
-			],
-			"tabularSections": [],
-			"forms": [
-				{
-					"name": "ФормаЭлемента",
-					"type": "managed"
-				},
-				{
-					"name": "ФормаСписка",
-					"type": "managed"
-				}
-			],
-			"commands": []
-		},
-		{
 			"name": "Номенклатура",
-			"uuid": "72b8c68f-251c-4734-8567-e195d825698c",
+			"uuid": "5d3e9322-448e-4731-a85a-5d4d344a0c7c",
 			"attributes": [
 				{
-					"uuid": "45e5ccdd-c714-477a-a94e-4dfb1cd46985",
+					"uuid": "f45cd5fd-f885-4ddf-b262-c48b5de94ffd",
 					"name": "ВидНоменклатуры",
 					"type": {
 						"kind": "enum",
@@ -106,224 +37,117 @@
 				}
 			],
 			"tabularSections": [],
-			"forms": [
-				{
-					"name": "ФормаЭлемента",
-					"type": "managed"
-				},
-				{
-					"name": "ФормаСписка",
-					"type": "managed"
-				},
-				{
-					"name": "ФормаВыбора",
-					"type": "managed"
-				},
-				{
-					"name": "ФормаГруппы",
-					"type": "managed"
-				},
-				{
-					"name": "ФормаВыбораГруппы",
-					"type": "managed"
-				}
-			],
-			"commands": [
-				{
-					"uuid": "7d1aadbd-b22d-40c1-80fe-4167441e3b06",
-					"name": "ПечатьДоговора",
-					"handler": "ОбработкаКоманды"
-				}
-			]
+			"forms": [],
+			"commands": []
 		},
 		{
-			"name": "Организации",
-			"uuid": "205e6fb1-ec6f-4058-b2bd-ec3a9c279a44",
-			"attributes": [
-				{
-					"uuid": "213fdd41-412e-4402-943c-c3c4dc9fa861",
-					"name": "ИНН",
-					"type": {
-						"kind": "string",
-						"length": 12
-					},
-					"required": true
-				},
-				{
-					"uuid": "41f742cb-d404-4598-92e7-6d5f9e7b658f",
-					"name": "РасчетныйСчет",
-					"type": {
-						"kind": "string",
-						"length": 12
-					},
-					"required": false
-				},
-				{
-					"uuid": "92ea6053-70ea-4b24-9a7a-43f36d73c2d3",
-					"name": "ПолноеНаименование",
-					"type": {
-						"kind": "string",
-						"length": 100
-					},
-					"required": false
-				}
-			],
-			"tabularSections": [],
-			"forms": [
-				{
-					"name": "ФормаЭлемента",
-					"type": "managed"
-				},
-				{
-					"name": "ФормаСписка",
-					"type": "managed"
-				},
-				{
-					"name": "ФормаВыбора",
-					"type": "managed"
-				}
-			],
-			"commands": [
-				{
-					"uuid": "1fabad0f-6f58-41b6-aafe-56a12063a623",
-					"name": "ПроверкаДанных",
-					"handler": "ОбработкаКоманды"
-				}
-			]
-		},
-		{
-			"name": "Пользователи",
-			"uuid": "ca54bf7b-d811-4877-a67d-05fded063d56",
-			"attributes": [
-				{
-					"uuid": "2628a672-d548-47cf-a250-6cb3838492fb",
-					"name": "Идентификатор",
-					"type": {
-						"kind": "string",
-						"length": 36,
-						"format": "uuid"
-					},
-					"required": false
-				}
-			],
+			"name": "Склады",
+			"uuid": "392b6f66-fa32-4851-97af-9d66f1ab6e9a",
+			"attributes": [],
 			"tabularSections": [],
 			"forms": [],
 			"commands": []
 		},
 		{
 			"name": "Сотрудники",
-			"uuid": "5c426f1d-6850-4de6-90aa-6b98010f6d02",
-			"attributes": [
-				{
-					"uuid": "26429cc3-f9f7-48b7-9b40-04cbf61769fd",
-					"name": "ФИО",
-					"type": {
-						"kind": "string",
-						"length": 100
-					},
-					"required": false
-				},
-				{
-					"uuid": "21ee2c6e-14b7-4609-94a7-eee9e6013a67",
-					"name": "ДатаРождения",
-					"type": {
-						"kind": "date"
-					},
-					"required": false
-				},
-				{
-					"uuid": "bc7875a0-0720-4104-aea1-41eb8ec7dc52",
-					"name": "СемейноеПоложение",
-					"type": {
-						"kind": "enum",
-						"target": "СемейноеПоложение"
-					},
-					"required": true
-				}
-			],
+			"uuid": "79e98965-5139-4369-9779-93931deafbdf",
+			"attributes": [],
 			"tabularSections": [
 				{
-					"uuid": "db2c8329-6869-411d-ba65-1a8c0de3b942",
-					"name": "Образование",
+					"uuid": "07a0a990-75c6-49cd-877f-c2234be8741d",
+					"name": "ТрудоваяДеятельность",
 					"attributes": [
 						{
-							"uuid": "57998ce8-8b0f-484b-8082-fe8ba6333524",
-							"name": "Учреждение",
+							"uuid": "f0b61617-72a2-42d0-b81e-be6de741e314",
+							"name": "Организация",
 							"type": {
 								"kind": "string",
-								"length": 10
+								"length": 100
 							},
 							"required": false
 						},
 						{
-							"uuid": "7fdf8f90-9123-4776-b228-a8c0497d4d7d",
-							"name": "ВидУЗ",
-							"type": {
-								"kind": "enum",
-								"target": "ВидыУчебногоЗаведения"
-							},
-							"required": false
-						},
-						{
-							"uuid": "0412e627-5eeb-47d4-aac9-89e96bb4dc42",
-							"name": "Специальность",
-							"type": {
-								"kind": "string",
-								"length": 10
-							},
-							"required": false
-						},
-						{
-							"uuid": "c7558526-5c4f-46bd-b63a-300684ca60f7",
-							"name": "ГодОкончания",
+							"uuid": "b2c4542a-a401-400a-8c41-bf7c95b351b4",
+							"name": "НачалоРаботы",
 							"type": {
 								"kind": "date"
+							},
+							"required": false
+						},
+						{
+							"uuid": "c58b75c7-3a1a-445f-8ace-2283570d3ae0",
+							"name": "ОкончаниеРаботы",
+							"type": {
+								"kind": "date"
+							},
+							"required": false
+						},
+						{
+							"uuid": "9e941e71-8052-4efb-846d-e76489e7e666",
+							"name": "Должность",
+							"type": {
+								"kind": "string",
+								"length": 100
 							},
 							"required": false
 						}
 					]
 				}
 			],
-			"forms": [
-				{
-					"name": "ФормаЭлемента",
-					"type": "managed"
-				}
-			],
+			"forms": [],
 			"commands": []
 		}
 	],
 	"documents": [
 		{
-			"name": "ЗаказКлиента",
-			"uuid": "b1e95c06-16a4-4a6b-91f6-949e3420cd04",
+			"name": "ОказаниеУслуги",
+			"uuid": "4204cb6f-9a07-46b6-bc9a-36d6d9ee4271",
 			"attributes": [
 				{
-					"uuid": "8dc64f2f-3e32-4f72-9877-0e0848ffd8be",
-					"name": "Контрагент",
+					"uuid": "345ef996-4c43-46b0-8c99-8f2ee3a1c403",
+					"name": "Склад",
 					"type": {
 						"kind": "ref",
-						"target": "Catalog.Контрагенты"
+						"target": "Catalog.Склады"
 					},
 					"required": false
 				},
 				{
-					"uuid": "fb233a77-2e1d-4eff-80ac-33399a9fcb2b",
-					"name": "ДоговорКонтрагента",
+					"uuid": "bf1afab8-f3fe-4165-bf35-a186a1a49c72",
+					"name": "Клиент",
 					"type": {
 						"kind": "ref",
-						"target": "Catalog.ДоговорыКонтрагентов"
+						"target": "Catalog.Клиенты"
+					},
+					"required": true
+				},
+				{
+					"uuid": "8cd6e9f8-f735-42db-b754-81e68bf6b794",
+					"name": "Мастер",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.Сотрудники"
+					},
+					"required": true
+				},
+				{
+					"uuid": "b6a2c818-0dcf-4c58-a295-6a6ae10ebb2b",
+					"name": "ИтоговаяСумма",
+					"type": {
+						"kind": "number",
+						"precision": 15,
+						"scale": 2
 					},
 					"required": false
 				}
 			],
 			"tabularSections": [
 				{
-					"uuid": "49b1f00d-41a6-4970-901a-46ce664f34e7",
-					"name": "Товары",
+					"uuid": "03dfe023-d6d1-467d-8c17-b1475dcc6a95",
+					"name": "ПереченьНоменклатуры",
 					"attributes": [
 						{
-							"uuid": "830fe37d-c910-4af2-b93c-a7715ecd7c3c",
+							"uuid": "f76cdca8-51ad-481d-bf65-e194e32aeaf0",
 							"name": "Номенклатура",
 							"type": {
 								"kind": "ref",
@@ -332,34 +156,44 @@
 							"required": true
 						},
 						{
-							"uuid": "1c3eb07e-55d6-494c-84fc-1189bd330a04",
+							"uuid": "6b085701-5e58-4fad-8288-55eec8bcc071",
+							"name": "Стоимость",
+							"type": {
+								"kind": "number",
+								"precision": 15,
+								"scale": 2
+							},
+							"required": false
+						},
+						{
+							"uuid": "530e63c0-696d-4343-bbe9-a4807a6581bc",
 							"name": "Количество",
 							"type": {
 								"kind": "number",
-								"precision": 10,
+								"precision": 15,
 								"scale": 3
 							},
 							"required": true
 						},
 						{
-							"uuid": "de1ea9f5-ad25-46cb-aa82-19e3ce84f330",
+							"uuid": "c26db247-c72a-4186-a28b-e5e618d02e68",
 							"name": "Цена",
 							"type": {
 								"kind": "number",
 								"precision": 15,
 								"scale": 2
 							},
-							"required": false
+							"required": true
 						},
 						{
-							"uuid": "69fb2811-07a9-4ddc-a83f-d3177300824c",
+							"uuid": "ef7f94ac-f56c-41ab-b033-0b4c015c82a3",
 							"name": "Сумма",
 							"type": {
 								"kind": "number",
 								"precision": 15,
 								"scale": 2
 							},
-							"required": false
+							"required": true
 						}
 					]
 				}
@@ -372,48 +206,34 @@
 			],
 			"commands": [
 				{
-					"uuid": "3b9202ac-f4a0-4a98-aa8b-7f87be71bcb7",
-					"name": "Акт",
-					"handler": "ОбработкаКоманды"
-				},
-				{
-					"uuid": "3defa6d7-d541-452f-a89c-db66a9e73069",
-					"name": "ТТН",
+					"uuid": "d34e62bf-b83c-4a95-9241-dd2b3df08839",
+					"name": "Печать",
 					"handler": "ОбработкаКоманды"
 				}
 			]
 		},
 		{
-			"name": "ЗаказПоставщику",
-			"uuid": "4047eecd-ff74-4d8f-aadf-7f155c8d18aa",
+			"name": "ПриходнаяНакладная",
+			"uuid": "3c5ed7d9-ea2c-46cf-bd15-cbc1c9496e82",
 			"attributes": [
 				{
-					"uuid": "408f1e35-c1f4-480a-bd5a-e513442d898b",
-					"name": "Контрагент",
+					"uuid": "43511035-619e-4b53-b7d5-f62add3db4e3",
+					"name": "Склад",
 					"type": {
 						"kind": "ref",
-						"target": "Catalog.Контрагенты"
+						"target": "Catalog.Склады"
 					},
-					"required": false
-				},
-				{
-					"uuid": "06c4cea5-720a-41aa-9602-3f39bf3c07a3",
-					"name": "ДоговорКонтрагента",
-					"type": {
-						"kind": "ref",
-						"target": "Catalog.ДоговорыКонтрагентов"
-					},
-					"required": false
+					"required": true
 				}
 			],
 			"tabularSections": [
 				{
-					"uuid": "0fef3b85-4047-492a-a6c1-8fd941964f36",
-					"name": "Товары",
+					"uuid": "ac74206f-b2df-4db8-b206-2214f0c1f504",
+					"name": "Материалы",
 					"attributes": [
 						{
-							"uuid": "9d06063e-2d74-41a7-bb19-5fbee2bbe5e5",
-							"name": "Номенклатура",
+							"uuid": "77e905ae-635f-41d7-8153-94a422ffbe52",
+							"name": "Материал",
 							"type": {
 								"kind": "ref",
 								"target": "Catalog.Номенклатура"
@@ -421,34 +241,34 @@
 							"required": true
 						},
 						{
-							"uuid": "2a424b87-93cd-4b05-a3db-64e5f8fc2361",
+							"uuid": "9c2876fb-f343-4c4d-b1ea-9fb1906dca38",
 							"name": "Количество",
 							"type": {
 								"kind": "number",
-								"precision": 10,
+								"precision": 15,
 								"scale": 3
 							},
 							"required": true
 						},
 						{
-							"uuid": "abbe2e9e-e782-410e-861f-7c7005fced3f",
+							"uuid": "113969d3-3fa5-473a-b74d-c06a0f7c68eb",
 							"name": "Цена",
 							"type": {
 								"kind": "number",
 								"precision": 15,
 								"scale": 2
 							},
-							"required": false
+							"required": true
 						},
 						{
-							"uuid": "6252d1c9-ea68-4a3f-8f73-3d8e21364d26",
+							"uuid": "11430174-99cf-4bf5-8dac-52fc75711458",
 							"name": "Сумма",
 							"type": {
 								"kind": "number",
 								"precision": 15,
 								"scale": 2
 							},
-							"required": false
+							"required": true
 						}
 					]
 				}
@@ -465,66 +285,20 @@
 	"enumerations": [
 		{
 			"name": "ВидыНоменклатуры",
-			"uuid": "c832e2bf-e045-4d80-af62-18d0a0e3615c",
+			"uuid": "c52e6681-3d94-4d9e-8b9b-32f6d324ebee",
 			"values": [
 				{
-					"uuid": "b1d22143-8a68-41dc-802f-d9985ee9365a",
-					"name": "Товар"
+					"uuid": "a6d8c85e-de59-4f8d-b8cf-3ebc679d5051",
+					"name": "Материал"
 				},
 				{
-					"uuid": "90982cd1-c6b9-41e0-8fd3-7353d0a2c194",
+					"uuid": "3ea3967a-6238-48d3-910b-ed63610b6c3b",
 					"name": "Услуга"
 				}
 			]
-		},
-		{
-			"name": "ВидыУчебногоЗаведения",
-			"uuid": "52c011ac-d3c7-4548-bd96-0ac3d7dd84d0",
-			"values": [
-				{
-					"uuid": "cc7a95aa-c30f-4702-ba26-385c35623d90",
-					"name": "Школа"
-				},
-				{
-					"uuid": "156f1083-f57f-4adf-a36c-382fa914a618",
-					"name": "НПО"
-				},
-				{
-					"uuid": "4afaf51c-9ea7-4d8c-aca3-9a7043387771",
-					"name": "СПО"
-				},
-				{
-					"uuid": "4d7ac4b6-6fb8-452f-8a12-f0144a4fa364",
-					"name": "ВУЗ"
-				}
-			]
-		},
-		{
-			"name": "СемейноеПоложение",
-			"uuid": "c660bb7c-3cbb-4c8c-9a74-741334bfcc33",
-			"values": [
-				{
-					"uuid": "3436717c-bb54-4d16-99d1-8f6db1c571fc",
-					"name": "Холост"
-				},
-				{
-					"uuid": "ff1dda41-2c26-44d9-92d3-63becf27988d",
-					"name": "Женат"
-				}
-			]
-		},
-		{
-			"name": "ТипДоговора",
-			"uuid": "1d5870b8-920a-4d1e-a4c2-39aa29c4faff",
-			"values": []
-		},
-		{
-			"name": "ТипОрганизации",
-			"uuid": "70f075ca-7cb0-4cf2-8dc5-f0c23ccc31a4",
-			"values": []
 		}
 	],
-	"configurationName": "ТестоваяКонфигурация",
-	"configurationUuid": "f4c587f1-b61c-463b-98e7-91b6a729c0f8",
+	"configurationName": "МастерскаяРадченко",
+	"configurationUuid": "3f521541-0317-484a-8e71-282d009c0c5d",
 	"version": "2"
 }

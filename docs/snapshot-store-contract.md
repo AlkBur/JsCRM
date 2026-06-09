@@ -59,26 +59,38 @@ type SnapshotPatch = Record<string, unknown>;
 
 ## Snapshot JSON format (FilesystemSnapshotStore)
 
+Collection per object type, one file per type:
+
 ```json
 {
   "meta": {
-    "id": "eab2b1df-...",
     "object": "Контрагенты",
     "schemaVersion": 1,
     "metadataVersion": 1
   },
-  "values": {
-    "Code": "00001",
-    "Description": "ООО Ромашка",
-    "ИНН": "7701234567"
-  }
+  "items": [
+    {
+      "id": "eab2b1df-...",
+      "parent": null,
+      "owner": null,
+      "values": {
+        "Code": "00001",
+        "Description": "ООО Ромашка",
+        "ИНН": "7701234567"
+      }
+    }
+  ]
 }
 ```
 
+- `parent` and `owner` are nullable UUID strings (or `$ref` objects in future).
+- relationships present even if unused — see Data Evolution Rule.
+- `id` is 1C internal UUID (`ЗначениеВСтрокуВнутр(Ссылка)`), not user-editable Code.
+
 ## Overlay (FilesystemSnapshotStore)
 
-Source is `export/data/`. Writes go to `workspace/pending/`.
-Read always does `pending ?? source` (pending overlays source).
+Source is `export/data/{object}.json`. Writes go to `workspace/pending/{object}/{id}.json`.
+Read always does `pending ?? source` (pending overlays source per item).
 
 This is an implementation detail — other stores (SQL, HTTP) may have no overlay.
 
@@ -86,7 +98,7 @@ This is an implementation detail — other stores (SQL, HTTP) may have no overla
 
 ```
 FilesystemSnapshotStore
-  source:  export/data/{object}/{id}.json
+  source:  export/data/{object}.json
   pending: workspace/pending/{object}/{id}.json
 ```
 

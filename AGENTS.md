@@ -15,30 +15,36 @@ IR v1 frozen. VM split into 11 single-responsibility modules.
 
 ```
 Signal #1: "Хочу увидеть настоящий интерфейс 1С в Web"
-  Round 1: Forms only (read-only)              ✅
 
-  Phase 2  — FormIndex + Workspace integration ✅
-  Phase 3  — TreeBuilder form nodes + REST     ✅
+  Round 1: Forms read-only                     ✅
+
+  Phase 1  — form-types + form-projection      ✅
+  Phase 2  — FormIndex + Workspace             ✅
+  Phase 3  — TreeBuilder + REST                ✅
   Phase 4  — React FormRenderer                ✅
 
-  Round 2A: Editable Forms (M2)                🔄
+  Foundations (before M2)                      🔄
+
+  Commit A — Action System v1                  pending
+  Commit B — Session Layer v1                  pending
+  Commit C — SnapshotStore                     pending
+
+  M2: Editable Forms                           🔄
     Цель: открыть карточку → изменить → сохранить
 
-    Шаг 1  — snapshot-store-contract.md
-    Шаг 2  — src/snapshots/ (SnapshotStore interface + FS impl)
-    Шаг 3  — FormStateStore (dataPath → values bridge)
-    Шаг 4  — REST: GET/POST /api/object
-    Шаг 5  — React controlled inputs + selector + save
+  Commit D — FormStateStore + REST             pending
+    GET  /api/object-list/:object
+    GET  /api/object/:object/:id
+    POST /api/action
 
-    Out of scope:
-      DynamicList, TabularSections, Commands, Validation,
-      SQL, Live sync, VM execution
+  Commit E — Первый handler                    pending
+    handlers/ObjectSaveHandler.ts
 
-  Round 2B (future): DynamicList
-  Round 3 (future):   TabularSection
-  Round 4 (future):   SQL backend
-
-Next signal: «Хочу увидеть список Контрагентов» → DynamicList
+  M3 (future): DynamicList
+  M4 (future): Action Commands
+  M5 (future): Desktop
+  M6 (future): Login screen
+  M7 (future): SQL backend
 ```
 
 ## Architecture Layers
@@ -57,7 +63,10 @@ Layer  9  Explorer v1 (CSR, read-only)       ✅
          Forms Phase 2 (FormIndex)           ✅
          Forms Phase 3 (Tree + REST)         ✅
          Forms Phase 4 (FormRenderer)        ✅
-         FormState + SnapshotStore           🔄
+         Actions + Session                  🔄
+         FormState + SnapshotStore          🔄
+         GeneratedFormBuilder               🔄
+         FormResolver                       🔄
 Layer 10  Synchronization & Migration        ← FUTURE
 ```
 
@@ -179,6 +188,26 @@ Invalid or incomplete source data may be filtered when building projections,
 but execution components (VM, runtime, builtins) must never silently ignore
 errors or substitute missing behavior.
 
+## Forms Policy
+
+**Forms are optional.** Rendering priority:
+1. Explicit form JSON (`export/forms/{kind}/{object}/{name}.json`).
+2. Generated form from metadata (`GeneratedFormBuilder`).
+3. Render error.
+
+Generated forms are adapter-level projections and do not become part of MetadataModel.
+
+GeneratedFormBuilder produces item form ("ФормаЭлемента") only — group "Основное",
+all attributes, buttons "Записать"/"Закрыть". List forms are M3.
+
+FormResolver is the bridge: queries FormIndex first, falls back to GeneratedFormBuilder.
+
+## Data Evolution Rule
+
+New relationships (owner, parent, references) should be added to snapshot values
+immediately when available, even if no consumer exists yet. These fields are part
+of the object model and do not constitute premature architecture.
+
 ## Task-oriented navigation
 
 | To change | Look here |
@@ -186,7 +215,10 @@ errors or substitute missing behavior.
 | VM execution | `src/vm/`, `runtime/`, `builtins/` |
 | Metadata | `metadata/` |
 | FormProjection | `src/forms/` |
+| Action System | `src/actions/` |
+| Session | `src/session/` |
 | FormState / SnapshotStore | `src/snapshots/`, `src/forms/form-state.ts` |
+| Generated forms | `src/generated-forms/` |
 | Navigation | `SymbolIndex`, `DependencyGraph`, `LocationIndex` |
 | LSP | `lsp/` |
 | Explorer UI | `tree-builder.ts`, `client/` |
@@ -230,14 +262,16 @@ Rules: baseline is pinned, >10% deviation invalidates comparison,
 
 - Web IDE (Layer 9)
 - Synchronization Engine (Layer 10)
-- DynamicList / QueryRuntime
+- DynamicList / QueryRuntime (M3)
 - Virtual Scroll / ViewportManager
 - Table parts (ТЧ)
 - Full type system
 - Do not generate SQL directly from MetadataModel
-- DynamicList (next round after Signal #1)
-- TabularSection rendering (next round after Signal #1)
-- Command execution in FormRenderer (Phase 4 is read-only)
+- Screens (login, desktop — M5/M6)
+- Session auth (tokens, LDAP, permissions — M5)
+- SQL backend (M7)
+- WebSocket / live sync
+- Complex layout engine v2
 
 ## Code Conventions
 
