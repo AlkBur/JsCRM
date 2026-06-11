@@ -17,34 +17,27 @@ IR v1 frozen. VM split into 11 single-responsibility modules.
 Signal #1: "Хочу увидеть настоящий интерфейс 1С в Web"
 
   Round 1: Forms read-only                     ✅
-
-  Phase 1  — form-types + form-projection      ✅
-  Phase 2  — FormIndex + Workspace             ✅
-  Phase 3  — TreeBuilder + REST                ✅
-  Phase 4  — React FormRenderer                ✅
-
-  Foundations (before M2)                      🔄
-
-  Commit A — Action System v1                  pending
-  Commit B — Session Layer v1                  pending
-  Commit C — SnapshotStore                     pending
-
-  M2: Editable Forms                           🔄
+  M2: Editable Forms                           ✅
     Цель: открыть карточку → изменить → сохранить
+  M3: TabularSection read-only                 ✅
 
-  Commit D — FormStateStore + REST             pending
-    GET  /api/object-list/:object
-    GET  /api/object/:object/:id
-    POST /api/action
+  M4A: UI Components Layer                     ✅
+    controls/  — pure presentational components
+    elements/  — JSON-aware component mapping
+    renderers/ — FormElementRenderer (view → component)
+    gallery/   — ComponentGallery (visual test stand)
 
-  Commit E — Первый handler                    pending
-    handlers/ObjectSaveHandler.ts
+  M4B: Metadata-aware Rendering                🔄
+    types-metadata.ts, resolveAttribute, UIContext
 
-  M3 (future): DynamicList
-  M4 (future): Action Commands
-  M5 (future): Desktop
-  M6 (future): Login screen
-  M7 (future): SQL backend
+  M4C: Migration to DefaultFormView            pending
+  M5: Editable rows                            pending
+  M6: DynamicList                              pending
+  M7: Session + Login + MainWindow             pending
+  M8: Commands                                 pending
+  M9: Partial UI updates                       pending
+  M10: SQL SnapshotStore                       pending
+  M11: Exchange                                pending
 ```
 
 ## Architecture Layers
@@ -67,6 +60,7 @@ Layer  9  Explorer v1 (CSR, read-only)       ✅
          FormState + SnapshotStore          🔄
          GeneratedFormBuilder               🔄
          FormResolver                       🔄
+         UI Components Layer (M4A)           ✅
 Layer 10  Synchronization & Migration        ← FUTURE
 ```
 
@@ -222,6 +216,10 @@ of the object model and do not constitute premature architecture.
 | Core utilities | `src/core/` (`parseObjectName`, `buildObjectName`) |
 | Navigation | `SymbolIndex`, `DependencyGraph`, `LocationIndex` |
 | LSP | `lsp/` |
+| UI Controls | `client/src/components/controls/` |
+| UI Elements (JSON layer) | `client/src/components/elements/` |
+| UI Renderers | `client/src/components/renderers/` |
+| UI Gallery | `client/src/components/demo/` |
 | Explorer UI | `tree-builder.ts`, `client/` |
 | Benchmarks | `bench/` |
 | Workspace composition | `Workspace.ts`, `WorkspaceLoader.ts` |
@@ -263,16 +261,32 @@ Rules: baseline is pinned, >10% deviation invalidates comparison,
 
 - Web IDE (Layer 9)
 - Synchronization Engine (Layer 10)
-- DynamicList / QueryRuntime (M3)
+- DynamicList / QueryRuntime (M6)
 - Virtual Scroll / ViewportManager
 - Table parts (ТЧ)
 - Full type system
 - Do not generate SQL directly from MetadataModel
-- Screens (login, desktop — M5/M6)
-- Session auth (tokens, LDAP, permissions — M5)
-- SQL backend (M7)
+- Screens (login, desktop — M7)
+- Session auth (tokens, LDAP, permissions — M7)
+- SQL backend (M10)
 - WebSocket / live sync
 - Complex layout engine v2
+
+## UI Architecture Rules
+
+```
+controls/  — Pure presentational components.
+             Must not import form-types, metadata types,
+             ActionDispatcher, REST clients or Session.
+
+elements/  — JSON-aware component mapping.
+             May depend on form-types.
+             Must not import REST clients or Session.
+
+renderers/ — Only map view → element component.
+
+views/     — May orchestrate context, state and actions.
+```
 
 ## Export Policy
 

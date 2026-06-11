@@ -58,6 +58,7 @@ export interface UnionType {
 export interface AttributeV2 {
   readonly uuid?: string;
   readonly name: string;
+  readonly synonym?: string;
   readonly type: FieldType;
   readonly required: boolean;
 }
