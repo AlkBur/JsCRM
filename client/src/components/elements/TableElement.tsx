@@ -1,5 +1,5 @@
 import type { AttributeV2 } from "../../types-metadata";
-import { stripObjectPrefix } from "../FormView/displayValue";
+import { stripObjectPrefix } from "../../utils/displayValue";
 import TableControl from "../controls/TableControl";
 import type { TableColumn } from "../controls/TableControl";
 

@@ -7,4 +7,5 @@ export interface FormScreenDto {
   form: FormDocument;
   metadata: MetadataEntity | null;
   object?: { name: string };
+  sessionId?: string;
 }

@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function CommandBarElement({ element }: Props) {
-  const buttons = element.elements.filter(e => e.view === "button");
+  const buttons = (element.elements ?? []).filter(e => e.view === "button");
 
   if (buttons.length === 0) return null;
 

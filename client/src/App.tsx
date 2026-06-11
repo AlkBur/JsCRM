@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import type { TreeNode } from "./types";
-import { fetchTree, fetchNode } from "./api";
+import type { TreeNode, FormScreenDto } from "./types";
+import { fetchTree, fetchNode, fetchStartup, fetchForm } from "./api";
 import TreeView from "./components/TreeView/TreeView";
 import DetailPanel from "./components/DetailPanel/DetailPanel";
 import Breadcrumb from "./components/Breadcrumb/Breadcrumb";
@@ -16,6 +16,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    fetchStartup()
+      .then(s => fetchForm(s.form))
+      .then((dto: FormScreenDto) => setNodeDetail(dto))
+      .catch(() => {});
     fetchTree().then(data => {
       setTree(data);
       setExpanded(new Set(["catalogs", "documents", "enumerations"]));

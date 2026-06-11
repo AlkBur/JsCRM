@@ -1,4 +1,4 @@
-import { displayValue } from "../FormView/displayValue";
+import { displayValue } from "../../utils/displayValue";
 import styles from "./controls.module.css";
 
 export interface TableColumn {

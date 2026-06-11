@@ -146,11 +146,32 @@ const server = Bun.serve({
       return json({ unused: workspace.dependencyGraph.findUnused({ includeTests, includeEntrypoints }) });
     }
 
+    if (path === "/api/startup") {
+      return json({ form: "System.Start" });
+    }
+
+    if (path.startsWith("/api/form/")) {
+      const formPath = decodeURIComponent(path.slice("/api/form/".length));
+      const indexed = workspace.formIndex.getByPath(formPath);
+      if (!indexed) return json({ error: "Form not found" }, 404);
+      const parts = formPath.split(".");
+      let metadata = null;
+      let objectName: string | undefined;
+      if (parts.length === 3) {
+        const entityName = parts[1]!;
+        metadata = workspace.metadata.findCatalogV2(entityName) ?? workspace.metadata.findDocumentV2(entityName) ?? null;
+        objectName = `${parts[0]}.${entityName}`;
+      }
+      const dto: FormScreenDto = { form: indexed.document, metadata, object: objectName ? { name: objectName } : undefined };
+      return json(dto);
+    }
+
     if (path === "/api/forms") {
       const all = workspace.formIndex.getAllForms();
       const grouped: Record<string, string[]> = {};
       for (const f of all) {
-        (grouped[f.objectName] ??= []).push(f.formName);
+        const key = f.objectName ?? "System";
+        (grouped[key] ??= []).push(f.formName);
       }
       return json(Object.entries(grouped).map(([object, forms]) => ({ object, forms })));
     }
@@ -165,7 +186,7 @@ const server = Bun.serve({
         formName = decodeURIComponent(parts[1] ?? "");
       } catch { return json({ error: "Некорректный идентификатор формы" }, 400); }
       if (!objectName || !formName) return json({ error: "Usage: /api/forms/:object/:form" }, 400);
-      const indexed = workspace.formIndex.get(objectName, formName);
+      const indexed = workspace.formIndex.getByPath(`${objectName}.${formName}`);
       if (!indexed) return json({ error: "Form not found" }, 404);
       return json(indexed.document);
     }
@@ -206,9 +227,10 @@ const server = Bun.serve({
 
       // Form projection node: Catalog.Организации.Forms.ФормаЭлемента
       if (parts.length === 4 && subKind === "Forms") {
-        const objectName = `${entityKind}.${entityName}`;
-        const indexed = workspace.formIndex.get(objectName, parts[3]!);
+        const formPath = `${entityKind}.${entityName}.${parts[3]!}`;
+        const indexed = workspace.formIndex.getByPath(formPath);
         if (indexed) {
+          const objectName = `${entityKind}.${entityName}`;
           const dto: FormScreenDto = {
             form: indexed.document,
             metadata: workspace.metadata.findCatalogV2(entityName) ?? workspace.metadata.findDocumentV2(entityName) ?? null,

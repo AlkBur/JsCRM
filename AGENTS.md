@@ -291,6 +291,17 @@ renderers/ — Only map view → element component.
 views/     — May orchestrate context, state and actions.
 ```
 
+## Startup Policy
+
+Клиент никогда не знает стартовую форму.  
+Клиент спрашивает сервер (`GET /api/startup`), какую форму открыть первой.
+
+Сейчас `GET /api/startup` возвращает `{ form: "System.Start" }`.  
+В будущем Session.mode или код запуска будет определять `System.Login | System.MainWindow | ...`.
+
+Всегда используется универсальный `GET /api/form/:path` для загрузки любой формы,  
+включая System-формы (`System.Start`) и объектные (`Catalog.X.ФормаЭлемента`).
+
 ## Export Policy
 
 The `export/` directory is managed by the user (metadata, forms, data, IR).

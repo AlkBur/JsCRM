@@ -23,7 +23,7 @@ export default function GroupElement({ element, values, onChange, path }: Props)
       border={element.showBorder}
       layout={element.layout}
     >
-      {element.elements.map((child, i) => (
+      {(element.elements ?? []).map((child, i) => (
         <FormElementRenderer
           key={`${path}.${i}`}
           element={child}

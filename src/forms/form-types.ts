@@ -16,7 +16,7 @@ export interface FormDocument {
 
 export interface IndexedFormDocument {
   kind: string;
-  objectName: string;
+  objectName: string | null;
   formName: string;
   path: string;
   document: FormDocument;

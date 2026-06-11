@@ -1,4 +1,4 @@
-import type { FormDocument, FormLayoutElement, ObjectRef, FormScreenDto } from "../../types";
+import type { FormLayoutElement, ObjectRef, FormScreenDto } from "../../types";
 import type { MetadataEntity } from "../../types-metadata";
 import { FormProvider } from "../context/UIContext";
 import FormElementRenderer from "../renderers/FormElementRenderer";
@@ -57,12 +57,15 @@ export default function DefaultFormView({
         {saveError && <div className={styles.error}>{saveError}</div>}
         <h2 className={styles.title}>{dto.form.form.synonym || dto.form.form.name}</h2>
         <div className={styles.body}>
-          <FormElementRenderer
-            element={dto.form.layout}
-            values={values}
-            onChange={onChange}
-            path=""
-          />
+          {(dto.form.layout as { elements: FormLayoutElement[] }).elements.map((child, i) => (
+            <FormElementRenderer
+              key={child.id ?? i}
+              element={child}
+              values={values}
+              onChange={onChange}
+              path={`${i}`}
+            />
+          ))}
         </div>
         {renderButtons(dto.form.layout)}
       </div>

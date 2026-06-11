@@ -1,6 +1,6 @@
 import type { FormLayoutElement } from "../../types";
 import type { AttributeV2 } from "../../types-metadata";
-import { stripObjectPrefix } from "../FormView/displayValue";
+import { stripObjectPrefix } from "../../utils/displayValue";
 import { resolveAttribute, hasDataPath } from "../context/resolveAttribute";
 import { useFormContext } from "../context/UIContext";
 import InputElement from "../elements/InputElement";
@@ -31,6 +31,11 @@ const renderers: Record<string, React.ComponentType<any>> = {
 };
 
 export default function FormElementRenderer({ element, values, onChange, path }: Props) {
+  if (element.view === "form") {
+    console.warn("FormElementRenderer: root form element must be handled by DefaultFormView");
+    return null;
+  }
+
   const ctx = useFormContext();
   const metadata = ctx?.metadata ?? null;
   const Component = renderers[element.view];

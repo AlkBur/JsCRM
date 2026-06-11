@@ -79,6 +79,7 @@ export interface FormScreenDto {
   form: FormDocument;
   metadata: unknown;
   object?: { name: string };
+  sessionId?: string;
 }
 
 export type FormLayoutElement =

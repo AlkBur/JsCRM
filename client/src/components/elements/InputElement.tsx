@@ -1,5 +1,6 @@
 import type { AttributeV2 } from "../../types-metadata";
 import { getAttributeCaption } from "./getAttributeCaption";
+import { displayValue } from "../../utils/displayValue";
 import InputControl from "../controls/InputControl";
 import CheckboxControl from "../controls/CheckboxControl";
 
@@ -22,7 +23,7 @@ export default function InputElement({ element, attribute, value, onChange }: Pr
   return (
     <InputControl
       label={label}
-      value={value != null ? String(value) : ""}
+      value={displayValue(value, attribute?.type.kind)}
       onChange={onChange}
       readOnly={element.readonly}
     />

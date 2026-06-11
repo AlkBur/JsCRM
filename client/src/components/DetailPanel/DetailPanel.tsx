@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { FieldType, FormDocument, FormScreenDto, ObjectRef } from "../../types";
+import type { FieldType, FormScreenDto, ObjectRef } from "../../types";
 import { fetchObjectList, fetchObject, postAction } from "../../api";
 import DefaultFormView from "../views/DefaultFormView";
 import styles from "./DetailPanel.module.css";
@@ -80,14 +80,6 @@ export default function DetailPanel({ nodeId, data }: Props) {
     }
   }, [objectName, formState.objectId, formState.values]);
 
-  if (!nodeId) {
-    return <div className={styles.root}><p className={styles.empty}>Выберите элемент в дереве</p></div>;
-  }
-
-  if (!data) {
-    return <div className={styles.root}><p className={styles.empty}>Загрузка...</p></div>;
-  }
-
   if (dto) {
     return (
       <DefaultFormView
@@ -102,6 +94,14 @@ export default function DetailPanel({ nodeId, data }: Props) {
         onSelectObject={handleSelectObject}
       />
     );
+  }
+
+  if (!nodeId) {
+    return <div className={styles.root}><p className={styles.empty}>Выберите элемент в дереве</p></div>;
+  }
+
+  if (!data) {
+    return <div className={styles.root}><p className={styles.empty}>Загрузка...</p></div>;
   }
 
   const d = data as Record<string, unknown>;

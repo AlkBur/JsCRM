@@ -1,4 +1,4 @@
-import type { TreeNode, ObjectRef, ObjectSnapshot, ActionResult } from "./types";
+import type { TreeNode, ObjectRef, ObjectSnapshot, ActionResult, FormScreenDto } from "./types";
 
 const BASE = "/api";
 
@@ -14,6 +14,14 @@ export function fetchTree(): Promise<TreeNode[]> {
 
 export function fetchNode(nodeId: string): Promise<unknown> {
   return get("/node/" + encodeURIComponent(nodeId));
+}
+
+export function fetchStartup(): Promise<{ form: string }> {
+  return get("/startup");
+}
+
+export function fetchForm(formPath: string): Promise<FormScreenDto> {
+  return get("/form/" + encodeURIComponent(formPath));
 }
 
 export function fetchObjectList(objectName: string): Promise<ObjectRef[]> {
