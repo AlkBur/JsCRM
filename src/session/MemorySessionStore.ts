@@ -5,10 +5,11 @@ export class MemorySessionStore implements SessionStore {
   private readonly sessions = new Map<string, Session>();
   private nextId = 1;
 
-  create(userId = "admin", mode: Session["mode"] = "designer"): Session {
+  create(userId = "admin", mode = "enterprise"): Session {
     const session: Session = {
       id: `session-${this.nextId++}`,
       userId,
+      locale: "ru",
       mode,
     };
     this.sessions.set(session.id, session);

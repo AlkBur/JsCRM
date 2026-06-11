@@ -15,12 +15,199 @@
 	],
 	"catalogs": [
 		{
-			"name": "Клиенты",
+			"name": "ДоговорыКонтрагентов",
+			"uuid": "beb51ad2-37d0-4346-aa08-c0a05d8634a9",
+			"attributes": [
+				{
+					"uuid": "490f624f-d7f3-4ac1-8e74-e90edfe4ee75",
+					"name": "Номер",
+					"type": {
+						"kind": "string",
+						"length": 50
+					},
+					"required": false
+				},
+				{
+					"uuid": "57151dce-bc9b-4dcd-a8b5-f12b1e9906c5",
+					"name": "Дата",
+					"type": {
+						"kind": "date"
+					},
+					"required": false
+				}
+			],
+			"standardAttributes": [
+				{
+					"name": "Ref",
+					"synonym": "Ссылка",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.ДоговорыКонтрагентов"
+					},
+					"required": true
+				},
+				{
+					"name": "DataVersion",
+					"synonym": "ВерсияДанных",
+					"type": {
+						"kind": "number",
+						"precision": 15,
+						"scale": 0
+					},
+					"required": true
+				},
+				{
+					"name": "DeletionMark",
+					"synonym": "ПометкаУдаления",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Code",
+					"synonym": "Код",
+					"type": {
+						"kind": "string",
+						"length": 9
+					},
+					"required": false
+				},
+				{
+					"name": "Description",
+					"synonym": "Наименование",
+					"type": {
+						"kind": "string",
+						"length": 25
+					},
+					"required": false
+				},
+				{
+					"name": "PredefinedDataName",
+					"synonym": "ИмяПредопределенныхДанных",
+					"type": {
+						"kind": "string",
+						"length": 80
+					},
+					"required": false
+				},
+				{
+					"name": "Predefined",
+					"synonym": "Предопределенный",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Owner",
+					"synonym": "Владелец",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.Контрагенты"
+					},
+					"required": true
+				}
+			],
+			"tabularSections": [],
+			"forms": [
+				{
+					"name": "ФормаЭлемента",
+					"type": "managed"
+				}
+			],
+			"commands": [],
+			"predefinedItems": null
+		},
+		{
+			"name": "Контрагенты",
 			"uuid": "8e0d9c78-5268-48fa-838d-bde0a9da699a",
 			"attributes": [],
+			"standardAttributes": [
+				{
+					"name": "Ref",
+					"synonym": "Ссылка",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.Контрагенты"
+					},
+					"required": true
+				},
+				{
+					"name": "DataVersion",
+					"synonym": "ВерсияДанных",
+					"type": {
+						"kind": "number",
+						"precision": 15,
+						"scale": 0
+					},
+					"required": true
+				},
+				{
+					"name": "DeletionMark",
+					"synonym": "ПометкаУдаления",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Code",
+					"synonym": "Код",
+					"type": {
+						"kind": "string",
+						"length": 9
+					},
+					"required": false
+				},
+				{
+					"name": "Description",
+					"synonym": "Наименование",
+					"type": {
+						"kind": "string",
+						"length": 100
+					},
+					"required": false
+				},
+				{
+					"name": "Parent",
+					"synonym": "Родитель",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.Контрагенты"
+					},
+					"required": false
+				},
+				{
+					"name": "IsFolder",
+					"synonym": "ЭтоГруппа",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "PredefinedDataName",
+					"synonym": "ИмяПредопределенныхДанных",
+					"type": {
+						"kind": "string",
+						"length": 80
+					},
+					"required": false
+				},
+				{
+					"name": "Predefined",
+					"synonym": "Предопределенный",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				}
+			],
 			"tabularSections": [],
 			"forms": [],
-			"commands": []
+			"commands": [],
+			"predefinedItems": null
 		},
 		{
 			"name": "Номенклатура",
@@ -36,22 +223,238 @@
 					"required": false
 				}
 			],
+			"standardAttributes": [
+				{
+					"name": "Ref",
+					"synonym": "Ссылка",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.Номенклатура"
+					},
+					"required": true
+				},
+				{
+					"name": "DataVersion",
+					"synonym": "ВерсияДанных",
+					"type": {
+						"kind": "number",
+						"precision": 15,
+						"scale": 0
+					},
+					"required": true
+				},
+				{
+					"name": "DeletionMark",
+					"synonym": "ПометкаУдаления",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Code",
+					"synonym": "Код",
+					"type": {
+						"kind": "string",
+						"length": 9
+					},
+					"required": false
+				},
+				{
+					"name": "Description",
+					"synonym": "Наименование",
+					"type": {
+						"kind": "string",
+						"length": 100
+					},
+					"required": false
+				},
+				{
+					"name": "Parent",
+					"synonym": "Родитель",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.Номенклатура"
+					},
+					"required": false
+				},
+				{
+					"name": "IsFolder",
+					"synonym": "ЭтоГруппа",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "PredefinedDataName",
+					"synonym": "ИмяПредопределенныхДанных",
+					"type": {
+						"kind": "string",
+						"length": 80
+					},
+					"required": false
+				},
+				{
+					"name": "Predefined",
+					"synonym": "Предопределенный",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				}
+			],
 			"tabularSections": [],
 			"forms": [],
-			"commands": []
+			"commands": [],
+			"predefinedItems": null
 		},
 		{
 			"name": "Склады",
 			"uuid": "392b6f66-fa32-4851-97af-9d66f1ab6e9a",
 			"attributes": [],
+			"standardAttributes": [
+				{
+					"name": "Ref",
+					"synonym": "Ссылка",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.Склады"
+					},
+					"required": true
+				},
+				{
+					"name": "DataVersion",
+					"synonym": "ВерсияДанных",
+					"type": {
+						"kind": "number",
+						"precision": 15,
+						"scale": 0
+					},
+					"required": true
+				},
+				{
+					"name": "DeletionMark",
+					"synonym": "ПометкаУдаления",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Code",
+					"synonym": "Код",
+					"type": {
+						"kind": "string",
+						"length": 9
+					},
+					"required": false
+				},
+				{
+					"name": "Description",
+					"synonym": "Наименование",
+					"type": {
+						"kind": "string",
+						"length": 50
+					},
+					"required": false
+				},
+				{
+					"name": "PredefinedDataName",
+					"synonym": "ИмяПредопределенныхДанных",
+					"type": {
+						"kind": "string",
+						"length": 80
+					},
+					"required": false
+				},
+				{
+					"name": "Predefined",
+					"synonym": "Предопределенный",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				}
+			],
 			"tabularSections": [],
 			"forms": [],
-			"commands": []
+			"commands": [],
+			"predefinedItems": [
+				{
+					"name": "Основной",
+					"uuid": "0682f136-817a-48f3-8459-3eb07fe4b9bd"
+				}
+			]
 		},
 		{
 			"name": "Сотрудники",
 			"uuid": "79e98965-5139-4369-9779-93931deafbdf",
 			"attributes": [],
+			"standardAttributes": [
+				{
+					"name": "Ref",
+					"synonym": "Ссылка",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.Сотрудники"
+					},
+					"required": true
+				},
+				{
+					"name": "DataVersion",
+					"synonym": "ВерсияДанных",
+					"type": {
+						"kind": "number",
+						"precision": 15,
+						"scale": 0
+					},
+					"required": true
+				},
+				{
+					"name": "DeletionMark",
+					"synonym": "ПометкаУдаления",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Code",
+					"synonym": "Код",
+					"type": {
+						"kind": "string",
+						"length": 9
+					},
+					"required": false
+				},
+				{
+					"name": "Description",
+					"synonym": "Наименование",
+					"type": {
+						"kind": "string",
+						"length": 50
+					},
+					"required": false
+				},
+				{
+					"name": "PredefinedDataName",
+					"synonym": "ИмяПредопределенныхДанных",
+					"type": {
+						"kind": "string",
+						"length": 80
+					},
+					"required": false
+				},
+				{
+					"name": "Predefined",
+					"synonym": "Предопределенный",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				}
+			],
 			"tabularSections": [
 				{
 					"uuid": "07a0a990-75c6-49cd-877f-c2234be8741d",
@@ -91,11 +494,33 @@
 							},
 							"required": false
 						}
+					],
+					"standardAttributes": [
+						{
+							"name": "Ref",
+							"synonym": "Ссылка",
+							"type": {
+								"kind": "ref",
+								"target": "Catalog.ТрудоваяДеятельность"
+							},
+							"required": true
+						},
+						{
+							"name": "LineNumber",
+							"synonym": "НомерСтроки",
+							"type": {
+								"kind": "number",
+								"precision": 5,
+								"scale": 0
+							},
+							"required": true
+						}
 					]
 				}
 			],
 			"forms": [],
-			"commands": []
+			"commands": [],
+			"predefinedItems": null
 		}
 	],
 	"documents": [
@@ -117,7 +542,7 @@
 					"name": "Клиент",
 					"type": {
 						"kind": "ref",
-						"target": "Catalog.Клиенты"
+						"target": "Catalog.Контрагенты"
 					},
 					"required": true
 				},
@@ -137,6 +562,69 @@
 						"kind": "number",
 						"precision": 15,
 						"scale": 2
+					},
+					"required": false
+				},
+				{
+					"uuid": "f65e386e-6a14-4142-b399-d7edd212d55f",
+					"name": "ДоговорКонтрагента",
+					"type": {
+						"kind": "ref",
+						"target": "Catalog.ДоговорыКонтрагентов"
+					},
+					"required": true
+				}
+			],
+			"standardAttributes": [
+				{
+					"name": "Ref",
+					"synonym": "Ссылка",
+					"type": {
+						"kind": "ref",
+						"target": "Document.ОказаниеУслуги"
+					},
+					"required": true
+				},
+				{
+					"name": "DataVersion",
+					"synonym": "ВерсияДанных",
+					"type": {
+						"kind": "number",
+						"precision": 15,
+						"scale": 0
+					},
+					"required": true
+				},
+				{
+					"name": "DeletionMark",
+					"synonym": "ПометкаУдаления",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Number",
+					"synonym": "Номер",
+					"type": {
+						"kind": "string",
+						"length": 9
+					},
+					"required": false
+				},
+				{
+					"name": "Date",
+					"synonym": "Дата",
+					"type": {
+						"kind": "date"
+					},
+					"required": true
+				},
+				{
+					"name": "Posted",
+					"synonym": "Проведен",
+					"type": {
+						"kind": "boolean"
 					},
 					"required": false
 				}
@@ -195,6 +683,27 @@
 							},
 							"required": true
 						}
+					],
+					"standardAttributes": [
+						{
+							"name": "Ref",
+							"synonym": "Ссылка",
+							"type": {
+								"kind": "ref",
+								"target": "Document.ПереченьНоменклатуры"
+							},
+							"required": true
+						},
+						{
+							"name": "LineNumber",
+							"synonym": "НомерСтроки",
+							"type": {
+								"kind": "number",
+								"precision": 5,
+								"scale": 0
+							},
+							"required": true
+						}
 					]
 				}
 			],
@@ -224,6 +733,60 @@
 						"target": "Catalog.Склады"
 					},
 					"required": true
+				}
+			],
+			"standardAttributes": [
+				{
+					"name": "Ref",
+					"synonym": "Ссылка",
+					"type": {
+						"kind": "ref",
+						"target": "Document.ПриходнаяНакладная"
+					},
+					"required": true
+				},
+				{
+					"name": "DataVersion",
+					"synonym": "ВерсияДанных",
+					"type": {
+						"kind": "number",
+						"precision": 15,
+						"scale": 0
+					},
+					"required": true
+				},
+				{
+					"name": "DeletionMark",
+					"synonym": "ПометкаУдаления",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
+				},
+				{
+					"name": "Number",
+					"synonym": "Номер",
+					"type": {
+						"kind": "string",
+						"length": 9
+					},
+					"required": false
+				},
+				{
+					"name": "Date",
+					"synonym": "Дата",
+					"type": {
+						"kind": "date"
+					},
+					"required": true
+				},
+				{
+					"name": "Posted",
+					"synonym": "Проведен",
+					"type": {
+						"kind": "boolean"
+					},
+					"required": false
 				}
 			],
 			"tabularSections": [
@@ -267,6 +830,27 @@
 								"kind": "number",
 								"precision": 15,
 								"scale": 2
+							},
+							"required": true
+						}
+					],
+					"standardAttributes": [
+						{
+							"name": "Ref",
+							"synonym": "Ссылка",
+							"type": {
+								"kind": "ref",
+								"target": "Document.Материалы"
+							},
+							"required": true
+						},
+						{
+							"name": "LineNumber",
+							"synonym": "НомерСтроки",
+							"type": {
+								"kind": "number",
+								"precision": 5,
+								"scale": 0
 							},
 							"required": true
 						}

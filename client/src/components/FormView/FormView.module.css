@@ -2,6 +2,59 @@
   padding: var(--spacing-4);
 }
 
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
+}
+
+.selector {
+  flex: 1;
+  padding: var(--spacing-1) var(--spacing-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-1);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+}
+
+.saveBtn {
+  padding: var(--spacing-1) var(--spacing-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  background: var(--color-panel);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+}
+
+.saveBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.saveBtnActive {
+  background: #1565c0;
+  color: #fff;
+  border-color: #1565c0;
+}
+
+.dirtyBadge {
+  color: #c62828;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.error {
+  color: #c62828;
+  font-size: var(--font-size-small);
+  margin-bottom: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-2);
+  background: #ffebee;
+  border-radius: var(--radius-1);
+}
+
 .title {
   font-size: var(--font-size-large);
   margin-bottom: var(--spacing-4);
@@ -68,6 +121,14 @@
   min-width: 0;
 }
 
+.buttonRow {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-4);
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--color-border);
+}
+
 .button {
   padding: var(--spacing-1) var(--spacing-3);
   border: 1px solid var(--color-border);
@@ -75,8 +136,7 @@
   background: var(--color-panel);
   color: var(--color-text);
   font-size: var(--font-size-base);
-  cursor: default;
-  opacity: 0.6;
+  cursor: pointer;
 }
 
 .label {
@@ -94,4 +154,42 @@
   color: var(--color-muted);
   font-style: italic;
   padding: var(--spacing-1) 0;
+}
+
+.tableWrapper {
+  margin: var(--spacing-2) 0;
+  overflow-x: auto;
+}
+
+.tableTitle {
+  display: block;
+  font-size: var(--font-size-small);
+  color: var(--color-muted);
+  margin-bottom: var(--spacing-1);
+}
+
+.formTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-small);
+  border: 1px solid var(--color-border);
+}
+
+.formTable th {
+  background: var(--color-panel);
+  padding: var(--spacing-1) var(--spacing-2);
+  text-align: left;
+  border-bottom: 2px solid var(--color-border);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.formTable td {
+  padding: var(--spacing-1) var(--spacing-2);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.formTable tr:last-child td {
+  border-bottom: none;
 }

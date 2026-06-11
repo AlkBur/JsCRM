@@ -8,11 +8,11 @@
 
 import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
-import type { FormDocument } from "./form-types";
+import type { FormDocument, IndexedFormDocument } from "./form-types";
 import { buildFormProjection } from "./form-projection";
 
 export class FormIndex {
-  private readonly forms: Map<string, Map<string, FormDocument>> = new Map();
+  private readonly index = new Map<string, Map<string, IndexedFormDocument>>();
 
   constructor(formsDir: string) {
     this.load(formsDir);
@@ -30,33 +30,41 @@ export class FormIndex {
         const files = readdirSync(objPath);
         for (const file of files) {
           if (!file.endsWith(".json")) continue;
-          const raw = readFileSync(join(objPath, file), "utf-8");
+          const filePath = join(objPath, file);
+          const raw = readFileSync(filePath, "utf-8");
           const doc: FormDocument = JSON.parse(raw);
           const projected = buildFormProjection(doc);
-          const objectName = doc.owner.name;
-          if (!this.forms.has(objectName)) {
-            this.forms.set(objectName, new Map());
+          const formName = file.replace(/\.json$/, "");
+          const indexed: IndexedFormDocument = {
+            kind: kind.name,
+            objectName: obj.name,
+            formName,
+            path: filePath,
+            document: projected,
+          };
+          if (!this.index.has(obj.name)) {
+            this.index.set(obj.name, new Map());
           }
-          this.forms.get(objectName)!.set(doc.form.name, projected);
+          this.index.get(obj.name)!.set(formName, indexed);
         }
       }
     }
   }
 
-  get(objectName: string, formName: string): FormDocument | undefined {
-    return this.forms.get(objectName)?.get(formName);
+  get(objectName: string, formName: string): IndexedFormDocument | undefined {
+    return this.index.get(objectName)?.get(formName);
   }
 
-  getFormsForObject(objectName: string): readonly FormDocument[] {
-    const map = this.forms.get(objectName);
+  getFormsForObject(objectName: string): readonly IndexedFormDocument[] {
+    const map = this.index.get(objectName);
     return map ? Array.from(map.values()) : [];
   }
 
-  getAllForms(): readonly FormDocument[] {
-    const result: FormDocument[] = [];
-    for (const map of this.forms.values()) {
-      for (const doc of map.values()) {
-        result.push(doc);
+  getAllForms(): readonly IndexedFormDocument[] {
+    const result: IndexedFormDocument[] = [];
+    for (const map of this.index.values()) {
+      for (const indexed of map.values()) {
+        result.push(indexed);
       }
     }
     return result;

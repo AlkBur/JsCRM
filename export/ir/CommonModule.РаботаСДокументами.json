@@ -1,0 +1,59 @@
+{
+	"irVersion": 1,
+	"generator": {
+		"tool": "1C Exporter",
+		"version": "0.1"
+	},
+	"module": {
+		"name": "РаботаСДокументами",
+		"body": {
+			"routines": [
+				{
+					"kind": "procedure",
+					"name": "РассчитатьСумму",
+					"export": true,
+					"params": [
+						{
+							"name": "СтрокаТабличнойЧасти",
+							"byRef": true
+						}
+					],
+					"body": [
+						{
+							"kind": "assign",
+							"target": {
+								"kind": "member",
+								"object": {
+									"kind": "variable",
+									"name": "СтрокаТабличнойЧасти"
+								},
+								"property": "Сумма"
+							},
+							"expr": {
+								"kind": "binary",
+								"op": "Умножить",
+								"left": {
+									"kind": "member",
+									"object": {
+										"kind": "variable",
+										"name": "СтрокаТабличнойЧасти"
+									},
+									"property": "Количество"
+								},
+								"right": {
+									"kind": "member",
+									"object": {
+										"kind": "variable",
+										"name": "СтрокаТабличнойЧасти"
+									},
+									"property": "Цена"
+								}
+							}
+						}
+					]
+				}
+			],
+			"globals": []
+		}
+	}
+}

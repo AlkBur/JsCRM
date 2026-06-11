@@ -1,0 +1,247 @@
+{
+	"schema": "jscrm.form.v1",
+	"id": "Document.ОказаниеУслуги.ФормаДокумента",
+	"attributes": [
+		{
+			"name": "Объект",
+			"type": {
+				"kind": "ref",
+				"target": "Document.ОказаниеУслуги"
+			},
+			"main": true,
+			"savedData": true
+		}
+	],
+	"commands": [],
+	"events": [
+		{
+			"source": "ПереченьНоменклатурыНоменклатура",
+			"event": "OnChange",
+			"handler": "ПереченьНоменклатурыНоменклатураПриИзменении"
+		},
+		{
+			"source": "ПереченьНоменклатурыКоличество",
+			"event": "OnChange",
+			"handler": "ПереченьНоменклатурыКоличествоПриИзменении"
+		},
+		{
+			"source": "ПереченьНоменклатурыЦена",
+			"event": "OnChange",
+			"handler": "ПереченьНоменклатурыЦенаПриИзменении"
+		}
+	],
+	"mainAttribute": "Объект",
+	"form": {
+		"name": "ФормаДокумента",
+		"title": "Форма документа",
+		"type": "managed",
+		"uuid": "5eae2b93-a474-4ebf-9217-0055019b5c62"
+	},
+	"layout": {
+		"id": -1,
+		"view": "form",
+		"name": "ЭтаФорма",
+		"title": "",
+		"visible": true,
+		"enabled": true,
+		"readonly": false,
+		"elements": [
+			{
+				"id": -1,
+				"view": "commandBar",
+				"name": "ФормаКоманднаяПанель",
+				"title": "",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"source": "Document.ОказаниеУслуги"
+			},
+			{
+				"id": 49,
+				"view": "group",
+				"name": "ГруппаШапка",
+				"title": "Группа шапка",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"layout": "alwayshorizontal",
+				"showTitle": false,
+				"elements": [
+					{
+						"id": 53,
+						"view": "group",
+						"name": "ГруппаЛевая",
+						"title": "Группа левая",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"layout": "vertical",
+						"showTitle": false,
+						"elements": [
+							{
+								"id": 47,
+								"view": "group",
+								"name": "ГруппаДатаНомер",
+								"title": "Группа дата номер",
+								"visible": true,
+								"enabled": true,
+								"readonly": false,
+								"layout": "horizontal",
+								"showTitle": false,
+								"elements": [
+									{
+										"id": 1,
+										"view": "input",
+										"name": "Номер",
+										"title": "Номер",
+										"visible": true,
+										"enabled": true,
+										"readonly": false,
+										"dataPath": "Объект.Number"
+									},
+									{
+										"id": 4,
+										"view": "input",
+										"name": "Дата",
+										"title": "Дата",
+										"visible": true,
+										"enabled": true,
+										"readonly": false,
+										"dataPath": "Объект.Date"
+									}
+								]
+							},
+							{
+								"id": 7,
+								"view": "input",
+								"name": "Склад",
+								"title": "Склад",
+								"visible": true,
+								"enabled": true,
+								"readonly": false,
+								"dataPath": "Объект.Склад"
+							},
+							{
+								"id": 13,
+								"view": "input",
+								"name": "Мастер",
+								"title": "Мастер",
+								"visible": true,
+								"enabled": true,
+								"readonly": false,
+								"dataPath": "Объект.Мастер"
+							}
+						]
+					},
+					{
+						"id": 51,
+						"view": "group",
+						"name": "ГруппаПравая",
+						"title": "Группа правая",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"layout": "vertical",
+						"showTitle": false,
+						"elements": [
+							{
+								"id": 10,
+								"view": "input",
+								"name": "Клиент",
+								"title": "Клиент",
+								"visible": true,
+								"enabled": true,
+								"readonly": false,
+								"dataPath": "Объект.Клиент"
+							},
+							{
+								"id": 55,
+								"view": "input",
+								"name": "ДоговорКонтрагента",
+								"title": "ДоговорКонтрагента",
+								"visible": true,
+								"enabled": true,
+								"readonly": false,
+								"dataPath": "Объект.ДоговорКонтрагента"
+							}
+						]
+					}
+				]
+			},
+			{
+				"id": 16,
+				"view": "table",
+				"name": "ПереченьНоменклатуры",
+				"title": "ПереченьНоменклатуры",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"showTitle": false,
+				"dataPath": "Объект.ПереченьНоменклатуры",
+				"columns": [
+					{
+						"id": "29",
+						"view": "input",
+						"name": "ПереченьНоменклатурыНомерСтроки",
+						"title": "ПереченьНоменклатурыНомерСтроки",
+						"visible": true,
+						"enabled": true,
+						"readonly": true,
+						"dataPath": "Объект.ПереченьНоменклатуры.LineNumber"
+					},
+					{
+						"id": "32",
+						"view": "input",
+						"name": "ПереченьНоменклатурыНоменклатура",
+						"title": "ПереченьНоменклатурыНоменклатура",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.ПереченьНоменклатуры.Номенклатура"
+					},
+					{
+						"id": "44",
+						"view": "input",
+						"name": "ПереченьНоменклатурыСтоимость",
+						"title": "ПереченьНоменклатурыСтоимость",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.ПереченьНоменклатуры.Стоимость"
+					},
+					{
+						"id": "35",
+						"view": "input",
+						"name": "ПереченьНоменклатурыКоличество",
+						"title": "ПереченьНоменклатурыКоличество",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.ПереченьНоменклатуры.Количество"
+					},
+					{
+						"id": "38",
+						"view": "input",
+						"name": "ПереченьНоменклатурыЦена",
+						"title": "ПереченьНоменклатурыЦена",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.ПереченьНоменклатуры.Цена"
+					},
+					{
+						"id": "41",
+						"view": "input",
+						"name": "ПереченьНоменклатурыСумма",
+						"title": "ПереченьНоменклатурыСумма",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.ПереченьНоменклатуры.Сумма"
+					}
+				],
+				"pepresentation": "list"
+			}
+		]
+	}
+}

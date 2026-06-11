@@ -163,6 +163,23 @@ TreeBuilder is a pure function.
 
 ---
 
+## Core utilities
+
+Responsible for system-wide helpers.
+
+Files:
+
+* `src/core/object-name.ts` — `parseObjectName()`, `buildObjectName()`
+
+Change here when:
+
+* adding a string format convention (e.g. `"Catalog.Контрагенты"`);
+* introducing a utility needed across layers.
+
+Do NOT create generic `utils.ts` or `helpers.ts`.
+
+---
+
 ## LSP
 
 Responsible for navigation protocol.

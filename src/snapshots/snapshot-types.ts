@@ -10,8 +10,6 @@ export interface ObjectRef {
 
 export interface ObjectSnapshot {
   meta: SnapshotMeta;
-  parent: string | null;
-  owner: string | null;
   values: Record<string, unknown>;
 }
 

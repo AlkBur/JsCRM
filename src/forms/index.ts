@@ -1,6 +1,6 @@
 export type {
   FormDocument,
-  FormOwner,
+  IndexedFormDocument,
   FormAttribute,
   FormAttributeType,
   FormCommand,

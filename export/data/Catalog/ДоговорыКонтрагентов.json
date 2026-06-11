@@ -1,0 +1,60 @@
+{
+	"meta": {
+		"object": "Catalog.ДоговорыКонтрагентов",
+		"schemaVersion": 1,
+		"metadataVersion": 1
+	},
+	"items": [
+		{
+			"id": "f83c4b92-63f0-11f1-9ea8-3800250b6566",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"Owner": {
+					"ref": "Catalog.Контрагенты",
+					"id": "46b913e6-9545-11ee-8a7b-f02f74d014e4",
+					"description": "Иванов Михаил Юрьевич"
+				},
+				"Description": "Основной",
+				"Code": "000000001",
+				"Номер": "1",
+				"Дата": "2026-01-01T00:00:00"
+			}
+		},
+		{
+			"id": "f83c4b93-63f0-11f1-9ea8-3800250b6566",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"Owner": {
+					"ref": "Catalog.Контрагенты",
+					"id": "46b913e8-9545-11ee-8a7b-f02f74d014e4",
+					"description": "Спиридонова Галина"
+				},
+				"Description": "Основной",
+				"Code": "000000002",
+				"Номер": "1",
+				"Дата": "2026-02-01T00:00:00"
+			}
+		},
+		{
+			"id": "f83c4b94-63f0-11f1-9ea8-3800250b6566",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"Owner": {
+					"ref": "Catalog.Контрагенты",
+					"id": "46b913e7-9545-11ee-8a7b-f02f74d014e4",
+					"description": "Роман"
+				},
+				"Description": "Без номера",
+				"Code": "000000003",
+				"Номер": "",
+				"Дата": "0001-01-01T00:00:00"
+			}
+		}
+	]
+}

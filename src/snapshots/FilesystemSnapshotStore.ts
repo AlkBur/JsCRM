@@ -2,6 +2,7 @@ import { readFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import type { SnapshotKey, ObjectRef, ObjectSnapshot, SnapshotPatch } from "./snapshot-types";
 import type { SnapshotStore } from "./SnapshotStore";
+import { parseObjectName } from "../core/object-name";
 
 interface CollectionFile {
   meta: { object: string; schemaVersion: number; metadataVersion: number };
@@ -10,8 +11,6 @@ interface CollectionFile {
 
 interface CollectionItem {
   id: string;
-  parent: string | null;
-  owner: string | null;
   values: Record<string, unknown>;
 }
 
@@ -24,16 +23,26 @@ export class FilesystemSnapshotStore implements SnapshotStore {
     this.pendingDir = pendingDir;
   }
 
+  private collectionPath(objectName: string): string {
+    const p = parseObjectName(objectName);
+    return join(this.sourceDir, p.kind, `${p.name}.json`);
+  }
+
   private loadCollection(objectName: string): CollectionFile {
-    const path = join(this.sourceDir, `${objectName}.json`);
+    const path = this.collectionPath(objectName);
     if (!existsSync(path)) {
       return { meta: { object: objectName, schemaVersion: 1, metadataVersion: 1 }, items: [] };
     }
     return JSON.parse(readFileSync(path, "utf-8"));
   }
 
+  private pendingPath(key: SnapshotKey): string {
+    const p = parseObjectName(key.object);
+    return join(this.pendingDir, p.kind, `${p.name}_${key.id}.json`);
+  }
+
   private loadPending(key: SnapshotKey): CollectionItem | null {
-    const path = join(this.pendingDir, key.object, `${key.id}.json`);
+    const path = this.pendingPath(key);
     if (!existsSync(path)) return null;
     return JSON.parse(readFileSync(path, "utf-8"));
   }
@@ -58,19 +67,18 @@ export class FilesystemSnapshotStore implements SnapshotStore {
     if (!item) return null;
     return {
       meta: { id: item.id, object: key.object },
-      parent: item.parent,
-      owner: item.owner,
       values: { ...item.values },
     };
   }
 
   async savePatch(key: SnapshotKey, patch: SnapshotPatch): Promise<void> {
-    const pendingPath = join(this.pendingDir, key.object, `${key.id}.json`);
-    const dir = dirname(pendingPath);
+    const p = parseObjectName(key.object);
+    const dir = join(this.pendingDir, p.kind);
     if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+    const pendingPath = join(dir, `${p.name}_${key.id}.json`);
 
     const existing = this.loadPending(key) ?? this.findInCollection(key.object, key.id);
-    const base = existing ?? { id: key.id, parent: null, owner: null, values: {} };
+    const base = existing ?? { id: key.id, values: {} };
     const merged = { ...base, values: { ...base.values, ...patch } };
     writeFileSync(pendingPath, JSON.stringify(merged, null, 2), "utf-8");
   }

@@ -84,10 +84,17 @@ export interface EnumValueV2 {
   readonly name: string;
 }
 
+export interface PredefinedItemV2 {
+  readonly name: string;
+  readonly uuid: string;
+}
+
 export interface CatalogV2 {
   readonly name: string;
   readonly uuid: string;
   readonly attributes: readonly AttributeV2[];
+  readonly standardAttributes?: readonly AttributeV2[];
+  readonly predefinedItems?: readonly PredefinedItemV2[];
   readonly tabularSections: readonly TabularSectionV2[];
   readonly forms: readonly FormV2[];
   readonly commands: readonly CommandV2[];
@@ -97,6 +104,7 @@ export interface DocumentV2 {
   readonly name: string;
   readonly uuid: string;
   readonly attributes: readonly AttributeV2[];
+  readonly standardAttributes?: readonly AttributeV2[];
   readonly tabularSections: readonly TabularSectionV2[];
   readonly forms: readonly FormV2[];
   readonly commands: readonly CommandV2[];

@@ -1,0 +1,108 @@
+{
+	"schema": "jscrm.form.v1",
+	"id": "Catalog.ДоговорыКонтрагентов.ФормаЭлемента",
+	"attributes": [
+		{
+			"name": "Объект",
+			"type": {
+				"kind": "ref",
+				"target": "Catalog.ДоговорыКонтрагентов"
+			},
+			"main": true,
+			"savedData": true
+		}
+	],
+	"commands": [],
+	"events": [],
+	"mainAttribute": "Объект",
+	"form": {
+		"name": "ФормаЭлемента",
+		"title": "Форма элемента",
+		"type": "managed",
+		"uuid": "e9a97f90-f562-4fc9-b275-734a480f68e9"
+	},
+	"layout": {
+		"id": -1,
+		"view": "form",
+		"name": "ЭтаФорма",
+		"title": "",
+		"visible": true,
+		"enabled": true,
+		"readonly": false,
+		"elements": [
+			{
+				"id": -1,
+				"view": "commandBar",
+				"name": "ФормаКоманднаяПанель",
+				"title": "",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"source": "Catalog.ДоговорыКонтрагентов"
+			},
+			{
+				"id": 1,
+				"view": "input",
+				"name": "Код",
+				"title": "Код",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"dataPath": "Объект.Code"
+			},
+			{
+				"id": 4,
+				"view": "input",
+				"name": "Наименование",
+				"title": "Наименование",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"dataPath": "Объект.Description"
+			},
+			{
+				"id": 7,
+				"view": "input",
+				"name": "Владелец",
+				"title": "Владелец",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"dataPath": "Объект.Owner"
+			},
+			{
+				"id": 16,
+				"view": "group",
+				"name": "Группа1",
+				"title": "Группа1",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"layout": "horizontal",
+				"showTitle": false,
+				"elements": [
+					{
+						"id": 10,
+						"view": "input",
+						"name": "Номер",
+						"title": "Номер",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.Номер"
+					},
+					{
+						"id": 13,
+						"view": "input",
+						"name": "Дата",
+						"title": "Дата",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.Дата"
+					}
+				]
+			}
+		]
+	}
+}

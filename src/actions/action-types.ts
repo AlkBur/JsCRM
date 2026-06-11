@@ -1,18 +1,29 @@
+import type { Session } from "../session";
+
 export interface Action {
   type: string;
   payload?: unknown;
 }
 
 export interface ActionContext {
-  session: { id: string; userId?: string; mode: "runtime" | "designer" };
+  session: Session;
   workspace: import("../Workspace").Workspace;
   snapshotStore: import("../snapshots/SnapshotStore").SnapshotStore;
 }
 
-export interface ActionHandler {
-  execute(ctx: ActionContext, action: Action): Promise<ActionResult>;
+export type ActionHandler = (
+  action: Action,
+  context: ActionContext,
+) => Promise<ActionResult>;
+
+export interface UiPatch {
+  commands?: unknown[];
+  controlStates?: Record<string, unknown>;
 }
 
-export type ActionResult =
-  | { success: true; data?: unknown }
-  | { success: false; error: string };
+export type ActionResult = {
+  ok: boolean;
+  error?: string;
+  data?: unknown;
+  ui?: UiPatch;
+};

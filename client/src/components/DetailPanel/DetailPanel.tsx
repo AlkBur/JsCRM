@@ -1,50 +1,94 @@
-import type { FieldType, FormDocument } from "../../types";
+import { useState, useEffect, useCallback } from "react";
+import type { FieldType, FormDocument, ObjectRef } from "../../types";
+import { fetchObjectList, fetchObject, postAction } from "../../api";
 import FormView from "../FormView/FormView";
 import styles from "./DetailPanel.module.css";
+
+function isFormDocument(v: unknown): v is FormDocument {
+  return typeof v === "object" && v !== null && "schema" in v && "layout" in v;
+}
+
+function parseFormNodeId(nodeId: string): { objectName: string } | null {
+  const parts = nodeId.split(".");
+  if (parts.length === 4 && parts[2] === "Forms") {
+    return { objectName: `${parts[0]}.${parts[1]}` };
+  }
+  return null;
+}
+
+interface FormState {
+  values: Record<string, unknown>;
+  dirty: boolean;
+  objectId: string | null;
+}
 
 interface Props {
   nodeId: string | null;
   data: unknown;
 }
 
-function isFormDocument(v: unknown): v is FormDocument {
-  return typeof v === "object" && v !== null && "schema" in v && "layout" in v;
-}
-
-function typeLabel(t: FieldType): string {
-  switch (t.kind) {
-    case "string": return "Строка" + (t.length ? "(" + t.length + ")" : "");
-    case "number": return "Число(" + (t.precision ?? 0) + "," + (t.scale ?? 0) + ")";
-    case "date": return "Дата";
-    case "boolean": return "Булево";
-    case "ref": return "Ссылка: " + t.target;
-    case "enum": return "Перечисление: " + t.target;
-    case "union": return "Составной (" + t.options.length + ")";
-    default: return JSON.stringify(t);
-  }
-}
-
-function isAttributeArray(v: unknown): v is Array<{ uuid?: string; name: string; type: FieldType; required: boolean }> {
-  return Array.isArray(v) && v.length > 0 && "type" in v[0];
-}
-
-function isTabularArray(v: unknown): v is Array<{ uuid?: string; name: string; attributes: Array<{ name: string; type: FieldType }> }> {
-  return Array.isArray(v) && v.length > 0 && "attributes" in v[0];
-}
-
-function isFormArray(v: unknown): v is Array<{ name: string; type: string }> {
-  return Array.isArray(v) && v.length > 0 && "type" in v[0];
-}
-
-function isCommandArray(v: unknown): v is Array<{ uuid?: string; name: string; handler: string }> {
-  return Array.isArray(v) && v.length > 0 && "handler" in v[0];
-}
-
-function isEnumValueArray(v: unknown): v is Array<{ uuid: string; name: string }> {
-  return Array.isArray(v) && v.length > 0 && "uuid" in v[0] && "name" in v[0] && !("type" in v[0]);
-}
-
 export default function DetailPanel({ nodeId, data }: Props) {
+  const [formState, setFormState] = useState<FormState>({ values: {}, dirty: false, objectId: null });
+  const [objectList, setObjectList] = useState<ObjectRef[]>([]);
+  const [saveError, setSaveError] = useState<string | undefined>();
+
+  const formMeta = isFormDocument(data) && nodeId ? parseFormNodeId(nodeId) : null;
+  const formDoc = isFormDocument(data) ? data : null;
+  const objectName = formMeta?.objectName ?? "";
+
+  useEffect(() => {
+    setFormState({ values: {}, dirty: false, objectId: null });
+    setObjectList([]);
+    setSaveError(undefined);
+
+    if (!formMeta) return;
+
+    fetchObjectList(formMeta.objectName).then(list => {
+      setObjectList(list);
+      if (list.length > 0) {
+        const firstId = list[0]!.id;
+        setFormState(prev => ({ ...prev, objectId: firstId }));
+        fetchObject(formMeta.objectName, firstId).then(snap => {
+          setFormState({ values: snap.values, dirty: false, objectId: firstId });
+        }).catch(() => setSaveError("Ошибка загрузки объекта"));
+      }
+    }).catch(() => setSaveError("Ошибка загрузки списка объектов"));
+  }, [nodeId, formMeta?.objectName]);
+
+  const handleSelectObject = useCallback((id: string) => {
+    setFormState(prev => ({ ...prev, objectId: id }));
+    fetchObject(objectName, id).then(snap => {
+      setFormState({ values: snap.values, dirty: false, objectId: id });
+    }).catch(() => setSaveError("Ошибка загрузки объекта"));
+  }, [objectName]);
+
+  const handleChange = useCallback((dataPath: string, value: unknown) => {
+    const key = dataPath.startsWith("Объект.") ? dataPath.slice(7) : dataPath;
+    setFormState(prev => ({
+      ...prev,
+      values: { ...prev.values, [key]: value },
+      dirty: true,
+    }));
+  }, []);
+
+  const handleSave = useCallback(async () => {
+    if (!objectName || !formState.objectId) return;
+    setSaveError(undefined);
+    const result = await postAction({
+      type: "object.save",
+      payload: {
+        object: objectName,
+        id: formState.objectId,
+        values: formState.values,
+      },
+    });
+    if (result.ok) {
+      setFormState(prev => ({ ...prev, dirty: false }));
+    } else {
+      setSaveError(result.error ?? "Ошибка сохранения");
+    }
+  }, [objectName, formState.objectId, formState.values]);
+
   if (!nodeId) {
     return <div className={styles.root}><p className={styles.empty}>Выберите элемент в дереве</p></div>;
   }
@@ -53,8 +97,21 @@ export default function DetailPanel({ nodeId, data }: Props) {
     return <div className={styles.root}><p className={styles.empty}>Загрузка...</p></div>;
   }
 
-  if (isFormDocument(data)) {
-    return <FormView form={data} />;
+  if (formDoc && formMeta) {
+    return (
+      <FormView
+        form={formDoc}
+        values={formState.values}
+        dirty={formState.dirty}
+        onChange={handleChange}
+        onSave={handleSave}
+        saveError={saveError}
+        objectName={objectName}
+        objectList={objectList}
+        selectedObjectId={formState.objectId}
+        onSelectObject={handleSelectObject}
+      />
+    );
   }
 
   const d = data as Record<string, unknown>;
@@ -114,6 +171,43 @@ export default function DetailPanel({ nodeId, data }: Props) {
       {isCommandArray(cmds) && renderCommands(cmds)}
     </div>
   );
+}
+
+// --- type guards (unchanged) ---
+
+function isAttributeArray(v: unknown): v is Array<{ uuid?: string; name: string; type: FieldType; required: boolean }> {
+  return Array.isArray(v) && v.length > 0 && "type" in v[0];
+}
+
+function isTabularArray(v: unknown): v is Array<{ uuid?: string; name: string; attributes: Array<{ name: string; type: FieldType }> }> {
+  return Array.isArray(v) && v.length > 0 && "attributes" in v[0];
+}
+
+function isFormArray(v: unknown): v is Array<{ name: string; type: string }> {
+  return Array.isArray(v) && v.length > 0 && "type" in v[0];
+}
+
+function isCommandArray(v: unknown): v is Array<{ uuid?: string; name: string; handler: string }> {
+  return Array.isArray(v) && v.length > 0 && "handler" in v[0];
+}
+
+function isEnumValueArray(v: unknown): v is Array<{ uuid: string; name: string }> {
+  return Array.isArray(v) && v.length > 0 && "uuid" in v[0] && "name" in v[0] && !("type" in v[0]);
+}
+
+// --- render helpers (unchanged) ---
+
+function typeLabel(t: FieldType): string {
+  switch (t.kind) {
+    case "string": return "Строка" + (t.length ? "(" + t.length + ")" : "");
+    case "number": return "Число(" + (t.precision ?? 0) + "," + (t.scale ?? 0) + ")";
+    case "date": return "Дата";
+    case "boolean": return "Булево";
+    case "ref": return "Ссылка: " + t.target;
+    case "enum": return "Перечисление: " + t.target;
+    case "union": return "Составной (" + t.options.length + ")";
+    default: return JSON.stringify(t);
+  }
 }
 
 function renderAttributes(attrs: Array<{ name: string; type: FieldType; required: boolean }>) {

@@ -51,13 +51,28 @@ export type FieldType =
 export interface FormDocument {
   schema: string;
   id: string;
-  owner: { kind: string; name: string };
   attributes: unknown[];
   commands: unknown[];
   events: unknown[];
   mainAttribute?: string;
   form: { name: string; synonym?: string; type: string; uuid: string };
   layout: FormLayoutElement;
+}
+
+export interface ObjectRef {
+  id: string;
+  label: string;
+}
+
+export interface ObjectSnapshot {
+  meta: { id: string; object: string };
+  values: Record<string, unknown>;
+}
+
+export interface ActionResult {
+  ok: boolean;
+  error?: string;
+  data?: unknown;
 }
 
 export type FormLayoutElement =

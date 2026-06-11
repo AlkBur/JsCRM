@@ -219,6 +219,7 @@ of the object model and do not constitute premature architecture.
 | Session | `src/session/` |
 | FormState / SnapshotStore | `src/snapshots/`, `src/forms/form-state.ts` |
 | Generated forms | `src/generated-forms/` |
+| Core utilities | `src/core/` (`parseObjectName`, `buildObjectName`) |
 | Navigation | `SymbolIndex`, `DependencyGraph`, `LocationIndex` |
 | LSP | `lsp/` |
 | Explorer UI | `tree-builder.ts`, `client/` |
@@ -272,6 +273,11 @@ Rules: baseline is pinned, >10% deviation invalidates comparison,
 - SQL backend (M7)
 - WebSocket / live sync
 - Complex layout engine v2
+
+## Export Policy
+
+The `export/` directory is managed by the user (metadata, forms, data, IR).
+Do NOT edit any file under `export/`. If changes are needed, inform the user.
 
 ## Code Conventions
 

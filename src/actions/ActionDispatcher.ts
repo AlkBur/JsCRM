@@ -10,8 +10,8 @@ export class ActionDispatcher {
   async dispatch(ctx: ActionContext, action: Action): Promise<ActionResult> {
     const handler = this.handlers.get(action.type);
     if (!handler) {
-      return { success: false, error: `Неизвестное действие: ${action.type}` };
+      return { ok: false, error: `Неизвестное действие: ${action.type}` };
     }
-    return handler.execute(ctx, action);
+    return handler(action, ctx);
   }
 }

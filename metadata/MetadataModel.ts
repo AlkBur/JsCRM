@@ -21,7 +21,7 @@
 
 import { readFileSync, existsSync } from "fs";
 import type { MetadataRoot, CommonModuleInfo, MetadataObjectInfo } from "./metadata-types";
-import type { MetadataRootV2, CatalogV2, DocumentV2, EnumerationV2, AttributeV2, TabularSectionV2, FormV2, CommandV2 } from "./metadata-types-v2";
+import type { MetadataRootV2, CatalogV2, DocumentV2, EnumerationV2, AttributeV2, TabularSectionV2, FormV2, CommandV2, PredefinedItemV2 } from "./metadata-types-v2";
 
 export class MetadataModel {
   readonly version: string;
@@ -107,13 +107,17 @@ export class MetadataModel {
     const normalizeEntity = <T extends CatalogV2 | DocumentV2>(e: T): T => ({
       ...e,
       attributes: normalizeArray(e.attributes),
+      standardAttributes: normalizeArray(e.standardAttributes as AttributeV2[] | undefined) as AttributeV2[],
       tabularSections: normalizeArray(e.tabularSections).map(normalizeTS),
       forms: normalizeArray(e.forms),
       commands: normalizeArray(e.commands),
     });
 
-    const normalizedCatalogs = (v2.catalogs ?? []).map(c => normalizeEntity(c));
-    const normalizedDocuments = (v2.documents ?? []).map(d => normalizeEntity(d));
+    const normalizedCatalogs = (v2.catalogs ?? []).map(c => ({
+      ...normalizeEntity(c),
+      predefinedItems: normalizeArray((c as CatalogV2).predefinedItems as PredefinedItemV2[] | undefined) as PredefinedItemV2[],
+    } as CatalogV2));
+    const normalizedDocuments = (v2.documents ?? []).map(d => normalizeEntity(d) as DocumentV2);
     const normalizedEnums = (v2.enumerations ?? []).map(e => ({
       ...e,
       values: normalizeArray(e.values),
@@ -185,6 +189,8 @@ function freezeCatalog(c: CatalogV2): CatalogV2 {
   return Object.freeze({
     ...c,
     attributes: Object.freeze(c.attributes.map(a => Object.freeze(a))),
+    standardAttributes: c.standardAttributes ? Object.freeze(c.standardAttributes.map(a => Object.freeze(a))) as AttributeV2[] : undefined,
+    predefinedItems: c.predefinedItems ? Object.freeze(c.predefinedItems.map(p => Object.freeze(p))) as PredefinedItemV2[] : undefined,
     tabularSections: Object.freeze(
       c.tabularSections.map(ts => Object.freeze({
         ...ts,
@@ -200,6 +206,7 @@ function freezeDocument(d: DocumentV2): DocumentV2 {
   return Object.freeze({
     ...d,
     attributes: Object.freeze(d.attributes.map(a => Object.freeze(a))),
+    standardAttributes: d.standardAttributes ? Object.freeze(d.standardAttributes.map(a => Object.freeze(a))) as AttributeV2[] : undefined,
     tabularSections: Object.freeze(
       d.tabularSections.map(ts => Object.freeze({
         ...ts,

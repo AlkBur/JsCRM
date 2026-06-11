@@ -19,6 +19,13 @@ import { BuiltinRegistry } from "../runtime/BuiltinRegistry";
 import { registerBuiltins } from "../builtins/index";
 import { buildTree } from "./tree-builder";
 import { loadWorkspace } from "./WorkspaceLoader";
+import { parseObjectName } from "./core/object-name";
+import { ActionDispatcher } from "./actions";
+import type { Action, ActionContext } from "./actions";
+import { objectSaveHandler } from "./actions/handlers/ObjectSaveHandler";
+import { MemorySessionStore } from "./session";
+import { FilesystemSnapshotStore } from "./snapshots";
+import type { SnapshotKey } from "./snapshots";
 
 const exportDir = join(__dirname, "..", "export");
 const workspace = loadWorkspace(exportDir);
@@ -26,6 +33,11 @@ const registry = new BuiltinRegistry();
 registerBuiltins(registry);
 const vm = new VM(workspace.program, registry);
 const tree = buildTree(workspace.metadata, workspace.formIndex);
+const dispatcher = new ActionDispatcher();
+dispatcher.register("object.save", objectSaveHandler);
+const sessionStore = new MemorySessionStore();
+const session = sessionStore.create();
+const snapshotStore = new FilesystemSnapshotStore(join(exportDir, "data"), join(exportDir, "data", ".pending"));
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data, null, 2), {
@@ -137,8 +149,7 @@ const server = Bun.serve({
       const all = workspace.formIndex.getAllForms();
       const grouped: Record<string, string[]> = {};
       for (const f of all) {
-        const key = f.owner.name;
-        (grouped[key] ??= []).push(f.form.name);
+        (grouped[f.objectName] ??= []).push(f.formName);
       }
       return json(Object.entries(grouped).map(([object, forms]) => ({ object, forms })));
     }
@@ -153,9 +164,27 @@ const server = Bun.serve({
         formName = decodeURIComponent(parts[1] ?? "");
       } catch { return json({ error: "Некорректный идентификатор формы" }, 400); }
       if (!objectName || !formName) return json({ error: "Usage: /api/forms/:object/:form" }, 400);
-      const doc = workspace.formIndex.get(objectName, formName);
-      if (!doc) return json({ error: "Form not found" }, 404);
-      return json(doc);
+      const indexed = workspace.formIndex.get(objectName, formName);
+      if (!indexed) return json({ error: "Form not found" }, 404);
+      return json(indexed.document);
+    }
+
+    if (path.startsWith("/api/object-list/")) {
+      const object = decodeURIComponent(path.slice("/api/object-list/".length));
+      const items = await snapshotStore.list(object);
+      return json(items);
+    }
+
+    if (path.startsWith("/api/object/")) {
+      const parts = path.slice("/api/object/".length).split("/");
+      if (parts.length !== 2) return json({ error: "Usage: /api/object/:object/:id" }, 400);
+      const key: SnapshotKey = {
+        object: decodeURIComponent(parts[0]!),
+        id: decodeURIComponent(parts[1]!),
+      };
+      const snap = await snapshotStore.load(key);
+      if (!snap) return json({ error: "Object not found" }, 404);
+      return json(snap);
     }
 
     if (path === "/api/tree") {
@@ -176,8 +205,8 @@ const server = Bun.serve({
 
       // Form projection node: Catalog.Организации.Forms.ФормаЭлемента
       if (parts.length === 4 && subKind === "Forms") {
-        const formDoc = workspace.formIndex.get(entityName, parts[3]!);
-        if (formDoc) return json(formDoc);
+        const indexed = workspace.formIndex.get(entityName, parts[3]!);
+        if (indexed) return json(indexed.document);
         return json({ error: "Form not found" }, 404);
       }
 
@@ -228,6 +257,13 @@ const server = Bun.serve({
         const msg = e instanceof Error ? e.message : String(e);
         return json({ success: false, error: msg });
       }
+    }
+
+    if (path === "/api/action" && method === "POST") {
+      const action = (await req.json()) as Action;
+      const ctx: ActionContext = { session, workspace, snapshotStore };
+      const result = await dispatcher.dispatch(ctx, action);
+      return json(result);
     }
 
     return json({ error: "Not found" }, 404);

@@ -1,0 +1,163 @@
+{
+	"schema": "jscrm.form.v1",
+	"id": "Document.ПриходнаяНакладная.ФормаДокумента",
+	"attributes": [
+		{
+			"name": "Объект",
+			"type": {
+				"kind": "ref",
+				"target": "Document.ПриходнаяНакладная"
+			},
+			"main": true,
+			"savedData": true
+		}
+	],
+	"commands": [],
+	"events": [
+		{
+			"source": "МатериалыКоличество",
+			"event": "OnChange",
+			"handler": "МатериалыКоличествоПриИзменении"
+		},
+		{
+			"source": "МатериалыЦена",
+			"event": "OnChange",
+			"handler": "МатериалыЦенаПриИзменении"
+		}
+	],
+	"mainAttribute": "Объект",
+	"form": {
+		"name": "ФормаДокумента",
+		"title": "Форма документа",
+		"type": "managed",
+		"uuid": "916e363f-ab3d-4189-95e3-0ad5a2fa70c4"
+	},
+	"layout": {
+		"id": -1,
+		"view": "form",
+		"name": "ЭтаФорма",
+		"title": "",
+		"visible": true,
+		"enabled": true,
+		"readonly": false,
+		"elements": [
+			{
+				"id": -1,
+				"view": "commandBar",
+				"name": "ФормаКоманднаяПанель",
+				"title": "",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"source": "Document.ПриходнаяНакладная"
+			},
+			{
+				"id": 38,
+				"view": "group",
+				"name": "ГруппаДатаНомер",
+				"title": "Группа дата номер",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"layout": "horizontal",
+				"showTitle": false,
+				"elements": [
+					{
+						"id": 1,
+						"view": "input",
+						"name": "Номер",
+						"title": "Номер",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.Number"
+					},
+					{
+						"id": 4,
+						"view": "input",
+						"name": "Дата",
+						"title": "Дата",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.Date"
+					}
+				]
+			},
+			{
+				"id": 7,
+				"view": "input",
+				"name": "Склад",
+				"title": "Склад",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"dataPath": "Объект.Склад"
+			},
+			{
+				"id": 10,
+				"view": "table",
+				"name": "Материалы",
+				"title": "Материалы",
+				"visible": true,
+				"enabled": true,
+				"readonly": false,
+				"showTitle": false,
+				"dataPath": "Объект.Материалы",
+				"columns": [
+					{
+						"id": "23",
+						"view": "input",
+						"name": "МатериалыНомерСтроки",
+						"title": "МатериалыНомерСтроки",
+						"visible": true,
+						"enabled": true,
+						"readonly": true,
+						"dataPath": "Объект.Материалы.LineNumber"
+					},
+					{
+						"id": "26",
+						"view": "input",
+						"name": "МатериалыМатериал",
+						"title": "МатериалыМатериал",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.Материалы.Материал"
+					},
+					{
+						"id": "29",
+						"view": "input",
+						"name": "МатериалыКоличество",
+						"title": "МатериалыКоличество",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.Материалы.Количество"
+					},
+					{
+						"id": "32",
+						"view": "input",
+						"name": "МатериалыЦена",
+						"title": "МатериалыЦена",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.Материалы.Цена"
+					},
+					{
+						"id": "35",
+						"view": "input",
+						"name": "МатериалыСумма",
+						"title": "МатериалыСумма",
+						"visible": true,
+						"enabled": true,
+						"readonly": false,
+						"dataPath": "Объект.Материалы.Сумма"
+					}
+				],
+				"pepresentation": "list"
+			}
+		]
+	}
+}

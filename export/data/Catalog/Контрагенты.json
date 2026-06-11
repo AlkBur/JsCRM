@@ -1,0 +1,45 @@
+{
+	"meta": {
+		"object": "Catalog.Контрагенты",
+		"schemaVersion": 1,
+		"metadataVersion": 1
+	},
+	"items": [
+		{
+			"id": "46b913e6-9545-11ee-8a7b-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": null,
+				"Description": "Иванов Михаил Юрьевич",
+				"Code": "000000001"
+			}
+		},
+		{
+			"id": "46b913e7-9545-11ee-8a7b-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": null,
+				"Description": "Роман",
+				"Code": "000000002"
+			}
+		},
+		{
+			"id": "46b913e8-9545-11ee-8a7b-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": null,
+				"Description": "Спиридонова Галина",
+				"Code": "000000003"
+			}
+		}
+	]
+}

@@ -1,0 +1,313 @@
+{
+	"meta": {
+		"object": "Catalog.Номенклатура",
+		"schemaVersion": 1,
+		"metadataVersion": 1
+	},
+	"items": [
+		{
+			"id": "dea991b9-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": true,
+				"Parent": null,
+				"Description": "Материалы",
+				"Code": "000000001",
+				"ВидНоменклатуры": null
+			}
+		},
+		{
+			"id": "dea991ba-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": true,
+				"Parent": null,
+				"Description": "Услуги",
+				"Code": "000000002",
+				"ВидНоменклатуры": null
+			}
+		},
+		{
+			"id": "dea991bb-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c7-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Радиодетали"
+				},
+				"Description": "Строчный трансформатор Samsung",
+				"Code": "000000003",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Материал",
+					"Description": "Материал"
+				}
+			}
+		},
+		{
+			"id": "dea991bc-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c7-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Радиодетали"
+				},
+				"Description": "Строчный трансформатор GoldStar",
+				"Code": "000000004",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Материал",
+					"Description": "Материал"
+				}
+			}
+		},
+		{
+			"id": "dea991bd-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c7-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Радиодетали"
+				},
+				"Description": "Транзистор Philips 2N2369",
+				"Code": "000000005",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Материал",
+					"Description": "Материал"
+				}
+			}
+		},
+		{
+			"id": "dea991be-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c8-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Прочее"
+				},
+				"Description": "Шланг резиновый",
+				"Code": "000000006",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Материал",
+					"Description": "Материал"
+				}
+			}
+		},
+		{
+			"id": "dea991bf-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c8-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Прочее"
+				},
+				"Description": "Кабель электрический",
+				"Code": "000000007",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Материал",
+					"Description": "Материал"
+				}
+			}
+		},
+		{
+			"id": "dea991c0-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c5-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Телевизоры"
+				},
+				"Description": "Диагностика",
+				"Code": "000000008",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Услуга",
+					"Description": "Услуга"
+				}
+			}
+		},
+		{
+			"id": "dea991c1-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c5-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Телевизоры"
+				},
+				"Description": "Ремонт отечественного телевизора",
+				"Code": "000000009",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Услуга",
+					"Description": "Услуга"
+				}
+			}
+		},
+		{
+			"id": "dea991c2-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c5-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Телевизоры"
+				},
+				"Description": "Ремонт импортного телевизора",
+				"Code": "000000010",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Услуга",
+					"Description": "Услуга"
+				}
+			}
+		},
+		{
+			"id": "dea991c3-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c6-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Стиральные машины"
+				},
+				"Description": "Подключение воды",
+				"Code": "000000011",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Услуга",
+					"Description": "Услуга"
+				}
+			}
+		},
+		{
+			"id": "dea991c4-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": false,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991c6-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Стиральные машины"
+				},
+				"Description": "Подключение электричества",
+				"Code": "000000012",
+				"ВидНоменклатуры": {
+					"enum": "Enum.ВидыНоменклатуры",
+					"value": "Услуга",
+					"Description": "Услуга"
+				}
+			}
+		},
+		{
+			"id": "dea991c5-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": true,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991ba-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Услуги"
+				},
+				"Description": "Телевизоры",
+				"Code": "000000013",
+				"ВидНоменклатуры": null
+			}
+		},
+		{
+			"id": "dea991c6-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": true,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991ba-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Услуги"
+				},
+				"Description": "Стиральные машины",
+				"Code": "000000014",
+				"ВидНоменклатуры": null
+			}
+		},
+		{
+			"id": "dea991c7-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": true,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991b9-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Материалы"
+				},
+				"Description": "Радиодетали",
+				"Code": "000000015",
+				"ВидНоменклатуры": null
+			}
+		},
+		{
+			"id": "dea991c8-9599-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"IsFolder": true,
+				"Parent": {
+					"ref": "Catalog.Номенклатура",
+					"id": "dea991b9-9599-11ee-8a7c-f02f74d014e4",
+					"description": "Материалы"
+				},
+				"Description": "Прочее",
+				"Code": "000000016",
+				"ВидНоменклатуры": null
+			}
+		}
+	]
+}

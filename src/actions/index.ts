@@ -1,2 +1,2 @@
-export type { Action, ActionContext, ActionHandler, ActionResult } from "./action-types";
+export type { Action, ActionContext, ActionHandler, ActionResult, UiPatch } from "./action-types";
 export { ActionDispatcher } from "./ActionDispatcher";

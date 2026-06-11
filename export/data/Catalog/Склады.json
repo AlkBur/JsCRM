@@ -1,0 +1,29 @@
+{
+	"meta": {
+		"object": "Catalog.Склады",
+		"schemaVersion": 1,
+		"metadataVersion": 1
+	},
+	"items": [
+		{
+			"id": "4fbbc5cf-959b-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "Основной",
+				"Predefined": true,
+				"DeletionMark": false,
+				"Description": "Основной",
+				"Code": "000000001"
+			}
+		},
+		{
+			"id": "4fbbc5d0-959b-11ee-8a7c-f02f74d014e4",
+			"values": {
+				"PredefinedDataName": "",
+				"Predefined": false,
+				"DeletionMark": false,
+				"Description": "Розничный",
+				"Code": "000000002"
+			}
+		}
+	]
+}

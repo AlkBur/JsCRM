@@ -6,7 +6,6 @@
 export interface FormDocument {
   schema: string;
   id: string;
-  owner: FormOwner;
   attributes: FormAttribute[];
   commands: FormCommand[];
   events: FormEvent[];
@@ -15,9 +14,12 @@ export interface FormDocument {
   layout: FormLayoutElement;
 }
 
-export interface FormOwner {
+export interface IndexedFormDocument {
   kind: string;
-  name: string;
+  objectName: string;
+  formName: string;
+  path: string;
+  document: FormDocument;
 }
 
 export interface FormAttribute {

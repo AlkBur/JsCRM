@@ -63,11 +63,11 @@ function entityNode(id: string, label: string, parentKind: "catalog" | "document
 
   const formChildren: TreeNode[] = [];
   if (formIndex) {
-    const forms = formIndex.getFormsForObject(label);
-    for (const f of forms) {
+    const list = formIndex.getFormsForObject(label);
+    for (const f of list) {
       formChildren.push({
-        id: id + ".Forms." + f.form.name,
-        label: f.form.synonym || f.form.name,
+        id: id + ".Forms." + f.document.form.name,
+        label: f.document.form.synonym || f.document.form.name,
         kind: "form",
         parentKind,
         metaRef: label,
