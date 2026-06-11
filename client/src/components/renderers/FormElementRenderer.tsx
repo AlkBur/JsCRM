@@ -1,5 +1,8 @@
 import type { FormLayoutElement } from "../../types";
+import type { AttributeV2 } from "../../types-metadata";
 import { stripObjectPrefix } from "../FormView/displayValue";
+import { resolveAttribute, hasDataPath } from "../context/resolveAttribute";
+import { useFormContext } from "../context/UIContext";
 import InputElement from "../elements/InputElement";
 import CheckboxElement from "../elements/CheckboxElement";
 import LabelElement from "../elements/LabelElement";
@@ -27,11 +30,9 @@ const renderers: Record<string, React.ComponentType<any>> = {
   commandBar: CommandBarElement,
 };
 
-function hasDataPath(el: FormLayoutElement): el is FormLayoutElement & { dataPath: string } {
-  return "dataPath" in el;
-}
-
 export default function FormElementRenderer({ element, values, onChange, path }: Props) {
+  const ctx = useFormContext();
+  const metadata = ctx?.metadata ?? null;
   const Component = renderers[element.view];
 
   if (!Component) {
@@ -42,12 +43,18 @@ export default function FormElementRenderer({ element, values, onChange, path }:
     );
   }
 
+  let attribute: AttributeV2 | null = null;
+  if (hasDataPath(element)) {
+    attribute = resolveAttribute(metadata, element.dataPath);
+  }
+
   if (hasDataPath(element)) {
     const key = stripObjectPrefix(element.dataPath);
     const value = values[key];
     return (
       <Component
         element={element}
+        attribute={attribute}
         values={values}
         value={value}
         checked={!!value}
@@ -57,5 +64,5 @@ export default function FormElementRenderer({ element, values, onChange, path }:
     );
   }
 
-  return <Component element={element} values={values} onChange={onChange} path={path} />;
+  return <Component element={element} attribute={attribute} values={values} onChange={onChange} path={path} />;
 }

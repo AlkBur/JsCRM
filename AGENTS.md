@@ -27,10 +27,10 @@ Signal #1: "Хочу увидеть настоящий интерфейс 1С в
     renderers/ — FormElementRenderer (view → component)
     gallery/   — ComponentGallery (visual test stand)
 
-  M4B: Metadata-aware Rendering                🔄
+  M4B: Metadata-aware Rendering                ✅
     types-metadata.ts, resolveAttribute, UIContext
 
-  M4C: Migration to DefaultFormView            pending
+  M4C: Migration to DefaultFormView            ✅
   M5: Editable rows                            pending
   M6: DynamicList                              pending
   M7: Session + Login + MainWindow             pending
@@ -61,6 +61,8 @@ Layer  9  Explorer v1 (CSR, read-only)       ✅
          GeneratedFormBuilder               🔄
          FormResolver                       🔄
          UI Components Layer (M4A)           ✅
+         Metadata-aware Rendering (M4B)      ✅
+         DefaultFormView + DTO (M4C)         ✅
 Layer 10  Synchronization & Migration        ← FUTURE
 ```
 
@@ -212,6 +214,7 @@ of the object model and do not constitute premature architecture.
 | Action System | `src/actions/` |
 | Session | `src/session/` |
 | FormState / SnapshotStore | `src/snapshots/`, `src/forms/form-state.ts` |
+| Form Screen DTO | `src/forms/form-screen-types.ts` |
 | Generated forms | `src/generated-forms/` |
 | Core utilities | `src/core/` (`parseObjectName`, `buildObjectName`) |
 | Navigation | `SymbolIndex`, `DependencyGraph`, `LocationIndex` |

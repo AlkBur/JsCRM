@@ -1,19 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import type { FieldType, FormDocument, ObjectRef } from "../../types";
+import type { FieldType, FormDocument, FormScreenDto, ObjectRef } from "../../types";
 import { fetchObjectList, fetchObject, postAction } from "../../api";
-import FormView from "../FormView/FormView";
+import DefaultFormView from "../views/DefaultFormView";
 import styles from "./DetailPanel.module.css";
 
-function isFormDocument(v: unknown): v is FormDocument {
-  return typeof v === "object" && v !== null && "schema" in v && "layout" in v;
-}
-
-function parseFormNodeId(nodeId: string): { objectName: string } | null {
-  const parts = nodeId.split(".");
-  if (parts.length === 4 && parts[2] === "Forms") {
-    return { objectName: `${parts[0]}.${parts[1]}` };
-  }
-  return null;
+function isFormScreenDto(v: unknown): v is FormScreenDto {
+  return typeof v === "object" && v !== null && "form" in v && "schema" in (v as any).form && "layout" in (v as any).form;
 }
 
 interface FormState {
@@ -32,28 +24,27 @@ export default function DetailPanel({ nodeId, data }: Props) {
   const [objectList, setObjectList] = useState<ObjectRef[]>([]);
   const [saveError, setSaveError] = useState<string | undefined>();
 
-  const formMeta = isFormDocument(data) && nodeId ? parseFormNodeId(nodeId) : null;
-  const formDoc = isFormDocument(data) ? data : null;
-  const objectName = formMeta?.objectName ?? "";
+  const dto = isFormScreenDto(data) ? data : null;
+  const objectName = dto?.object?.name ?? "";
 
   useEffect(() => {
     setFormState({ values: {}, dirty: false, objectId: null });
     setObjectList([]);
     setSaveError(undefined);
 
-    if (!formMeta) return;
+    if (!dto || !objectName) return;
 
-    fetchObjectList(formMeta.objectName).then(list => {
+    fetchObjectList(objectName).then(list => {
       setObjectList(list);
       if (list.length > 0) {
         const firstId = list[0]!.id;
         setFormState(prev => ({ ...prev, objectId: firstId }));
-        fetchObject(formMeta.objectName, firstId).then(snap => {
+        fetchObject(objectName, firstId).then(snap => {
           setFormState({ values: snap.values, dirty: false, objectId: firstId });
         }).catch(() => setSaveError("Ошибка загрузки объекта"));
       }
     }).catch(() => setSaveError("Ошибка загрузки списка объектов"));
-  }, [nodeId, formMeta?.objectName]);
+  }, [nodeId, dto, objectName]);
 
   const handleSelectObject = useCallback((id: string) => {
     setFormState(prev => ({ ...prev, objectId: id }));
@@ -97,16 +88,15 @@ export default function DetailPanel({ nodeId, data }: Props) {
     return <div className={styles.root}><p className={styles.empty}>Загрузка...</p></div>;
   }
 
-  if (formDoc && formMeta) {
+  if (dto) {
     return (
-      <FormView
-        form={formDoc}
+      <DefaultFormView
+        dto={dto}
         values={formState.values}
         dirty={formState.dirty}
         onChange={handleChange}
         onSave={handleSave}
         saveError={saveError}
-        objectName={objectName}
         objectList={objectList}
         selectedObjectId={formState.objectId}
         onSelectObject={handleSelectObject}
@@ -173,8 +163,6 @@ export default function DetailPanel({ nodeId, data }: Props) {
   );
 }
 
-// --- type guards (unchanged) ---
-
 function isAttributeArray(v: unknown): v is Array<{ uuid?: string; name: string; type: FieldType; required: boolean }> {
   return Array.isArray(v) && v.length > 0 && "type" in v[0];
 }
@@ -194,8 +182,6 @@ function isCommandArray(v: unknown): v is Array<{ uuid?: string; name: string; h
 function isEnumValueArray(v: unknown): v is Array<{ uuid: string; name: string }> {
   return Array.isArray(v) && v.length > 0 && "uuid" in v[0] && "name" in v[0] && !("type" in v[0]);
 }
-
-// --- render helpers (unchanged) ---
 
 function typeLabel(t: FieldType): string {
   switch (t.kind) {

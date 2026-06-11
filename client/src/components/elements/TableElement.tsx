@@ -1,3 +1,4 @@
+import type { AttributeV2 } from "../../types-metadata";
 import { stripObjectPrefix } from "../FormView/displayValue";
 import TableControl from "../controls/TableControl";
 import type { TableColumn } from "../controls/TableControl";
@@ -15,6 +16,7 @@ interface Props {
     dataPath: string;
     columns?: ColumnDef[];
   };
+  attribute?: AttributeV2 | null;
   values: Record<string, unknown>;
 }
 

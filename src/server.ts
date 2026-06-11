@@ -26,6 +26,7 @@ import { objectSaveHandler } from "./actions/handlers/ObjectSaveHandler";
 import { MemorySessionStore } from "./session";
 import { FilesystemSnapshotStore } from "./snapshots";
 import type { SnapshotKey } from "./snapshots";
+import type { FormScreenDto } from "./forms/form-screen-types";
 
 const exportDir = join(__dirname, "..", "export");
 const workspace = loadWorkspace(exportDir);
@@ -205,8 +206,16 @@ const server = Bun.serve({
 
       // Form projection node: Catalog.Организации.Forms.ФормаЭлемента
       if (parts.length === 4 && subKind === "Forms") {
-        const indexed = workspace.formIndex.get(entityName, parts[3]!);
-        if (indexed) return json(indexed.document);
+        const objectName = `${entityKind}.${entityName}`;
+        const indexed = workspace.formIndex.get(objectName, parts[3]!);
+        if (indexed) {
+          const dto: FormScreenDto = {
+            form: indexed.document,
+            metadata: workspace.metadata.findCatalogV2(entityName) ?? workspace.metadata.findDocumentV2(entityName) ?? null,
+            object: { name: objectName },
+          };
+          return json(dto);
+        }
         return json({ error: "Form not found" }, 404);
       }
 

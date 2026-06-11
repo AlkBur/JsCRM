@@ -75,6 +75,12 @@ export interface ActionResult {
   data?: unknown;
 }
 
+export interface FormScreenDto {
+  form: FormDocument;
+  metadata: unknown;
+  object?: { name: string };
+}
+
 export type FormLayoutElement =
   | { view: "form" | "group" | "tabs" | "tab" | "commandBar"; id: number; name: string; title?: string; elements: FormLayoutElement[]; layout?: string; showTitle?: boolean; showBorder?: boolean }
   | { view: "input"; id: number; name: string; title?: string; dataPath: string; readonly?: boolean; visible?: boolean; enabled?: boolean }
