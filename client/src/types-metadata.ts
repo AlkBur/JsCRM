@@ -1,7 +1,7 @@
 export type FieldType =
   | { kind: "string"; length?: number; format?: string }
   | { kind: "number"; precision?: number; scale?: number }
-  | { kind: "date" }
+  | { kind: "date"; dateKind?: "date" | "datetime" }
   | { kind: "boolean" }
   | { kind: "ref"; target: string }
   | { kind: "enum"; target: string }
@@ -23,12 +23,14 @@ export interface TabularSectionV2 {
 
 export interface CatalogV2 {
   readonly name: string;
+  readonly standardAttributes?: readonly AttributeV2[];
   readonly attributes: readonly AttributeV2[];
   readonly tabularSections?: readonly TabularSectionV2[];
 }
 
 export interface DocumentV2 {
   readonly name: string;
+  readonly standardAttributes?: readonly AttributeV2[];
   readonly attributes: readonly AttributeV2[];
   readonly tabularSections?: readonly TabularSectionV2[];
 }

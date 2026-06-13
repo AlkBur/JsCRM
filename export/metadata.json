@@ -11,6 +11,12 @@
 			"export": true,
 			"server": true,
 			"client": false
+		},
+		{
+			"name": "РаботаСФайлами",
+			"export": true,
+			"server": true,
+			"client": true
 		}
 	],
 	"catalogs": [
@@ -31,7 +37,8 @@
 					"uuid": "57151dce-bc9b-4dcd-a8b5-f12b1e9906c5",
 					"name": "Дата",
 					"type": {
-						"kind": "date"
+						"kind": "date",
+						"dateKind": "date"
 					},
 					"required": false
 				}
@@ -473,7 +480,8 @@
 							"uuid": "b2c4542a-a401-400a-8c41-bf7c95b351b4",
 							"name": "НачалоРаботы",
 							"type": {
-								"kind": "date"
+								"kind": "date",
+								"dateKind": "date"
 							},
 							"required": false
 						},
@@ -481,7 +489,8 @@
 							"uuid": "c58b75c7-3a1a-445f-8ace-2283570d3ae0",
 							"name": "ОкончаниеРаботы",
 							"type": {
-								"kind": "date"
+								"kind": "date",
+								"dateKind": "date"
 							},
 							"required": false
 						},
@@ -616,7 +625,8 @@
 					"name": "Date",
 					"synonym": "Дата",
 					"type": {
-						"kind": "date"
+						"kind": "date",
+						"dateKind": "datetime"
 					},
 					"required": true
 				},
@@ -776,7 +786,8 @@
 					"name": "Date",
 					"synonym": "Дата",
 					"type": {
-						"kind": "date"
+						"kind": "date",
+						"dateKind": "datetime"
 					},
 					"required": true
 				},

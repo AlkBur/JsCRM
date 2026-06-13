@@ -3,6 +3,7 @@ import { getAttributeCaption } from "./getAttributeCaption";
 import { displayValue } from "../../utils/displayValue";
 import InputControl from "../controls/InputControl";
 import CheckboxControl from "../controls/CheckboxControl";
+import ReferenceControl from "../controls/ReferenceControl";
 
 interface Props {
   element: { title?: string; name: string; readonly?: boolean };
@@ -20,10 +21,21 @@ export default function InputElement({ element, attribute, value, onChange }: Pr
     );
   }
 
+  if (attribute?.type.kind === "ref") {
+    return (
+      <ReferenceControl
+        object={attribute.type.target}
+        value={value}
+        onChange={onChange}
+        disabled={element.readonly}
+      />
+    );
+  }
+
   return (
     <InputControl
       label={label}
-      value={displayValue(value, attribute?.type.kind)}
+      value={displayValue(value, attribute?.type)}
       onChange={onChange}
       readOnly={element.readonly}
     />

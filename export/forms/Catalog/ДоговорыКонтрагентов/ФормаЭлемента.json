@@ -85,7 +85,7 @@
 						"id": 10,
 						"view": "input",
 						"name": "Номер",
-						"title": "Номер",
+						"title": "Номер договора",
 						"visible": true,
 						"enabled": true,
 						"readonly": false,

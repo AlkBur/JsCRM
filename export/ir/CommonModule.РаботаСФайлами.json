@@ -1,0 +1,237 @@
+{
+	"irVersion": 1,
+	"generator": {
+		"tool": "1C Exporter",
+		"version": "0.1"
+	},
+	"module": {
+		"name": "РаботаСФайлами",
+		"body": {
+			"routines": [
+				{
+					"kind": "procedure",
+					"name": "СоздатьНовыйКаталог",
+					"export": true,
+					"params": [
+						{
+							"name": "Путь",
+							"byRef": false
+						}
+					],
+					"body": [
+						{
+							"kind": "assign",
+							"target": {
+								"kind": "variable",
+								"name": "Каталог"
+							},
+							"expr": {
+								"kind": "new",
+								"type": "Файл",
+								"args": [
+									{
+										"kind": "variable",
+										"name": "Путь"
+									}
+								]
+							}
+						},
+						{
+							"kind": "if",
+							"cond": {
+								"kind": "unary",
+								"op": "Не",
+								"value": {
+									"kind": "call",
+									"object": {
+										"kind": "variable",
+										"name": "Каталог"
+									},
+									"method": "Существует",
+									"args": []
+								}
+							},
+							"then": [
+								{
+									"kind": "call",
+									"name": "СоздатьКаталог",
+									"args": [
+										{
+											"kind": "member",
+											"object": {
+												"kind": "variable",
+												"name": "Каталог"
+											},
+											"property": "ПолноеИмя"
+										}
+									]
+								}
+							],
+							"else": []
+						}
+					]
+				},
+				{
+					"kind": "procedure",
+					"name": "УдалитьКаталог",
+					"export": true,
+					"params": [
+						{
+							"name": "Путь",
+							"byRef": false
+						}
+					],
+					"body": [
+						{
+							"kind": "assign",
+							"target": {
+								"kind": "variable",
+								"name": "Каталог"
+							},
+							"expr": {
+								"kind": "new",
+								"type": "Файл",
+								"args": [
+									{
+										"kind": "variable",
+										"name": "Путь"
+									}
+								]
+							}
+						},
+						{
+							"kind": "if",
+							"cond": {
+								"kind": "call",
+								"object": {
+									"kind": "variable",
+									"name": "Каталог"
+								},
+								"method": "Существует",
+								"args": []
+							},
+							"then": [
+								{
+									"kind": "call",
+									"name": "УдалитьФайлы",
+									"args": [
+										{
+											"kind": "member",
+											"object": {
+												"kind": "variable",
+												"name": "Каталог"
+											},
+											"property": "ПолноеИмя"
+										}
+									]
+								}
+							],
+							"else": []
+						}
+					]
+				},
+				{
+					"kind": "procedure",
+					"name": "СохранитьJSONВФайл",
+					"export": true,
+					"params": [
+						{
+							"name": "Данные",
+							"byRef": true
+						},
+						{
+							"name": "ПутьКФайлу",
+							"byRef": true
+						}
+					],
+					"body": [
+						{
+							"kind": "assign",
+							"target": {
+								"kind": "variable",
+								"name": "ПараметрыJSON"
+							},
+							"expr": {
+								"kind": "new",
+								"type": "ПараметрыЗаписиJSON",
+								"args": [
+									null,
+									{
+										"kind": "member",
+										"object": {
+											"kind": "variable",
+											"name": "Символы"
+										},
+										"property": "Таб"
+									}
+								]
+							}
+						},
+						{
+							"kind": "assign",
+							"target": {
+								"kind": "variable",
+								"name": "ЗаписьJSON"
+							},
+							"expr": {
+								"kind": "new",
+								"type": "ЗаписьJSON",
+								"args": []
+							}
+						},
+						{
+							"kind": "call",
+							"object": {
+								"kind": "variable",
+								"name": "ЗаписьJSON"
+							},
+							"method": "ОткрытьФайл",
+							"args": [
+								{
+									"kind": "variable",
+									"name": "ПутьКФайлу"
+								},
+								{
+									"kind": "string",
+									"value": "UTF-8"
+								},
+								{
+									"kind": "boolean",
+									"value": false
+								},
+								{
+									"kind": "variable",
+									"name": "ПараметрыJSON"
+								}
+							]
+						},
+						{
+							"kind": "call",
+							"name": "ЗаписатьJSON",
+							"args": [
+								{
+									"kind": "variable",
+									"name": "ЗаписьJSON"
+								},
+								{
+									"kind": "variable",
+									"name": "Данные"
+								}
+							]
+						},
+						{
+							"kind": "call",
+							"object": {
+								"kind": "variable",
+								"name": "ЗаписьJSON"
+							},
+							"method": "Закрыть",
+							"args": []
+						}
+					]
+				}
+			],
+			"globals": []
+		}
+	}
+}

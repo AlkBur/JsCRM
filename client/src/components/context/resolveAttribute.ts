@@ -17,8 +17,11 @@ export function resolveAttribute(
   const parts = stripped.split(".");
 
   if (parts.length === 1) {
-    const attr = entity.attributes.find(a => a.name === parts[0]);
-    return attr ?? null;
+    const allAttributes = [
+      ...(entity.standardAttributes ?? []),
+      ...entity.attributes,
+    ];
+    return allAttributes.find(a => a.name === parts[0]) ?? null;
   }
 
   if (parts.length === 2 && entity.tabularSections) {

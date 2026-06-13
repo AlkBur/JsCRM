@@ -54,10 +54,22 @@ export class FilesystemSnapshotStore implements SnapshotStore {
 
   async list(objectName: string): Promise<ObjectRef[]> {
     const col = this.loadCollection(objectName);
-    return col.items.map(i => ({
-      id: i.id,
-      label: (i.values["Description"] as string) || (i.values["Code"] as string) || i.id,
-    }));
+    const p = parseObjectName(objectName);
+    return col.items.map(i => {
+      const presentation =
+        p.kind === "Catalog"
+          ? (i.values["Description"] as string)
+            || (i.values["Code"] as string)
+            || i.id
+          : (i.values["Number"] as string)
+            || (i.values["Date"] as string)
+            || i.id;
+      return {
+        id: i.id,
+        // TODO(M6): extract to ObjectPresentationProvider — SnapshotStore should not know presentation rules
+        label: presentation,
+      };
+    });
   }
 
   async load(key: SnapshotKey): Promise<ObjectSnapshot | null> {

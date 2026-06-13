@@ -34,6 +34,7 @@ export interface NumberType {
 
 export interface DateType {
   kind: "date";
+  dateKind?: "date" | "datetime";
 }
 
 export interface BooleanType {
